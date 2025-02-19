@@ -1,0 +1,24 @@
+[15-Dec-2022 15:56:44 Asia/Dhaka] PHP Fatal error:  Cannot use App\Http\Controllers\Admin\Reports\ReportController as ReportController because the name is already in use in /home2/salman2152/jtsc.jafreetraders.com/routes/accounts.php on line 12
+[25-Jan-2023 14:32:02 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 870
+[25-Jan-2023 14:38:24 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 1950
+[25-Jan-2023 14:39:50 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 893
+[13-Feb-2023 17:45:16 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 870
+[13-Feb-2023 17:56:02 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 928
+[15-Feb-2023 14:12:32 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/FrameDecorator/Page.php on line 182
+[15-Feb-2023 14:13:13 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Frame.php on line 382
+[16-Feb-2023 11:10:59 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 893
+[20-Feb-2023 16:12:52 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 817
+[22-Feb-2023 12:19:14 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/FrameDecorator/Block.php on line 149
+[11-Mar-2023 21:08:35 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 879
+[16-Mar-2023 10:39:44 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 2413
+[18-Mar-2023 11:59:19 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 928
+[18-Mar-2023 12:04:38 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 893
+[18-Mar-2023 13:25:14 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 1672
+[19-Mar-2023 11:28:58 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 928
+[19-Mar-2023 14:10:55 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/FrameReflower/AbstractFrameReflower.php on line 512
+[19-Mar-2023 14:12:56 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 902
+[19-Mar-2023 14:13:59 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 966
+[19-Mar-2023 14:15:32 Asia/Dhaka] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 20480 bytes) in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/FontMetrics.php on line 489
+[06-Apr-2023 10:37:21 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Css/Style.php on line 503
+[06-May-2023 13:09:09 Asia/Dhaka] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home2/salman2152/jtsc.jafreetraders.com/vendor/dompdf/dompdf/src/Frame.php on line 422
+[28-May-2023 08:54:31 America/Chicago] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 7.3.33. in /home2/salman2152/jtsc.jafreetraders.com/vendor/composer/platform_check.php on line 24
