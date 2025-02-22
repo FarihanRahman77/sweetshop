@@ -74,11 +74,15 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4 ">
-                                <label>sister concern: </label>
+                                <label>sister concern: <span class="text-danger">*</span></label>
                                 <select id="sisterconcern" name="sister_concern_id" class="form-control input-sm" style="width:100%">
                                     <option value="">Select sister concern</option>
                                     @foreach ($sisterConcerns as $sisterConcern)
-                                        <option value="{{ $sisterConcern->id }}"> {{ $sisterConcern->name }} </option>
+                                        <option value="{{ $sisterConcern->id }}" 
+                                            @if($logged_sister_concern_id == $sisterConcern->id) selected @endif
+                                            > 
+                                            {{ $sisterConcern->name }} 
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -390,12 +394,6 @@
                     $("#manageCartTable").html(result.data.cart);
                     $("#totalAmount").text(result.data.totalAmount);
                     calculateTotal();
-                },
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                complete: function() {
-                    $('#loading').hide();
                 },
                 error: function(response) {
                     $("#products").text("No such product available in your system 1 " + JSON
@@ -887,6 +885,29 @@
         }
 
 
+        function barcodeGenerate(id, warehouse_id){
+            $.ajax({
+                url: "{{ route('purchase.barcode.generate') }}",
+                method: "GET",
+                data: {
+                    "id": id,
+                    "warehouse_id": warehouse_id
+                },
+                datatype: "json",
+                success: function(result) {
+                    alert(JSON.stringify(result));
+                },
+                error: function(response) {
+                    alert(JSON.stringify(response));
+                },
+                beforeSend: function() {
+                    $('#loading').show();
+                },
+                complete: function() {
+                    $('#loading').hide();
+                }
+            });
+        }
 
 
 
@@ -996,6 +1017,8 @@
             $("#currentDue").text("0");
             $("#totalWithDue").text("0");
             $("#payment").val("0");
+            $("#currentDue").text("0");
+            $("#currentDueDisplay").text("0");
         }
 
         $('.only-number').keyup(function(e) {

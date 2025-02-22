@@ -162,6 +162,9 @@ Route::group(['middleware' => ['auth']], function () {
 			Route::get('/invoice/{id}', [PurchaseController::class, 'createPDF'])->name('invoice');
 			// Serilaize Product
 			Route::post('/showSerializTable', [PurchaseController::class, 'showSerializTable'])->name('showSerializTable');
+
+			Route::get('/barcode/add/{id}', [PurchaseController::class, 'addBarcode'])->name('add.barcode');
+			Route::get('/barcode/generate', [PurchaseController::class, 'barcodeGenerate'])->name('barcode.generate');
 		
 		
 

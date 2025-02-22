@@ -38,7 +38,7 @@
                             ->get();
                             @endphp
 
-                            <div class="col-md-12 mt-3">
+                            <!-- <div class="col-md-12 mt-3">
                                 <div class="row">
                                     @foreach($inventoryProducts as $menu)
                                     <div class="card col-lg-4 col-md-3 col-sm-4 col-4 col-xl-2 p-2"
@@ -56,10 +56,45 @@
                                             @else
                                             <p class="mb-1">{{$menu->sale_price}}<br>{{$menu->purchase_price}}</p>
                                             @endif
-                                            <a href="#" class="btn btn-primary">
-                                                <i class="fa fa-plus-circle"
-                                                    onclick="event.stopPropagation(); addmenuitemtocard({{$menu->id}})"></i>
-                                            </a>
+                                            <div class="d-flex justify-content-between">
+                                                <a href="#" class="btn btn-primary">
+                                                    <i class="fa fa-eye"
+                                                        onclick="event.stopPropagation(); addmenuitemtocard({{$menu->id}})"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-primary">
+                                                    <i class="fa fa-shopping-cart"
+                                                        onclick="event.stopPropagation(); addmenuitemtocard({{$menu->id}})"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div> -->
+                            <div class="col-md-12 mt-3">
+                                <div class="row">
+                                    @foreach($inventoryProducts as $menu)
+                                    <div class="card col-lg-4 col-md-3 col-sm-4 col-4 col-xl-2 p-2">
+                                        <div class="image-container text-center position-relative">
+                                            <img src="{{asset('upload/product_images/thumbs/' . $menu->image)}}" class="card-img-top img-fluid" alt="{{$menu->image}}" />
+                                            <div class="position-absolute w-100 d-flex justify-content-center" style="top: 50%; transform: translateY(-50%);">
+                                                <a href="#" class="btn btn-primary mx-1" onclick="menudetailsmodal({{$menu->id}})">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-primary mx-1" onclick="addmenuitemtocard({{$menu->id}})">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title text-truncate">{{substr($menu->name, 0, 33)}}</h5>
+                                            @if($menu->discount > 0)
+                                            <p class="mb-1">
+                                                <span class="text-danger font-weight-bold">{{$menu->sale_price}}</span>
+                                            </p>
+                                            @else
+                                            <p class="mb-1">{{$menu->sale_price}}<br>{{$menu->purchase_price}}</p>
+                                            @endif
                                         </div>
                                     </div>
                                     @endforeach
@@ -81,17 +116,49 @@
                                 <table class="table text-center">
                                     <thead>
                                         <tr>
-                                            <th>Img</th>
-                                            <th>Name</th>
-                                            <th>Qty</th>
-                                            <th>Broken<br>Qty</th>
-                                            <th>Unit<br>Price </th>
-                                            <th>Sub<br>Total </th>
-                                            <th>Action </th>
+                                            <th width="10%">Img</th>
+                                            <th  width="20%">Name</th>
+                                            <th  width="20%">Qty</th>
+                                            <th  width="10%">Broken<br>Qty</th>
+                                            <th  width="10%">Unit<br>Price </th>
+                                            <th  width="20%">Sub<br>Total </th>
+                                            <th  width="10%">Action </th>
                                         </tr>
                                     </thead>
                                     <tbody id="manu_item_table_card">
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Total Tk:</td>
+                                            <td  class="text-right" colspan="2"> <span id="totalAmount"> <sapn></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Discount:</td>
+                                            <td colspan="2"> <input class="form-control text-right" id="discount" value="0"></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Vat:</td>
+                                            <td colspan="2"> <input class="form-control text-right" id="vat" value="0"> </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Ait:</td>
+                                            <td colspan="2"> <input class="form-control text-right" id="ait" value="0"> </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Payment Method:</td>
+                                            <td colspan="2"> <input class="form-control text-right" id="ait" value="0"> </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Payment:</td>
+                                            <td colspan="2"> <input class="form-control text-right" id="paymentt" value="0"> </td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                             <div class="form-group">
@@ -256,8 +323,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary order-btn" id="savechangesbreakquantity"
-                    onclick="savebreakitems()">Save changes</button>
+                <button type="submit" class="btn btn-primary order-btn" id="savechangesbreakquantity" onclick="savebreakitems()">Save changes</button>
             </div>
         </div>
 
@@ -273,8 +339,12 @@
 $(document).ready(function() {
     $("#main-wrapper").toggleClass("mini-sidebar");
     $("#main-wrapper").attr("data-sidebartype", "mini-sidebar");
-});
 
+    
+});
+function validateNumericInput(input) {
+    input.value = input.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+}
 
 function scrollTabs(direction) {
     const container = document.getElementById('menulist');
@@ -711,8 +781,9 @@ function fetch_menu_Cart_item() {
         url: "{{ route('sweetsconfectionary.menu.fetch_menu_Cart_item') }}",
         method: "GET",
         success: function(result) {
-           // alert(JSON.stringify(result));
+            alert(JSON.stringify(result));
             $("#manu_item_table_card").html(result.cart);
+            $("#totalAmount").text(result.totalAmount);
         },
         error: function(response) {
            // alert(JSON.stringify(response));
