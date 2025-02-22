@@ -51,9 +51,7 @@ class PurchaseController extends Controller
 
 	public function add()
 	{             
-		      
-           
-  
+		$data['logged_sister_concern_id'] = Session::get('companySettings')[0]['id'];
 		$data['categories'] = Category::where('deleted', 'No')->where('status', 'Active')->get();
 		$data['brands'] = Brand::where('deleted', 'No')->where('status', 'Active')->get();
 		$data['products'] = Product::where('deleted', 'No')->where('status', 'Active')->where('type', '!=', 'service')->get();
@@ -142,11 +140,12 @@ class PurchaseController extends Controller
 					<ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid gray;" role="menu">
 						<li class="action" onclick="printPurchase(' . $purchase->id . ')"  ><a  class="btn" ><i class="fas fa-print"></i> View Details </a></li>
 						</li> 
-				</li>
-					<li class="action"><a   class="btn"  onclick="purchaseReturn(' . $purchase->id . ')" ><i class="fas fa-undo-alt"></i> Return Purchase </a></li>
-					</li>
-					<li class="action"><a   class="btn"  onclick="confirmDelete(' . $purchase->id . ')" ><i class="fas fa-trash-alt"></i> Delete </a></li>
-					</li>
+						<li class="action" onclick="addBarcode(' . $purchase->id . ')"  ><a  class="btn" ><i class="fas fa-barcode"></i> Add BArcode </a></li>
+						</li> 
+						<li class="action"><a   class="btn"  onclick="purchaseReturn(' . $purchase->id . ')" ><i class="fas fa-undo-alt"></i> Return Purchase </a></li>
+						</li>
+						<li class="action"><a   class="btn"  onclick="confirmDelete(' . $purchase->id . ')" ><i class="fas fa-trash-alt"></i> Delete </a></li>
+						</li>
 					</ul>   
 				</div>
 			</td>';
@@ -306,12 +305,15 @@ class PurchaseController extends Controller
 					$updateQty = '';
 				}
 				$cart .= '<tr><td style="text-align: center;">' . $i++ . '<input type="hidden" name="ids[]" id="id_' . $productId . '_' . $warehouseId . '" value="' . $productId . '" /><input type="hidden" name="warehouseIds[]" id="warehouse_id_' . $productId . '_' . $warehouseId . '" value="' . $productId . '" /></td>' .
-					'<td>' . Session::get("purchase_cart_array")[$keys]["product_name"] . ' [' . Session::get("purchase_cart_array")[$keys]["warehouse_name"] . ']</td>' .
-					'<td style="text-align: center;"><span id="available_qty_' . $productId . '_' . $warehouseId . '">' . Session::get("purchase_cart_array")[$keys]["available_qty"] . '</span></td>' .
-					'<td><input type="text" class="form-control quantityUpdate only-number" style="text-align: center;width: 80%;" id="quantity_' . $productId . '_' . $warehouseId . '" name="quantity[]" onblur="loadCartandUpdate(' . $productId . ',' . $warehouseId . ',' . $updateQty . ')" value="' . Session::get("purchase_cart_array")[$keys]["product_quantity"] . '" />' . $btn . '</td>' .
-					'<td><input type="text" class="form-control" style="text-align: center;width: 100%;" id="unitPrice_' . $productId . '_' . $warehouseId . '"  name="unitPrice[]" onblur="loadCartandUpdate(' . $productId . ',' . $warehouseId . ')" value="' . $unitPrice . '" /></td>' .
-					'<td style="text-align: right;"><span id="totalPrice_' . $productId . '_' . $warehouseId . '">' . numberFormat($totalPrice) . '</span></td>' .
-					'<td style="text-align: center;"><a href="#" onclick="removeCartProduct(' . Session::get("purchase_cart_array")[$keys]["product_id"] . ', ' . Session::get("purchase_cart_array")[$keys]["warehouse_id"] . ')" style="color:red;"><i class="fa fa-trash"> </i> </a></td></tr>';
+							'<td>' . Session::get("purchase_cart_array")[$keys]["product_name"] . ' [' . Session::get("purchase_cart_array")[$keys]["warehouse_name"] . ']</td>' .
+							'<td style="text-align: center;"><span id="available_qty_' . $productId . '_' . $warehouseId . '">' . Session::get("purchase_cart_array")[$keys]["available_qty"] . '</span></td>' .
+							'<td><input type="text" class="form-control quantityUpdate only-number" style="text-align: center;width: 80%;" id="quantity_' . $productId . '_' . $warehouseId . '" name="quantity[]" onkeyup="loadCartandUpdate(' . $productId . ',' . $warehouseId . ',' . $updateQty . ')" value="' . Session::get("purchase_cart_array")[$keys]["product_quantity"] . '" />' . $btn . '</td>' .
+							'<td><input type="text" class="form-control" style="text-align: center;width: 100%;" id="unitPrice_' . $productId . '_' . $warehouseId . '"  name="unitPrice[]" onkeyup="loadCartandUpdate(' . $productId . ',' . $warehouseId . ')" value="' . $unitPrice . '" /></td>' .
+							'<td style="text-align: right;"><span id="totalPrice_' . $productId . '_' . $warehouseId . '">' . numberFormat($totalPrice) . '</span></td>' .
+							'<td style="text-align: center;">
+								<a href="#" onclick="removeCartProduct(' . Session::get("purchase_cart_array")[$keys]["product_id"] . ', ' . Session::get("purchase_cart_array")[$keys]["warehouse_id"] . ')" style="color:red;"><i class="fa fa-trash"> </i> </a>								
+							</td>
+						</tr>';
 				$grandTotal += $totalPrice;
 			}
 		}
@@ -442,6 +444,20 @@ class PurchaseController extends Controller
 	//=========== End Serialize Product ===========//
 
 
+
+	public function barcodeGenerate(Request $request){
+		$data = "";
+		if (Session::get("purchase_cart_array") != null) {
+			foreach (Session::get("purchase_cart_array") as $keys => $values) {
+				if (Session::get("purchase_cart_array")[$keys]['product_id'] == $request->id && Session::get("purchase_cart_array")[$keys]['warehouse_id'] == $request->warehouseId) {
+				return	session()->put("purchase_cart_array." . $keys . ".product_quantity", $request->quantity);
+				}
+			}
+		} else {
+			$data = "";
+		}
+		return response()->json(['data' => $data]);
+	}
 
 
 
@@ -762,4 +778,17 @@ class PurchaseController extends Controller
 		$pdf = PDF::loadView('admin.PurchaseManagement.purchase.purchase-report',  ['invoice' => $invoice, 'purchases' => $purchases]);
 		return $pdf->stream('purchase-report-pdf.pdf', array("Attachment" => false));
 	}
+
+
+
+
+	//barcode
+	public function addBarcode($id){
+		//return $id;
+		return view('admin.PurchaseManagement.purchase.barcode.barcodeIndex');
+	}
+
+
+
+
 }

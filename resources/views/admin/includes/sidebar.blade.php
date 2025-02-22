@@ -92,8 +92,8 @@
                   <li class="sidebar-item"> 
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"> <i class="fa fa-birthday-cake"></i><span class="hide-menu"> Menu Order </span<></a>
                         <ul aria-expanded="false" class="collapse  first-level">
-                        <li class="sidebar-item menu-design"><a href="{{url('sweetsconfectionary/menu/getMenu_itms_list')}}" class="sidebar-link"><i class="fas fa-bars"></i><span class="hide-menu"> Menu</span></a></li>
-                        <li class="sidebar-item menu-design"><a href="{{url('sweetsconfectionary/table/view')}}" class="sidebar-link"><i class="fas fa-bars"></i><span class="hide-menu"> Table</span></a></li>
+                        <li class="sidebar-item menu-design"><a href="{{url('sweetsconfectionary/menu/getMenu_itms_list')}}" class="sidebar-link"><i class="fas fa-bars"></i><span class="hide-menu"> Walkin Sale</span></a></li>
+                        <li class="sidebar-item menu-design"><a href="{{url('sweetsconfectionary/table/view')}}" class="sidebar-link d-none"><i class="fas fa-bars"></i><span class="hide-menu"> Table</span></a></li>
                         <li class="sidebar-item menu-design"><a href="{{url('sweetsconfectionary/order/view')}}" class="sidebar-link"><i class="fas fa-bars"></i><span class="hide-menu"> Order</span></a></li>
                         <li class="sidebar-item menu-design"><a href="{{url('sweetsconfectionary/order/list')}}" class="sidebar-link"><i class="fas fa-bars"></i><span class="hide-menu"> Order List</span></a></li>
                         </ul>
