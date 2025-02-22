@@ -77,12 +77,12 @@
                                     <div class="card col-lg-4 col-md-3 col-sm-4 col-4 col-xl-2 p-2">
                                         <div class="image-container text-center position-relative">
                                             <img src="{{asset('upload/product_images/thumbs/' . $menu->image)}}" class="card-img-top img-fluid" alt="{{$menu->image}}" />
-                                            <div class="position-absolute w-100 d-flex justify-content-center" style="top: 50%; transform: translateY(-50%);">
+                                            <div class="position-absolute w-100 d-flex justify-content-between" style="top: 100%; transform: translateY(-50%);">
                                                 <a href="#" class="btn btn-primary mx-1" onclick="menudetailsmodal({{$menu->id}})">
-                                                    <i class="fa fa-eye"></i>
+                                                    <i class="fa fa-eye"> Details</i>
                                                 </a>
                                                 <a href="#" class="btn btn-primary mx-1" onclick="addmenuitemtocard({{$menu->id}})">
-                                                    <i class="fa fa-shopping-cart"></i>
+                                                    <i class="fa fa-shopping-cart"> Buy</i>
                                                 </a>
                                             </div>
                                         </div>
@@ -135,27 +135,36 @@
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Discount:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="discount" value="0"></td>
+                                            <td colspan="2"> <input class="form-control text-right" id="discount" value="0" onkeyup="calculateGrandTotal()"></td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Vat:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="vat" value="0"> </td>
+                                            <td colspan="2"> <input class="form-control text-right" id="vat" value="0" onkeyup="calculateGrandTotal()"> </td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Ait:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="ait" value="0"> </td>
+                                            <td colspan="2"> <input class="form-control text-right" id="ait" value="0" onkeyup="calculateGrandTotal()"> </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Grand Total:</td>
+                                            <td colspan="2" class="text-right"> <span id="grandTotal"></span> </td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Payment Method:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="ait" value="0"> </td>
+                                            <td colspan="2"> 
+                                                <select class="form-control" id="payment_method">
+                                                    <option value="1">Cash</option>
+                                                </select>
+                                             </td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Payment:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="paymentt" value="0"> </td>
+                                            <td colspan="2"> <input class="form-control text-right" value="0" id="payment" > </td>
                                             <td></td>
                                         </tr>
                                     </tfoot>
@@ -552,6 +561,7 @@ document.getElementById('savechangesbreakquantity').addEventListener('click', fu
         success: function(result) {
            // alert(JSON.stringify(result));
             fetch_menu_Cart_item();
+            
             $("#broken_quantity_break").val('');
             $("#break_slice_sell_price").val('');
             $("#slice_quantity_break").val('');
@@ -618,6 +628,7 @@ function clearCart() {
                 datatype: "json",
                 success: function(result) {
                     fetch_menu_Cart_item();
+
                 },
                 beforeSend: function() {
                     $('#loading').show();
@@ -781,9 +792,10 @@ function fetch_menu_Cart_item() {
         url: "{{ route('sweetsconfectionary.menu.fetch_menu_Cart_item') }}",
         method: "GET",
         success: function(result) {
-            alert(JSON.stringify(result));
+            //alert(JSON.stringify(result));
             $("#manu_item_table_card").html(result.cart);
             $("#totalAmount").text(result.totalAmount);
+            calculateGrandTotal();
         },
         error: function(response) {
            // alert(JSON.stringify(response));
@@ -889,10 +901,22 @@ function updatemenuCart(menu_id, userId) {
     });
 }
 
+
+
+ function calculateGrandTotal(){
+    var totalAmount=$('#totalAmount').text();
+    var discount=$('#discount').val();
+    var vat = $('#vat').val();
+    var ait=$('#ait').val();
+    var grandTotal=parseFloat(totalAmount)-parseFloat(discount)+parseFloat(vat)+parseFloat(ait);
+    $('#grandTotal').text(grandTotal);
+    $('#payment').val(grandTotal);
+ }
+
+
+
 function loadmenuCartandUpdate(menu_id, userId) {
-
     updatemenuCart(menu_id, userId);
-
 }
 
 
