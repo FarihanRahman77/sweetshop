@@ -171,5 +171,13 @@
         function purchaseReturn(id) {
             window.location.href = "{{ url('purchase/purchase-return') }}" + "/" + id;
         }
+
+        function addBarcode(id){
+            var url = '{{ route('purchase.add.barcode', ':id') }}';
+            url = url.replace(':id', id);
+            window.open(url);
+        }
+
+
     </script>
 @endsection

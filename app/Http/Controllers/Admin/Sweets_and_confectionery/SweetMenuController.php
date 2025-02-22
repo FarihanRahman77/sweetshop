@@ -583,27 +583,27 @@ class SweetMenuController extends Controller
                 $cart .= '<tr class="text-center" width="100%">  
                                 <input type="hidden" name="ids[]" id="id_' . $product_id . '" value="' . $product_id . '"/><input type="hidden" name="user_id[]" id="user_id_' . $userId . '" value="' . $product_id . '" />
                                 <input type="hidden" name="min_price[]"  id="min_price_' . $product_id . '_' . $userId . '"   value="' . $menu_price_after_discount . '"/>
-                                <td width="15%" class="p-1"> 
+                                <td  class="p-1"> 
                                     <img class="img-fluid rounded-circle" src="' . asset('upload/product_images/thumbs/' . $menu_image) . '" alt="' . $menu_image . '"  id="carditemimg" /> 
                                 </td>
-                                <td width="25%" class="p-1">
+                                <td class="p-1">
                                     ' . $menu_name . '
                                 </td>
-                                <td width="20%" class="p-1"> 
-                                    <input type="number" class="form-control text-center" style="width: 100%;"  id="menu_quantity_' . $product_id . '_' . $userId . '" name="menu_quantity[]" oninput="loadmenuCartandUpdate(' . $product_id . ',' . $userId . ')" value="'. $menu_quantity . '" step="1" min="0"/>
+                                <td class="p-1">
+                                    <input type="text" class="form-control text-center" style="width: 100%;"  id="menu_quantity_' . $product_id . '_' . $userId . '" name="menu_quantity[]" oninput="loadmenuCartandUpdate(' . $product_id . ',' . $userId . ');validateNumericInput(this);" value="'. $menu_quantity . '" step="1" min="0" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                                 </td>
-                                <td width="10%" class="p-1" id="menubreak_item_subtotal">
+                                <td class="p-1" id="menubreak_item_subtotal">
                                     ' .$menu_broken_Sell_quantity. '
                                 </td>
-                                <td  width="10%" class="p-1" id="menusubtotal">
+                                <td class="p-1" id="menusubtotal">
                                     ' .$subtotal.'
                                 </td>
                                 
-                                <td width="10%" class="p-1" id="menubreak_item_subtotal_price">
+                                <td class="p-1" id="menubreak_item_subtotal_price">
                                     ' .$subtotal_show. '
                                 </td>
 
-                                <td width="10%" class="d-flex justify-content-right">
+                                <td class="d-flex justify-content-right">
                                     <a href="#" onclick="deleteCartItem('.$product_id.','.$userId.')" class="text-danger mx-2"> <i class="fa fa-trash text-danger"></i> </a>
                                     <a href="#" onclick="cutitems('.$product_id.')"  class="text-danger mx-2"> <i class="fas fa-box-open text-danger"></i> </a>
                                 </td>
@@ -612,13 +612,9 @@ class SweetMenuController extends Controller
 
                 $grandTotal += $subtotal_show; 
                 }
-                $Grandtotal_amount = (float)$grandTotal; 
+                //$Grandtotal_amount = (float)$grandTotal; 
               
-                $cart .= '<tr>
-                                <td colspan="5" class="text-right">Total Tk:</td>
-                                <td  class="text-right" > <span id="totalAmount"> ' . $Grandtotal_amount . '<sapn></td>
-                                <td></td>
-                         </tr>';
+                
             } 
             
             
