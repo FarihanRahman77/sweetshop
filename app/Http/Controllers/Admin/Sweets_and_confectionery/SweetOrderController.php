@@ -883,7 +883,8 @@ public function EditcheckoutOrder(Request $request)
     }
 }
 
- public function getorderlist(Request $request, $filterByTypeDateParty) {
+public function getorderlist(Request $request, $filterByTypeDateParty) {
+    
     $filterbytable = '';
     $filter = Carbon::now()->toDateString();
 
@@ -895,81 +896,133 @@ public function EditcheckoutOrder(Request $request)
     if ($filterDays !== "Today" && $filterDays !== 'FilterBytable') {
         $filter = Carbon::now()->subDays($filterDays)->format('Y-m-d'); 
     }
+ 
+  
 
-
-    if (count($filterByDatetableArray) == 2 && !empty($filterByDatetableArray[1])) {
-        $filterbytable = $filterByDatetableArray[1]; 
-    }
+    // if (count($filterByDatetableArray) == 2 && !empty($filterByDatetableArray[1])) {
+    //     $filterbytable = $filterByDatetableArray[1]; 
+    // }
 
  
-    $orderdata = DB::table('tbl_restaurant_order_details')
-        ->leftJoin('tbl_restaurant_order', 'tbl_restaurant_order_details.order_id', '=', 'tbl_restaurant_order.id')
-        ->leftJoin('tables', 'tbl_restaurant_order.id', '=', 'tables.id')
-        ->leftJoin('menus', 'tbl_restaurant_order_details.menu_id', '=', 'menus.id')
-        ->leftJoin('tbl_crm_parties', 'tbl_restaurant_order.party_id', '=', 'tbl_crm_parties.id')
-        ->select(
-            'tbl_restaurant_order_details.id', 
-            'tbl_restaurant_order_details.menu_quantity', 
-            'tbl_restaurant_order.id as order_id', 
-            'tbl_restaurant_order.paid_amount', 
-            'tbl_restaurant_order.order_status', 
-            'tbl_restaurant_order.table_id',
-            'tbl_restaurant_order_details.menu_id', 
-            'tbl_crm_parties.name AS party_name', 
-            'tbl_crm_parties.code AS party_code', 
-            'tbl_crm_parties.contact AS party_contact', 
-            'tables.name AS table_name', 
-            'menus.name AS menu_name',
-            'tbl_restaurant_order.order_date', 
-            'tbl_restaurant_order.due', 
-            'tbl_restaurant_order.grand_total AS order_total',
-            'tbl_restaurant_order.party_id'
-        )
-        ->where('tbl_restaurant_order_details.deleted', 'No') 
-        ->where('tbl_restaurant_order.deleted', 'No') 
-        ->when(!empty($filter), function ($query) use ($filter) {  
-            $query->where('tbl_restaurant_order.order_date', '>=', $filter);
-        })
-        ->when(!empty($filterbytable), function ($query) use ($filterbytable) {   
-            $query->where('tbl_restaurant_order.table_id', $filterbytable);
-        })
-        ->orderby('tbl_restaurant_order_details.id', 'DESC') 
-        ->get();
+ $orderdata = DB::table('tbl_restaurant_order')
+    ->leftJoin('tbl_restaurant_order_details', 'tbl_restaurant_order.id', '=', 'tbl_restaurant_order_details.order_id')
+    ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
+    ->leftJoin('tbl_voucher_payment_vouchers', 'tbl_restaurant_order.id', '=', 'tbl_voucher_payment_vouchers.resturant_order_id')
+    ->leftJoin('tbl_crm_parties', 'tbl_restaurant_order.party_id', '=', 'tbl_crm_parties.id')
+    ->select(
+        'tbl_restaurant_order.id as order_id', 
+        'tbl_restaurant_order.paid_amount', 
+        'tbl_restaurant_order.vat', 
+        'tbl_restaurant_order.code', 
+        'tbl_restaurant_order.grand_discount', 
+        'tbl_restaurant_order.order_status', 
+        'tbl_restaurant_order.table_id',
+        'tbl_restaurant_order.order_date', 
+        'tbl_restaurant_order.due', 
+        'tbl_restaurant_order.grand_discount', 
+        'tbl_restaurant_order.grand_total AS order_total',
+        'tbl_restaurant_order.party_id',
+        'tbl_voucher_payment_vouchers.payment_method',
+        'tbl_restaurant_order_details.id AS order_detail_id',
+        'tbl_restaurant_order_details.menu_quantity', 
+        'tbl_restaurant_order_details.menu_id', 
+        'tbl_restaurant_order_details.product_broken_type', 
+        'tbl_restaurant_order_details.unit_total_price', 
+        'tbl_restaurant_order_details.unit_price', 
+        'tbl_restaurant_order_details.sub_quantity', 
+        'tbl_restaurant_order_details.sub_unit_price',
+        'tbl_crm_parties.name AS party_name', 
+        'tbl_crm_parties.code AS party_code', 
+        'tbl_crm_parties.contact AS party_contact', 
+        'tbl_crm_parties.address AS party_address', 
+        'tbl_inventory_products.name AS menu_name'
+    )
+   
+    ->where('tbl_restaurant_order.deleted', 'No')
+    ->where('tbl_restaurant_order_details.deleted', 'No')
+    ->when(!empty($filter), function ($query) use ($filter) {  
+        $query->where('tbl_restaurant_order.order_date', '>=', $filter);
+    })
+   
+    ->orderBy('tbl_restaurant_order.id', 'DESC')
+    ->get();
 
 
     $output = array('data' => array());
-    $i = 1;
-    foreach ($orderdata as $orders) {
-        $status = $orders->order_status == 'Open'
-        ? '<center><i class="fas fa-check-circle" style="color:green; font-size:16px;" title="' . $orders->order_status . '"></i></center>'
-        : ($orders->order_status == 'Pending'
-            ? '<center><i class="fas fa-times-circle" style="color:Yellow; font-size:16px;" title="' . $orders->order_status . '"></i></center>'
-            : '<center><i class="fas fa-times-circle" style="color:red; font-size:16px;" title="' . $orders->order_status . '"></i></center>');
+    $groupedOrders = []; 
     
-
+    foreach ($orderdata as $orders) {
+      
+        if (!isset($groupedOrders[$orders->order_id])) {
+            
+            $groupedOrders[$orders->order_id] = [
+                'menu_items' => '',
+                'party_name' => $orders->party_name,
+                'product_broken_type' => $orders->product_broken_type,
+                'party_address' => $orders->party_address,
+                'sub_quantity' => $orders->sub_quantity,
+                'paid_amount' => $orders->paid_amount,
+                'payment_method' => $orders->payment_method,
+                'code' => $orders->code,
+                'grand_discount' => $orders->grand_discount,
+                'vat' => $orders->vat,
+                'sub_unit_price' => $orders->sub_unit_price,
+                'party_contact' => $orders->party_contact,
+                'order_total' => $orders->order_total,
+                'due' => $orders->due,
+                'order_status' => $orders->order_status,
+                'order_date' => $orders->order_date,
+                'order_id' => $orders->order_id
+            ];
+        }
+    
+                if ($orders->product_broken_type == 'Yes'){
+                $qty=$orders->sub_quantity.' '.'piece';
+                $unitPrice=$orders->sub_unit_price;
+            }else{
+                $qty=$orders->menu_quantity;
+                $unitPrice=$orders->unit_price;
+            }
+      
+        // $groupedOrders[$orders->order_id]['menu_items'] .= '<b>Menu Name: </b>' . $orders->menu_name . '<br><b>Menu Quantity: </b>' . $qty. '<br>'.'<br>';
+    }
+    
+ 
+    $i = 1;
+    foreach ($groupedOrders as $order) {
+        $status = $order['order_status'] == 'Open'
+            ? '<center><i class="fas fa-check-circle" style="color:green; font-size:16px;" title="' . $order['order_status'] . '"></i></center>'
+            : ($order['order_status'] == 'Pending'
+                ? '<center><i class="fas fa-times-circle" style="color:Yellow; font-size:16px;" title="' . $order['order_status'] . '"></i></center>'
+                : '<center><i class="fas fa-times-circle" style="color:red; font-size:16px;" title="' . $order['order_status'] . '"></i></center>');
+        
         $button = '<td style="width: 12%;">
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                 <i class="fas fa-cog"></i>  <span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid gray;" role="menu">
-                                 <li class="action" onclick="edit(' . $orders->order_id . ')"  ><a  class="btn" ><i class="fas fa-edit"></i> Edit </a></li>
-                                 <li class="action"><a class="btn" onclick="confirmDelete(' . $orders->order_id . ')"><i class="fas fa-trash-alt"></i> Delete</a></li>
-                              <li class="action"><a class="btn" onclick="printorderBill(' . $orders->order_id  . ')"><i class="fas fa-file-pdf"></i> Invoice</a></li>
+                               
+                                 <li class="action"><a class="btn" onclick="confirmDelete(' . $order['order_id'] . ')"><i class="fas fa-trash-alt"></i> Delete</a></li>
+                                 <li class="action"><a class="btn" onclick="printorderBill(' . $order['order_id']  . ')"><i class="fas fa-file-pdf"></i> Invoice</a></li>
                                 </ul>
                             </div>
                         </td>'; 
+                        
         $output['data'][] = array(
-            $i++ . '<input type="hidden" name="id" id="id" value="' . $orders->order_id . '" />',
-            '<b>Menu Name: </b>' . $orders->menu_name .  '<br><b>Menu Quantity: </b>' .$orders->menu_quantity .'<br><b>Table : </b>' . $orders->table_name .'<br><b>Order date: </b>' . $orders->order_date,
-            '<b>Party: </b>' . $orders->party_name . '<br><b>Contact: </b>' . $orders->party_contact,
-            '<b>Total: </b>'. $orders->order_total . '<br><b>Due: </b>' . $orders->due,
-             $orders->order_status ,
+            $i++ . '<input type="hidden" name="id" id="id" value="' . $order['order_id'] . '" />',
+         $order['code'],
+            '<b>Order date: </b>' . $order['order_date'],
+         '<b>Party: </b>' . $order['party_name'] . '<br><b>Contact: </b>' . $order['party_contact'] . '<br><b>Address: </b>' . $order['party_address'],
+            '<b>Total: </b>'. $order['order_total']. '<br><b>Discount: </b>' . $order['grand_discount']. '<br><b>vat: </b>' . $order['vat']. '<br><b>Grand Total: </b>' . $order['order_total']. '<br><b>Paid Amount: </b>' . $order['paid_amount'] ,
+            '<b>Payment Method: </b>'. $order['payment_method'] ,
+            $order['order_status'],
             $button
         );
     }
-
+    
     return $output;
 }
+
 
 public function listedit(Request $request){
     $orders =  Order::find($request->id);
