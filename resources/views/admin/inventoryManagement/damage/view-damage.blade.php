@@ -53,12 +53,13 @@
 
                         <input type="hidden" name="id">
                         <div class="form-group row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label> Date <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="date" type="date" name="date"
                                     value="{{ date('Y-m-d') }}">
                                 <span class="text-danger" id="nameError"></span>
                             </div>
+                           
                             <div class="col-md-6">
                                 <label> Product <span class="text-danger"> * </span></label>
                                 <select class="form-control input-sm" id="productId" name="productId">
@@ -79,11 +80,26 @@
                                 </select>
                                 <span class="text-danger" id="stock_warehouseError"></span>
                             </div>
+                            <div class="col-md-6">
+                                <label> Product Type<span class="text-danger"> * </span></label>
+                                <select class="form-control input-sm" id="producttype" name="producttype">
+                                    <option value="">Select Product Type</option>
+                                        <option value="regular">Regular</option>
+                                        <option value="broken">Broken</option>
+                                </select>
+                                <span class="text-danger" id="producttypeError"></span>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <label> Current Stock</label>
                                 <input class="form-control input-sm" id="current_stock" type="text" name="current_stock"
+                                    Disabled>
+                                <span class="text-danger" id="nameError"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label> Broken Item Stock</label>
+                                <input class="form-control input-sm" id="damagebroken_quantity" type="text" name="damagebroken_quantity"
                                     Disabled>
                                 <span class="text-danger" id="nameError"></span>
                             </div>
@@ -160,6 +176,7 @@
                     contentType: false,
                     processData: false,
                     success: function(result) {
+                        // alert(JSON.stringify(result));
                         let viewWarehouse = '<option value="" selected>Select Warehouse</option>';
                         for (warehouse of result) {
                             viewWarehouse += '<option value="' + warehouse.id + '" >' + warehouse
@@ -168,6 +185,7 @@
                         $("#warehouse").html(viewWarehouse);
                     },
                     error: function(response) {
+                        // alert(JSON.stringify(response));
                         Swal.fire("Error!", result.response, "error");
                     },
                     beforeSend: function() {
@@ -198,7 +216,7 @@
                     processData: false,
                     success: function(result) {
                         // alert(JSON.stringify(result));
-                        $("#current_stock").val(result);
+                        // $("#current_stock").val(result);
                     },
                     error: function(response) {
                         // alert(JSON.stringify(response));
@@ -216,21 +234,68 @@
             }
         });
 
+
+
+        $("#producttype").change(function() {
+            var productId = $("#productId").val();
+            var Product_Type = $("#producttype").val();
+            var warehouse_id = $("#warehouse").val();
+
+         if (productId != "") {
+                var _token = $('input[name="_token"]').val();
+                var fd = new FormData();
+                fd.append('product_id', productId);
+                fd.append('warehouse_id', warehouse_id);
+                fd.append('Product_Type', Product_Type);
+                fd.append('_token', _token);
+                $.ajax({
+                    url: "{{ route('getStockByProduct_type') }}",
+                    method: "POST",
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(result) {
+                      alert(JSON.stringify(result));
+                           if (result.type === 'regular') {
+                            $("#current_stock").val(result.currentStock);
+                        } else if (result.type === 'broken') {
+                            $("#damagebroken_quantity").val(result.currentStock);
+                        }
+                                    },
+                    error: function(response) {
+                       alert(JSON.stringify(response));
+                        Swal.fire("Error!", result.response, "error");
+                    },
+                    beforeSend: function() {
+                        $('#loading').show();
+                    },
+                    complete: function() {
+                        $('#loading').hide();
+                    }
+                })
+            } else {
+                alert('Select Product First');
+                $("#current_stock").val(0);
+            }
+        });
+
         $("#damageForm").submit(function(e) {
             e.preventDefault();
             clearMessages();
             var products_id = $("#productId").val();
             var damage_quantity = $("#damage_quantity").val();
+            var damagebroken_quantity = $("#damagebroken_quantity").val();
             var current_stock = $("#current_stock").val();
             var warehouse_id = $("#warehouse").val();
             var remarks = $("#remark").val();
             var damage_date = $("#date").val();
             var _token = $('input[name="_token"]').val();
-            if (parseInt(damage_quantity) <= parseInt(current_stock)) {
+            if (parseInt(damage_quantity) <= parseInt(current_stock) || parseInt(damage_quantity) <= parseInt(damagebroken_quantity)) {
                 var fd = new FormData();
                 fd.append('products_id', products_id);
                 fd.append('warehouse_id', warehouse_id);
                 fd.append('damage_quantity', damage_quantity);
+                fd.append('damagebroken_quantity', damagebroken_quantity);
                 fd.append('remarks', remarks);
                 fd.append('damage_date', damage_date);
                 fd.append('_token', _token);
