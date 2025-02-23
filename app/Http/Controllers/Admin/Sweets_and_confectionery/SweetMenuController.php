@@ -57,6 +57,7 @@ class SweetMenuController extends Controller
             ->where('tbl_setups_sisterconcern_categories.status', '=', 'Active')
             ->where('tbl_setups_categories.status', '=', 'Active')
             ->get();
+        
         return view('admin.Sweets_and_confectionery.menu.menuAdd', ['categories' => $categories]);
     }
 
@@ -172,15 +173,13 @@ class SweetMenuController extends Controller
 
     public function checkoutmenuOrder(Request $request)
     {  
-         
-//   return $request;
+        // return $request;
         $Party_id = $request->partyid;
 
      
         $party = Party::find($Party_id);
         
         if (!$party) {
-           
             $party = new Party();
             $party->name = $request->partyname;
             $party->contact = $request->partyPhoneNumber;
@@ -192,8 +191,6 @@ class SweetMenuController extends Controller
             $party->deleted = 'No';
             $party->status = 'Active';
             $party->save();
-        
-          
             $Party_id = $party->id;
         }
         $totalAmount = $request->grandTotal;
@@ -207,7 +204,6 @@ class SweetMenuController extends Controller
         }
         
         DB::beginTransaction();
-    
         try {
             $cartData = Session::get($cartString);
             $maxCode = OrderModel::where('deleted', 'No')->max('code');
@@ -290,10 +286,6 @@ class SweetMenuController extends Controller
                 $Currentstock_insert->save();
             }
 
-              
-
-
-
             }
         
             if (floatval($totalAmount) > 0) {
@@ -315,32 +307,32 @@ class SweetMenuController extends Controller
                 $paymentVoucher->entryBy  = auth()->user()->id;
                 $paymentVoucher->save(); 
             }
-                                    $voucher = new AccountsVoucher();
-                                    $voucher->tbl_resturantOrder_id  = $order_id;
-                                    $voucher->vendor_id = $Party_id;
-                                    $voucher->transaction_date = now();
-                                    $voucher->amount = floatval($totalAmount);
-                                    $voucher->payment_method = 'Cash';
-                                    $voucher->deleted = "No";
-                                    $voucher->status = "Active";
-                                    $voucher->created_by = Auth::user()->id;
-                                    $voucher->created_date = date('Y-m-d h:s');
-                                    $voucher->save();
-    
-    
-                                    $voucherId = $voucher->id;
-                                    $salesCoaId = ChartOfAccounts::where('slug', '=', 'Sales')->first()->id;
-                                    $voucherDetails = new AccountsVoucherDetails();
-                                    $voucherDetails->tbl_acc_voucher_id = $voucherId;
-                                    $voucherDetails->tbl_acc_coa_id = $salesCoaId;
-                                    $voucherDetails->transaction_date = now();
-                                    $voucherDetails->credit = floatval($totalAmount);
-                                    $voucherDetails->voucher_title = 'Order amount paid ' . $totalAmount . ' Tk , Date:  '. (new \DateTime())->format('Y-m-d H:i:s');
-                                    $voucherDetails->deleted = "No";
-                                    $voucherDetails->status = "Active";
-                                    $voucherDetails->created_by = Auth::user()->id;
-                                    $voucherDetails->created_date = date('Y-m-d h:s');
-                                    $voucherDetails->save();
+                $voucher = new AccountsVoucher();
+                $voucher->tbl_resturantOrder_id  = $order_id;
+                $voucher->vendor_id = $Party_id;
+                $voucher->transaction_date = now();
+                $voucher->amount = floatval($totalAmount);
+                $voucher->payment_method = 'Cash';
+                $voucher->deleted = "No";
+                $voucher->status = "Active";
+                $voucher->created_by = Auth::user()->id;
+                $voucher->created_date = date('Y-m-d h:s');
+                $voucher->save();
+
+
+                $voucherId = $voucher->id;
+                $salesCoaId = ChartOfAccounts::where('slug', '=', 'Sales')->first()->id;
+                $voucherDetails = new AccountsVoucherDetails();
+                $voucherDetails->tbl_acc_voucher_id = $voucherId;
+                $voucherDetails->tbl_acc_coa_id = $salesCoaId;
+                $voucherDetails->transaction_date = now();
+                $voucherDetails->credit = floatval($totalAmount);
+                $voucherDetails->voucher_title = 'Order amount paid ' . $totalAmount . ' Tk , Date:  '. (new \DateTime())->format('Y-m-d H:i:s');
+                $voucherDetails->deleted = "No";
+                $voucherDetails->status = "Active";
+                $voucherDetails->created_by = Auth::user()->id;
+                $voucherDetails->created_date = date('Y-m-d h:s');
+                $voucherDetails->save();
             Session::forget($cartString);
             DB::commit();
             return response()->json(['status' => 'success', 'message' => 'Order successfully placed', 'menuorder_id' => $order->id]);
@@ -365,8 +357,8 @@ class SweetMenuController extends Controller
             ->where('tbl_setups_categories.status', '=', 'Active')
             ->get();
 
-
-        return view('admin.Sweets_and_confectionery.menu.menu_itms_lists', ['categories' => $categories]);
+        $defaultParty=Party::find(1);
+        return view('admin.Sweets_and_confectionery.menu.menu_itms_lists', ['categories' => $categories,'defaultParty'=>$defaultParty]);
     }
 
 
@@ -630,6 +622,10 @@ class SweetMenuController extends Controller
         return response()->json($data);
     }
 
+
+
+
+
     public function fetch_menu_Cart_item_modaldata(Request $request)
     {
          // return $request;
@@ -695,6 +691,9 @@ class SweetMenuController extends Controller
 
 
 
+
+
+
     public function removeCartmenuitem(Request $request)
     {
       
@@ -721,29 +720,29 @@ class SweetMenuController extends Controller
 
 
 
+
+
+
     public function updateCartmenuitem(Request $request){
         $data = ""; 
-    $userId=$request->userId;
-    $menuId=$request->menu_id;
-    $cartString = 'menu_item_purchase_cart_array_' . $userId;
-    $cartData = Session::get($cartString);
-       
-        if ($cartData) {
-            foreach ($cartData as $key => $value) {
-                if ($value['product_id'] == $menuId && $value['user_id'] == $userId) {
-                    $cartData[$key]['menu_quantity'] = $request->menu_quantity;
-                    $cartData[$key]['menu_price_after_discount'] = $request->min_price;
-                    Session::put($cartString, $cartData);
-                    $data = ["status" => "success", "message" => "Cart updated successfully."];
-                    break; 
+        $userId=$request->userId;
+        $menuId=$request->menu_id;
+        $cartString = 'menu_item_purchase_cart_array_' . $userId;
+        $cartData = Session::get($cartString);
+        
+            if ($cartData) {
+                foreach ($cartData as $key => $value) {
+                    if ($value['product_id'] == $menuId && $value['user_id'] == $userId) {
+                        $cartData[$key]['menu_quantity'] = $request->menu_quantity;
+                        $cartData[$key]['menu_price_after_discount'] = $request->min_price;
+                        Session::put($cartString, $cartData);
+                        $data = ["status" => "success", "message" => "Cart updated successfully."];
+                        break; 
+                    }
                 }
-            }
-    } else {
-        
-        $data = ["status" => "error", "message" => "Cart data not found."];
-    }
-
-        
+        } else {
+            $data = ["status" => "error", "message" => "Cart data not found."];
+        }
         return response()->json($data); 
     }
 
@@ -775,9 +774,7 @@ class SweetMenuController extends Controller
                 
                 $data = ["status" => "error", "message" => "Cart data not found."];
             }
-        
-                
-                return response()->json($data);
+            return response()->json($data);
          }
 
 

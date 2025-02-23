@@ -135,17 +135,17 @@
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Discount:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="discount" value="0" onkeyup="calculateGrandTotal()"></td>
+                                            <td colspan="2"> <input class="form-control text-right" id="discount" value="0" onkeyup="calculateGrandTotal()" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';" ></td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Vat:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="vat" value="0" onkeyup="calculateGrandTotal()"> </td>
+                                            <td colspan="2"> <input class="form-control text-right" id="vat" value="0" onkeyup="calculateGrandTotal()" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';"> </td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Ait:</td>
-                                            <td colspan="2"> <input class="form-control text-right" id="ait" value="0" onkeyup="calculateGrandTotal()"> </td>
+                                            <td colspan="2"> <input class="form-control text-right" id="ait" value="0" onkeyup="calculateGrandTotal()" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';"> </td>
                                             <td></td>
                                         </tr>
                                         <tr>
@@ -164,7 +164,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Payment:</td>
-                                            <td colspan="2"> <input class="form-control text-right" value="0" id="payment" > </td>
+                                            <td colspan="2"> <input class="form-control text-right" value="0" id="payment" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';"> </td>
                                             <td></td>
                                         </tr>
                                     </tfoot>
@@ -172,16 +172,15 @@
                             </div>
                             <div class="form-group">
                                 <label>Customer Name</label>
-                                <input type="text" name="customerName" id="customerName" class="form-control"
+                                <input type="text" name="customerName" id="customerName" class="form-control"  value="{{$defaultParty->name}}"
                                     placeholder="Customer Name">
                             </div>
                             <div class="form-group">
                                 <input type="hidden" id="party_id" name="party_id" value="0" />
                                 <label>Phone: <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <input type="text" id="partyPhoneNumber" name="partyPhoneNumber"
-                                        class="form-control" placeholder="Phone Number"
-                                        onchange="getCustomerInfo(0,'Walkin_Customer')"
+                                    <input type="text" id="partyPhoneNumber" name="partyPhoneNumber" class="form-control" placeholder="Phone Number"
+                                        onchange="getCustomerInfo(0,'Walkin_Customer')" value="{{$defaultParty->contact}}"
                                         oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-danger" type="button"
@@ -353,6 +352,8 @@ $(document).ready(function() {
 });
 function validateNumericInput(input) {
     input.value = input.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+     if(input.value === '') 
+     input.value = '0';
 }
 
 function scrollTabs(direction) {
@@ -656,15 +657,28 @@ function placeOrder() {
     var breakslicepRiece = document.getElementById('break_slice_price').value;
     let break_item_subtotal = $("#menubreak_item_subtotal").text();
     let break_item_subtotal_price = $("#menubreak_item_subtotal_price").text();
-    var grandTotal = $("#totalAmount").text();
+    var totalAmount = $("#totalAmount").text();
+    var discount = $("#discount").val();
+    var vat = $("#vat").val();
+    var ait = $("#ait").val();
+    var grandTotal =  $('#grandTotal').val();
+    var payment_method =  $('#payment_method').val();
+    var payment =  $('#payment').val();
     var fd = new FormData();
-    fd.append('grandTotal', grandTotal);
+    fd.append('totalAmount', totalAmount);
     fd.append('breakslicepRiece', breakslicepRiece);
     fd.append('break_item_subtotal', break_item_subtotal);
     fd.append('break_item_subtotal_price', break_item_subtotal_price);
     fd.append('partyid', partyid);
     fd.append('partyname', partyname);
     fd.append('partyPhoneNumber', partyPhoneNumber);
+    fd.append('discount', discount);
+    fd.append('vat', vat);
+    fd.append('ait', ait);
+    fd.append('grandTotal', grandTotal);
+    fd.append('payment_method', payment_method);
+    fd.append('payment', payment);
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -677,7 +691,7 @@ function placeOrder() {
         contentType: false,
         processData: false,
         success: function(result) {
-            //alert(JSON.stringify(result));
+            alert(JSON.stringify(result));
             let menuorderId = result.menuorder_id;
             fetch_menu_Cart_item();
             if (result.status === 'success') {
@@ -701,7 +715,7 @@ function placeOrder() {
             }
         },
         error: function(response) {
-            // alert(JSON.stringify(response));
+             alert(JSON.stringify(response));
             alert('Checkout error: ' + JSON.stringify(response));
         }
     });
