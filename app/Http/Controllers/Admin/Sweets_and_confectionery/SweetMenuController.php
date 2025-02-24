@@ -176,7 +176,7 @@ class SweetMenuController extends Controller
 
     public function checkoutmenuOrder(Request $request)
     {  
-        // return $request;
+       // return $request;
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
 
         $Party_id = $request->partyid;
@@ -197,7 +197,7 @@ class SweetMenuController extends Controller
             $Party_id = $party->id;
         }
 
-        //$totalAmount = $request->grandTotal;
+        $totalAmount = $request->totalAmount;
         
         $Current_Balance = '0.00';
         $userId = auth()->user()->id;
@@ -297,22 +297,12 @@ class SweetMenuController extends Controller
                 $maxCode = PaymentVoucher::where('deleted', 'No')->max('voucherNo');
                 $maxCode++;
                 $maxCode = str_pad($maxCode, 6, '000000', STR_PAD_LEFT);
-                $this->storePartyPayable($maxCode, $Party_id, $request->totalAmount, $order->id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Party Payable', $remarks='WalkinSale: ' . ' party payable: ' . $request->totalAmount);
-                
-                $paymentVoucher = new PaymentVoucher();
-                $paymentVoucher->voucherNo = $maxCode;
-                $paymentVoucher->amount = floatval($totalAmount);
-                $paymentVoucher->resturant_order_id = $order->id;
-                $paymentVoucher->party_id = $Party_id;
-                $paymentVoucher->payment_method = 'Cash';
-                $paymentVoucher->paymentDate  = now();
-                $paymentVoucher->discount  ='0.00';
-                $paymentVoucher->type  = 'Payment Received';
-                $paymentVoucher->voucherType  = 'WalkinSale';
-                $paymentVoucher->remarks  = 'WalkinSale: ' . ' payment: ' . $totalAmount;
-                $paymentVoucher->entryBy  = auth()->user()->id;
-                $paymentVoucher->save(); 
-            
+
+                $this->storePartyPayable($maxCode, $Party_id, $request->totalAmount, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Party Payable', $remarks='WalkinSale: ' . ' party payable: ' . $request->totalAmount);
+                if($request->payment >0){
+                    $this->storePaymentReceived($maxCode, $Party_id, $request->payment, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Payment Received', $remarks='WalkinSale: ' . 'payment received: ' . $request->payment);
+                }
+
                 $voucher = new AccountsVoucher();
                 $voucher->tbl_resturantOrder_id  = $order_id;
                 $voucher->vendor_id = $Party_id;
