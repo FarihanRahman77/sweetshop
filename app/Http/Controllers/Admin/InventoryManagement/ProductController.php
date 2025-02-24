@@ -45,11 +45,26 @@ class ProductController extends Controller
         $data['units'] = Unit::where('deleted', 'No')->where('status','=','Active')->get();
         $data['warehouses'] = Warehouse::where('deleted', 'No')->where('status','=','Active')->get();
         $data['sisterconcern'] = DB::table('tbl_settings_company_settings')->where('deleted', 'No')->where('status', 'Active') ->get();
-        
+        $data['logged_sister_concern_id'] = Session::get('companySettings')[0]['id'];
         return view('admin.inventoryManagement.products.view-products', $data);
     }
 
     public function slug_generate(Request $request)
+    {
+     
+        $product = $request->productName;
+        $categories = Category::find($request->categoryName);
+        $brands = Brand::find($request->brandName);
+       $slugSource = $brands->name . ' ' . $categories->name . ' ' . $product;
+    
+   
+    $slug = Str::slug($slugSource, '-');
+    
+  
+    return $slug;
+ 
+    }
+    public function edit_slug_generate(Request $request)
     {
      
         $product = $request->productName;
@@ -71,6 +86,18 @@ class ProductController extends Controller
         ->leftJoin('tbl_setups_warehouses', 'tbl_setups_sister_concern_to_warehouses.warehouse_id', '=', 'tbl_setups_warehouses.id')
         ->select('tbl_setups_sister_concern_to_warehouses.warehouse_id', 'tbl_setups_warehouses.name')
         ->where('tbl_setups_sister_concern_to_warehouses.sister_concern_id', $request->sisterconcern_id)
+        ->where('tbl_setups_warehouses.deleted', 'No')
+        ->where('tbl_setups_sister_concern_to_warehouses.warehouse_id','!=', '0')
+        ->get();
+   
+        return $warehouse_id;
+    }
+    public function sisterconcernwisewarehouseedit(Request $request){
+        // return $request;
+        $warehouse_id = DB::table('tbl_setups_sister_concern_to_warehouses')
+        ->leftJoin('tbl_setups_warehouses', 'tbl_setups_sister_concern_to_warehouses.warehouse_id', '=', 'tbl_setups_warehouses.id')
+        ->select('tbl_setups_sister_concern_to_warehouses.warehouse_id', 'tbl_setups_warehouses.name')
+        ->where('tbl_setups_sister_concern_to_warehouses.sister_concern_id', $request->editsisterconcern_id)
         ->where('tbl_setups_warehouses.deleted', 'No')
         ->where('tbl_setups_sister_concern_to_warehouses.warehouse_id','!=', '0')
         ->get();
@@ -327,7 +354,8 @@ class ProductController extends Controller
             'opening_stock' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'remainder_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'category_id' => 'required',
-            'brand_id' => 'nullable',
+            'sisterconcern' => 'required',
+            'brand_id' => 'required',
              'stock_warehouse' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'unit_id' => 'required',
             'purchase_price' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
@@ -400,6 +428,7 @@ class ProductController extends Controller
             $product->barcode_no = $barcode_no;
             $product->category_id = $request->category_id;
             $product->sister_concern_id = $request->sisterconcern_id;
+            $product->tbl_warehouseid = $request->stock_warehouse;
             $product->slug = $request->slug;
             $product->brand_id = $request->brand_id;
             $product->unit_id = $request->unit_id;
@@ -729,7 +758,8 @@ class ProductController extends Controller
 
 
     public function update(Request $request)
-    {
+    {         
+           return $request;
        
         $discount = $request->discount;
         $lastChar = substr($discount, -1); //get last character
@@ -799,6 +829,9 @@ class ProductController extends Controller
         $product->purchase_price = $request->purchase_price;
         $product->sale_price = $request->sale_price;
         $product->discount = $request->discount;
+        $product->sister_concern_id = $request->sisterconcernid;
+        $product->tbl_warehouseid = $request->stockwarewhouse;
+        $product->slug = $request->Slug;
         $product->status = $request->status;
         $product->notes = $request->notes;
         $product->model_no = $request->model_no;
@@ -1107,7 +1140,7 @@ class ProductController extends Controller
                         $stockEntry->decrement('broken_remaining', $request->damage_quantity);
                         $stockEntry->increment('broken_damage', $request->damage_quantity);
                     }
-                    
+
                 } else {
                     $currentStock = new Currentstock();
                     $currentStock->tbl_productsId = $request->products_id;

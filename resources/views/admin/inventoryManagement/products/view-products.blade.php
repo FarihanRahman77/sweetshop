@@ -97,11 +97,10 @@
                             </div>
                             <div class=" form-group col-md-3">
                                 <label> Select Sisterconcern <span class="text-danger"> * </span></label>
-                                <select class="form-control input-sm" id="sisterconcern" name="sisterconcern" >
-                                    <option value="" selected> Select sisterconcern </option>
+                                <select class="form-control input-sm" id="sisterconcern" name="sisterconcern" onchange="sisterConcernToWarehouse()">
+                                    <option value="" > Select sisterconcern </option>
                                     @foreach ($sisterconcern as $sisterconcer)
-                                        <option  value="{{ $sisterconcer->id }}">{{ $sisterconcer->name }}
-                                        </option>
+                                        <option  value="{{ $sisterconcer->id }}" @if($sisterconcer->id == $logged_sister_concern_id) selected @endif>{{ $sisterconcer->name }}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="sisterconcerError"></span>
@@ -151,29 +150,31 @@
                             </div>
                            
                             <div class="form-group col-md-3">
-                                <label>Minimun Price <span class="text-danger"> * </span></label>
-                                <input class="form-control input-sm" id="minimum_price" type="number"
-                                    name="minimum_price" placeholder=" Minimum price " min="0" onkeyup="validatePrice(this)">
+                                <label >Minimun Price <span class="text-danger"> * </span></label>
+                                <input class="form-control text-right input-sm" id="minimum_price" type="number"
+                                    name="minimum_price" value="0" min="0" 
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
                                 <span class="text-danger" id="minimum_priceError"></span>
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label>Maximun price <span class="text-danger"> * </span></label>
-                                <input class="form-control input-sm" id="maximum_price" type="number"
-                                    name="maximum_price" placeholder=" Maximum price " min="0"  onkeyup="validatePrice(this)">
-                                <span class="text-danger" id="maximum_priceError"></span>
-                            </div>
+                            <label>Maximum Price <span class="text-danger"> * </span></label>
+                            <input class="form-control text-right input-sm" id="maximum_price" type="number" placeholder="0" name="maximum_price" 
+                                oninput="validatePrice(this);this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';"/>
+                            <span class="text-danger" id="maximum_priceError"></span>
+                        </div>
+
                             <div class="form-group col-md-3 ">
                                 <label> Discount Amount</label>
-                                <input class="form-control input-sm" id="discount" type="number" placeholder="Discount" value=""
-                                    name="discount"  onkeyup="validatePrice(this)">
+                                <input class="form-control text-right input-sm" id="discount" type="number"   placeholder="0"
+                                    name="discount"  onkeyup="validatePrice(this);this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
                                 <span class="text-danger" id="discountError"></span>
                             </div>
                             <div class="form-group col-md-3">
                                     <label>Items In Box: <span class="text-danger"></span></label>
                                     <input class="form-control input-sm serialize" id="itemsInBox" type="number"
                                         min="0" name="itemsInBox" placeholder=" Number " onchange="checkType()"
-                                        >
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
                                     <span class="text-danger" id="itemsInBoxError"></span>
                                 </div>
                            
@@ -194,13 +195,14 @@
                                 <label> Opening Stock <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm openingStock" min="0" id="opening_stock"
                                     type="number" name="opening_stock" placeholder="opening stock"
-                                    onchange="checkType()">
+                                    onchange="checkType()"  oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
                                 <span class="text-danger" id="opening_stockError"></span>
                             </div>
                             <div class="form-group col-md-3">
                                 <label> Reminder Stock <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" min="0" id="remainder_quantity"
-                                placeholder="Reminder Stock" type="number" name="remainder_quantity">
+                                placeholder="Reminder Stock" type="number" name="remainder_quantity"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
                                 <span class="text-danger" id="remainder_quantityError"></span>
                             </div>
 
@@ -327,13 +329,13 @@
                             <div class="form-group col-md-3">
                                 <label>Minimum Price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="serviceminimum_price" type="number"
-                                    name="serviceminimum_price" placeholder=" Minimum price " min="0">
+                                    name="serviceminimum_price"  value="0" min="0">
                                 <span class="text-danger" id="serviceminimum_priceError"></span>
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Maximum Price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="servicemaximum_price" type="number"
-                                    name="servicemaximum_price" placeholder=" Maximum price " min="0">
+                                    name="servicemaximum_price" value="0" min="0">
                                 <span class="text-danger" id="servicemaximum_priceError"></span>
                             </div>
                             <div class="form-group col-md-3 d-none">
@@ -484,7 +486,7 @@
                                 <label> Category <span class="text-danger"> * </span></label><br>
                                 <select name="editCategory" id="editCategory" class="form-control input-sm">
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option onchange="editgenerateSlug()" value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="editCategoryError"></span>
@@ -494,15 +496,21 @@
                                 <select name="editBrand" id="editBrand" class="form-control input-sm">
                                     
                                     @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        <option onchange="editgenerateSlug()" value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="editBrandError"></span>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-3">
                                 <label> Product Name <span class="text-danger"> * </span></label>
-                                <input class="form-control input-sm" id="editName" type="text" name="editName">
+                                <input class="form-control input-sm" id="editName" type="text" name="editName" onkeyup="editgenerateSlug()">
                                 <span class="text-danger" id="editNameError"></span>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label> Slug <span class="text-danger"> * </span></label>
+                                <input class="form-control input-sm" id="editslug" type="text" name="editslug"
+                                    placeholder=" Product slug" readonly>
+                                <span class="text-danger" id="nameError"></span>
                             </div>
                             @if (Session::get('companySettings')[0]['barcode_exists'] == 'Yes')
                                 <div class="d-none form-group col-md-6">
@@ -512,7 +520,26 @@
                                     <span class="text-danger" id="editBarcodeError"></span>
                                 </div>
                             @endif
-                           
+                            <div class=" form-group col-md-3">
+                                <label> Select Sisterconcern <span class="text-danger"> * </span></label>
+                                <select class="form-control input-sm" id="editsisterconcern" name="sisterconcern" onchange="editsisterConcernToWarehouse()">
+                                    <option value="" > Select sisterconcern </option>
+                                    @foreach ($sisterconcern as $sisterconcer)
+                                        <option  value="{{ $sisterconcer->id }}" >{{ $sisterconcer->name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger" id="editsisterconcernError"></span>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label> Select Warehouse <span class="text-danger"> * </span></label>
+                                <select class="form-control input-sm" id="editstock_warehouse" name="editstock_warehouse">
+                                    <option value="" selected> Select Warehouse </option>
+                                    @foreach ($warehouses as $warehouse)
+                                        <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger" id="editstock_warehouseError"></span>
+                            </div>
                             <div class="form-group col-md-3" id="UnitDiv">
                                 <label> Unit <span class="text-danger"> * </span></label>
                                 
@@ -524,7 +551,16 @@
                                 </select>
                                 <span class="text-danger" id="editUnitError"></span>
                             </div>
-
+                            <div class="form-group col-md-3" id="StockCheckDiv">
+                                <label> Stock Check <span class="text-danger"> * </span></label>
+                                <select id="editStockCheck" name="editStockCheck" class="form-control input-sm">
+                                    <option value="Yes"> Yes</option>
+                                    <option value="No"> No </option>
+                                </select>
+                                <span class="text-danger" id="stockCheckError"></span>
+                            </div>
+                           
+                           
                             <div class=" d-none form-group col-md-3" id="ModelDiv">
                                 <label>Model No <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="editModelNo" type="text" name="editModelNo">
@@ -533,21 +569,28 @@
                             <div class="form-group col-md-3" >
                                 <label>Minimun Price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="editMinimumPrice" type="number"
-                                    name="editMinimumPrice" placeholder=" Minimum price ">
+                                    name="editMinimumPrice" placeholder=" Minimum price " oninput="validatePrice(this)">
                                 <span class="text-danger" id="editMinimumPriceError"></span>
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Maximun Price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="editMaximumPrice" type="number"
-                                    name="editMaximumPrice" placeholder=" Maximum price ">
+                                    name="editMaximumPrice" placeholder=" Maximum price " oninput="validatePrice(this)">
                                 <span class="text-danger" id="editMaximumPriceError"></span>
                             </div>
-                            <div class="form-group col-md-3 d-none">
+                            <div class="form-group col-md-3 ">
                                 <label> Discount Amount</label>
-                                <input class="form-control input-sm" id="editDiscount" type="text"
-                                    name="editDiscount">
-                                <span class="text-danger" id="editDiscountError"></span>
+                                <input class="form-control text-right input-sm" id="editdiscount" type="number"   placeholder="0"
+                                    name="editdiscount"  oninput="validatePrice(this);this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
+                                <span class="text-danger" id="editdiscountError"></span>
                             </div>
+                            <div class="form-group col-md-3">
+                                    <label>Items In Box: <span class="text-danger"></span></label>
+                                    <input class="form-control input-sm serialize" id="edititemsInBox" type="number"
+                                        min="0" name="edititemsInBox" placeholder=" Number " onchange="checkType()"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
+                                    <span class="text-danger" id="edititemsInBoxBoxError"></span>
+                                </div>
                             <div class="form-group col-md-3" id="OpeningStockDiv">
                                 <label> Opening Stock </label>
                                 <input class="form-control input-sm" id="editOpenStock" type="number"
@@ -583,22 +626,7 @@
                                 </select>
                                 <span class="text-danger" id="typeError"></span>
                             </div>
-                            <div class="form-group col-md-3" id="StockCheckDiv">
-                                <label> Stock Check <span class="text-danger"> * </span></label>
-                                <select id="editStockCheck" name="editStockCheck" class="form-control input-sm">
-                                    <option value="Yes"> Yes</option>
-                                    <option value="No"> No </option>
-                                </select>
-                                <span class="text-danger" id="stockCheckError"></span>
-                            </div>
-                            <div class="d-none row col-md-6" id="editSP">
-                                <div class="form-group col-md-6">
-                                    <label>Pics Per Box: <span class="text-danger"></span></label>
-                                    <input class="form-control input-sm serialize" id="editPicsPerBox" type="text"
-                                        name="editPicsPerBox" disabled>
-                                    <span class="text-danger" id="editPicsPerBoxError"></span>
-                                </div>
-                            </div>
+                          
                             <div class="form-group col-md-12">
                                 <div class="row">
                                     <div class="form-group col-md-3 " id="ImageDiv">
@@ -776,9 +804,85 @@
 
 @section('javascript')
     <script>
+
+       
+          
+            function sisterConcernToWarehouse (){
+            // alert(id);
+            var sisterconcern_id = $("#sisterconcern").val();
+            
+            var _token = $('input[name="_token"]').val();
+                var fd = new FormData();
+                fd.append('sisterconcern_id', sisterconcern_id);
+                fd.append('_token', _token);
+                $.ajax({
+                    url: "{{ route('products.sisterconcernwarehouse') }}",
+                    method: "POST",
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(result) {
+                        // alert(JSON.stringify(result));
+                        let viewWarehouse = '<option value="" selected>Select Warehouse</option>';
+                        for (warehouse of result) {
+                            viewWarehouse += '<option value="' + warehouse.id + '" >' + warehouse
+                                .name + '</option>';
+                        }
+                        $("#stock_warehouse").html(viewWarehouse);
+                    },
+                    error: function(response) {
+                    //   alert(JSON.stringify(response));
+                        Swal.fire("Error!", result.response, "error");
+                    },
+                    beforeSend: function() {
+                        $('#loading').show();
+                    },
+                    complete: function() {
+                        $('#loading').hide();
+                    }
+                })
+            }
+            function editsisterConcernToWarehouse (){
+            // alert(id);
+            var editsisterconcern_id = $("#editsisterconcern").val();
+            
+            var _token = $('input[name="_token"]').val();
+                var fd = new FormData();
+                fd.append('editsisterconcern_id', editsisterconcern_id);
+                fd.append('_token', _token);
+                $.ajax({
+                    url: "{{ route('products.sisterconcerneditwarehouse') }}",
+                    method: "POST",
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(result) {
+                        //  alert(JSON.stringify(result));
+                        let viewWarehouse = '<option value="" selected>Select Warehouse</option>';
+                        for (warehouse of result) {
+                            viewWarehouse += '<option value="' + warehouse.id + '" >' + warehouse
+                                .name + '</option>';
+                        }
+                        $("#editstock_warehouse").html(viewWarehouse);
+                    },
+                    error: function(response) {
+                    //   alert(JSON.stringify(response));
+                        Swal.fire("Error!", result.response, "error");
+                    },
+                    beforeSend: function() {
+                        $('#loading').show();
+                    },
+                    complete: function() {
+                        $('#loading').hide();
+                    }
+                })
+            }
+      
+
         function validatePrice(input) {
         // Replace non-numeric characters (except for decimals) and ensure positive value
         input.value = input.value.replace(/[^0-9.]/g, ''); 
+        
         
         // Ensure there's only one decimal point
         if ((input.value.match(/\./g) || []).length > 1) {
@@ -789,6 +893,7 @@
         if (input.value && parseFloat(input.value) < 0) {
             input.value = ''; // or display an error message
         }
+        
     }
         //=========== Start Serialize Product ===========//
         var serialNumbers = [];
@@ -986,6 +1091,37 @@
 
 
 
+        function editgenerateSlug() {
+            const productName = document.getElementById('editName').value;
+            const brandName = document.getElementById('editBrand').value;
+            const categoryName = document.getElementById('editCategory').value;
+            var _token = $('input[name="_token"]').val();
+            var fd = new FormData();
+                    fd.append('productName', productName);
+                    fd.append('brandName', brandName);
+                    fd.append('categoryName', categoryName);
+                    fd.append('_token', _token);
+            $.ajax({
+                        url: "{{ route('products.editgenerate_slug') }}",
+                        method: "POST",
+                        data: fd,
+                        contentType: false,
+                        processData: false,
+                        success: function(result) {
+                        //    alert(JSON.stringify(result));
+                        $("#editslug").val(result);
+                        },
+                        error: function(response) {
+                            alert(JSON.stringify(response));
+                        
+                        },
+            })
+
+}
+
+
+
+
         function generateSlug() {
             const productName = document.getElementById('name').value;
             const brandName = document.getElementById('brand_id').value;
@@ -1016,41 +1152,7 @@
 
 
 
-$("#sisterconcern").change(function() {
-            // alert(id);
-            var sisterconcern_id = $("#sisterconcern").val();
-            
-            var _token = $('input[name="_token"]').val();
-                var fd = new FormData();
-                fd.append('sisterconcern_id', sisterconcern_id);
-                fd.append('_token', _token);
-                $.ajax({
-                    url: "{{ route('products.sisterconcernwarehouse') }}",
-                    method: "POST",
-                    data: fd,
-                    contentType: false,
-                    processData: false,
-                    success: function(result) {
-                        // alert(JSON.stringify(result));
-                        let viewWarehouse = '<option value="" selected>Select Warehouse</option>';
-                        for (warehouse of result) {
-                            viewWarehouse += '<option value="' + warehouse.id + '" >' + warehouse
-                                .name + '</option>';
-                        }
-                        $("#stock_warehouse").html(viewWarehouse);
-                    },
-                    error: function(response) {
-                      alert(JSON.stringify(response));
-                        Swal.fire("Error!", result.response, "error");
-                    },
-                    beforeSend: function() {
-                        $('#loading').show();
-                    },
-                    complete: function() {
-                        $('#loading').hide();
-                    }
-                })
-            });
+
 
 
 
@@ -1197,6 +1299,7 @@ $("#sisterconcern").change(function() {
         function create() {
             reset();
             $("#modal").modal('show');
+            sisterConcernToWarehouse();
         }
 
         function resetService(){
@@ -1222,6 +1325,7 @@ $("#sisterconcern").change(function() {
                 'ajax': "{{ route('products.getProducts') }}",
                 processing: true,
             });
+            
         });
 
         $("#productForm").submit(function(e) {
@@ -1330,6 +1434,7 @@ $("#sisterconcern").change(function() {
                     $("#barcode_noError").text(response.responseJSON.errors.barcode_no);
                     $("#categoryError").text(response.responseJSON.errors.category_id);
                     $("#brandError").text(response.responseJSON.errors.brand_id);
+                    $("#sisterconcerError").text(response.responseJSON.errors.sisterconcern);
                     $("#unitError").text(response.responseJSON.errors.unit_id);
                     $("#opening_stockError").text(response.responseJSON.errors.opening_stock);
                     $("#remainder_quantityError").text(response.responseJSON.errors.remainder_quantity);
@@ -1469,19 +1574,19 @@ $("#sisterconcern").change(function() {
             $("#code").val("");
             $("#barcode_no").val("");
             $("#model_no").val("");
-            $("#minimum_price").val("");
-            $("#maximum_price").val("");
+            $("#minimum_price").val("0");
+            $("#maximum_price").val("0");
             $("#notes").val("");
             $("#category_id").val("").trigger("change");
             $("#brand_id").val("").trigger("change");
             $("#unit_id").val("").trigger("change");
             $("#stock_warehouse").val("").trigger("change");
-            $("#opening_stock").val("");
-            $("#remainder_quantity").val("");
-            $("#purchase_price").val("");
-            $("#itemsInBox").val("");
+            $("#opening_stock").val("0");
+            $("#remainder_quantity").val("0");
+            $("#purchase_price").val("0");
+            $("#itemsInBox").val("0");
             $("#sale_price").val("");
-            $("#discount").val("");
+            $("#discount").val("0");
             $("#image").val("")
             //$('#showImage').attr('src', "");
             $("#serializeProductTable").html('');
@@ -1514,9 +1619,10 @@ $("#sisterconcern").change(function() {
                 },
                 datatype: "json",
                 success: function(result) {
-                    //alert(JSON.stringify(result));
+                //  alert(JSON.stringify(result));
                     $('.editSpecRow').remove();
                     $("#editModal").modal('show');
+                    editsisterConcernToWarehouse ();
                     if(result[0].type == 'service'){
                         $("#CategoryDiv").hide();
                         $("#BrandDiv").hide();
@@ -1550,15 +1656,17 @@ $("#sisterconcern").change(function() {
                     $("#editCategory").val(result[0].category_id).trigger("change");
                     
                     $("#editUnit").val(result[0].unit_id).trigger("change");
+                    $("#editslug").val(result[0].slug);
                     $("#editModelNo").val(result[0].model_no);
                     $("#editMinimumPrice").val(result[0].purchase_price);
                     $("#editMaximumPrice").val(result[0].sale_price);
+                    $("#editstock_warehouse").val(result[0].tbl_warehouseid);
                     $("#editNotes").val(result[0].notes);
                     let openingStock = result[0].opening_stock;
                     $("#editOpenStock").val(openingStock);
                     $("#editRemainder").val(result[0].remainder_quantity);
-                    $("#editDiscount").val(result[0].discount);
-                    $("#editPicsPerBox").val(result[0].items_in_box);
+                    $("#editdiscount").val(result[0].discount);
+                    $("#edititemsInBox").val(result[0].items_in_box);
                     const type = result[0].type;
                     $("#editType").val(type).trigger("change");
                     $("#editStockCheck").val(result[0].stock_check).trigger("change");
@@ -1745,11 +1853,14 @@ $("#sisterconcern").change(function() {
             var category_id = $("#editCategory").val();
             var brand_id = $("#editBrand").val();
             var unit_id = $("#editUnit").val();
+            var sisterconcernid = $("#editsisterconcern").val();
+            var stockwarewhouse = $("#editstock_warehouse").val();
+            var discount = $("#editdiscount").val();
+            var Slug = $("#editslug").val();
             var opening_stock = $("#editOpenStock").val();
             var remainder_quantity = $("#editRemainder").val();
             var purchase_price = $("#editMinimumPrice").val();
             var sale_price = $("#editMaximumPrice").val();
-            var discount = $("#editDiscount").val();
             var status = $("#editStatus").val();
             var model_no = $("#editModelNo").val();
             var notes = $("#editNotes").val();
@@ -1816,6 +1927,9 @@ $("#sisterconcern").change(function() {
             fd.append('purchase_price', purchase_price);
             fd.append('sale_price', sale_price);
             fd.append('discount', discount);
+            fd.append('sisterconcernid', sisterconcernid);
+            fd.append('stockwarewhouse', stockwarewhouse);
+            fd.append('Slug', Slug);
             fd.append('type', type);
             fd.append('stockCheck', stockCheck);
             fd.append('image', productImage);
@@ -1850,14 +1964,14 @@ $("#sisterconcern").change(function() {
                 contentType: false,
                 processData: false,
                 success: function(result) {
-                    //alert(JSON.stringify(result));
+         alert(JSON.stringify(result));
                     $("#editModal").modal('hide');
                     Swal.fire("Updated Product!", result.success, "success");
                     $('.editSpecRow').remove();
                     table.ajax.reload(null, false);
                 },
                 error: function(response) {
-                    //alert(JSON.stringify(response));
+                    // alert(JSON.stringify(response));
                     $('#editNameError').text(response.responseJSON.errors.name);
                     $('#editCodeError').text(response.responseJSON.errors.code);
                     $('#editBarcodeError').text(response.responseJSON.errors.barcode_no);
