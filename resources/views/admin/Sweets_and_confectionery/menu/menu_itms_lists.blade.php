@@ -663,7 +663,7 @@ function placeOrder() {
     var discount = $("#discount").val();
     var vat = $("#vat").val();
     var ait = $("#ait").val();
-    var  totalAmount =  $('#grandTotal').val();
+    var  totalAmount =  $('#grandTotal').text();
     var payment_method =  $('#payment_method').val();
     var payment =  $('#payment').val();
     var fd = new FormData();
