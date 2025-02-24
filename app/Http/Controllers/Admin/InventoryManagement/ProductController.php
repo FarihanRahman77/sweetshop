@@ -49,8 +49,34 @@ class ProductController extends Controller
         return view('admin.inventoryManagement.products.view-products', $data);
     }
 
+    public function slug_generate(Request $request)
+    {
+     
+        $product = $request->productName;
+        $categories = Category::find($request->categoryName);
+        $brands = Brand::find($request->brandName);
+       $slugSource = $brands->name . ' ' . $categories->name . ' ' . $product;
+    
+   
+    $slug = Str::slug($slugSource, '-');
+    
+  
+    return $slug;
+ 
+    }
 
-
+    public function sisterconcernwisewarehouse(Request $request){
+        // return $request;
+        $warehouse_id = DB::table('tbl_setups_sister_concern_to_warehouses')
+        ->leftJoin('tbl_setups_warehouses', 'tbl_setups_sister_concern_to_warehouses.warehouse_id', '=', 'tbl_setups_warehouses.id')
+        ->select('tbl_setups_sister_concern_to_warehouses.warehouse_id', 'tbl_setups_warehouses.name')
+        ->where('tbl_setups_sister_concern_to_warehouses.sister_concern_id', $request->sisterconcern_id)
+        ->where('tbl_setups_warehouses.deleted', 'No')
+        ->where('tbl_setups_sister_concern_to_warehouses.warehouse_id','!=', '0')
+        ->get();
+   
+        return $warehouse_id;
+    }
 
 
 
@@ -287,7 +313,7 @@ class ProductController extends Controller
         }
         return $product;
     }
-
+ 
 
 
 
@@ -304,7 +330,6 @@ class ProductController extends Controller
             'brand_id' => 'nullable',
              'stock_warehouse' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'unit_id' => 'required',
-             'model_no' => 'required',
             'purchase_price' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'sale_price' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'discount' => 'numeric|nullable',
@@ -961,6 +986,28 @@ class ProductController extends Controller
             ->get();
         return $warehouses;
     }
+    public function getStockByProduct_type(Request $request)
+    {
+        // return $request;
+
+        if($request->Product_Type == 'broken'){
+            //   return 'Broken Items';
+            $currentStock = Currentstock::where('tbl_currentstock.deleted', 'No')
+            ->where('tbl_currentstock.tbl_productsId', $request->product_id)
+            ->where('tbl_currentstock.tbl_wareHouseId', $request->warehouse_id)
+            ->pluck('broken_remaining');
+              return response()->json([ 'type' => 'broken','currentStock'=>$currentStock]);
+            //   return $currentStock;
+        }
+        else{
+            $currentStock = Currentstock::where('tbl_currentstock.deleted', 'No')
+            ->where('tbl_currentstock.tbl_productsId', $request->product_id)
+            ->where('tbl_currentstock.tbl_wareHouseId', $request->warehouse_id)
+            ->pluck('currentStock');
+            return response()->json([ 'type' => 'regular','currentStock'=>$currentStock]);
+        }
+       
+    }
     public function getStockByProductWarehouse(Request $request)
     {
         $currentStock = Currentstock::where('deleted', 'No')
@@ -1017,6 +1064,8 @@ class ProductController extends Controller
 
     public function damageStore(Request $request)
     {
+   
+//   return $request;
        
         $request->validate([
             'damage_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
@@ -1039,16 +1088,26 @@ class ProductController extends Controller
             $DamageProduct->created_date = Carbon::now();
             $DamageProduct->deleted = 'No';
             $DamageProduct->save();
+
             Product::find($request->products_id)->decrement('current_stock', $request->damage_quantity);
+
             if ($request->damage_quantity > 0 && $request->warehouse_id > 0) {
             
-                $stockEntry = DB::table('tbl_currentstock')
+              $stockEntry = DB::table('tbl_currentstock')
                     ->where('tbl_productsId', $request->products_id)
                     ->where('tbl_wareHouseId', '=', $request->warehouse_id)
                     ->where('deleted', '=', 'No');
                 if ($stockEntry->get()) {
-                    $stockEntry->decrement('currentStock', $request->damage_quantity);
-                    $stockEntry->increment('damageProducts', $request->damage_quantity);
+                    if($request->ProductType=='regular'){
+                        $stockEntry->decrement('currentStock', $request->damage_quantity);
+                        $stockEntry->increment('damageProducts', $request->damage_quantity);
+                    }
+                   else  if($request->ProductType=='broken'){
+                        $stockEntry->decrement('currentStock', $request->current_stock);
+                        $stockEntry->decrement('broken_remaining', $request->damage_quantity);
+                        $stockEntry->increment('broken_damage', $request->damage_quantity);
+                    }
+                    
                 } else {
                     $currentStock = new Currentstock();
                     $currentStock->tbl_productsId = $request->products_id;

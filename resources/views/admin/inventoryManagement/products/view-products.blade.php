@@ -68,17 +68,17 @@
                                 <select name="category_id" id="category_id" class="form-control input-sm">
                                     <option value="" selected="selected">Select Category</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option onchange="generateSlug()" value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="categoryError"></span>
                             </div>
                             <div class="form-group col-md-3">
-                                <label> Brand </label><br>
+                                <label> Brand <span class="text-danger"> * </span></label><br>
                                 <select name="brand_id" id="brand_id" class="form-control input-sm">
                                     <option value="" selected>Select Brand</option>
                                     @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        <option onchange="generateSlug()" value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="brandError"></span>
@@ -86,25 +86,36 @@
                             <div class="form-group col-md-3">
                                 <label> Product Name <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="name" type="text" name="name"
-                                    placeholder=" Product name">
+                                onkeyup="generateSlug()"   placeholder=" Product name">
                                 <span class="text-danger" id="nameError"></span>
                             </div>
                             <div class="form-group col-md-3">
                                 <label> Slug <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="slug" type="text" name="slug"
-                                    placeholder=" Product slug">
+                                    placeholder=" Product slug" readonly>
                                 <span class="text-danger" id="nameError"></span>
                             </div>
                             <div class=" form-group col-md-3">
                                 <label> Select Sisterconcern <span class="text-danger"> * </span></label>
-                                <select class="form-control input-sm" id="sisterconcern" name="sisterconcern">
+                                <select class="form-control input-sm" id="sisterconcern" name="sisterconcern" >
                                     <option value="" selected> Select sisterconcern </option>
                                     @foreach ($sisterconcern as $sisterconcer)
-                                        <option value="{{ $sisterconcer->id }}">{{ $sisterconcer->name }}
+                                        <option  value="{{ $sisterconcer->id }}">{{ $sisterconcer->name }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="sisterconcerError"></span>
+                            </div>
+                            <div class=" form-group col-md-3">
+                                <label> Select Warehouse <span class="text-danger"> * </span></label>
+                                <select class="form-control input-sm" id="stock_warehouse" name="stock_warehouse">
+                                    <option value="" selected> Select Warehouse </option>
+                                    @foreach ($warehouses as $warehouse)
+                                        <option value="{{ $warehouse->id }}" >{{ $warehouse->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger" id="stock_warehouseError"></span>
                             </div>
                             @if (Session::get('companySettings')[0]['barcode_exists'] == 'Yes')
                                 <div class="form-group col-md-6">
@@ -130,23 +141,55 @@
                                 <span class="text-danger" id="unitError"></span>
                             </div>
                             <div class="form-group col-md-3">
+                                <label> Stock Check <span class="text-danger"> * </span></label>
+                                <select id="stockCheck" name="stockCheck" class="form-control input-sm">
+                                    <option value="Yes"> Yes</option>
+                                    <option value="No"> No </option>
+                               
+                                </select>
+                                <span class="text-danger" id="stockCheckError"></span>
+                            </div>
+                           
+                            <div class="form-group col-md-3">
                                 <label>Minimun Price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="minimum_price" type="number"
-                                    name="minimum_price" placeholder=" Minimum price " min="0">
+                                    name="minimum_price" placeholder=" Minimum price " min="0" onkeyup="validatePrice(this)">
                                 <span class="text-danger" id="minimum_priceError"></span>
                             </div>
+
                             <div class="form-group col-md-3">
                                 <label>Maximun price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="maximum_price" type="number"
-                                    name="maximum_price" placeholder=" Maximum price " min="0">
+                                    name="maximum_price" placeholder=" Maximum price " min="0"  onkeyup="validatePrice(this)">
                                 <span class="text-danger" id="maximum_priceError"></span>
                             </div>
                             <div class="form-group col-md-3 ">
                                 <label> Discount Amount</label>
                                 <input class="form-control input-sm" id="discount" type="number" placeholder="Discount" value=""
-                                    name="discount">
+                                    name="discount"  onkeyup="validatePrice(this)">
                                 <span class="text-danger" id="discountError"></span>
                             </div>
+                            <div class="form-group col-md-3">
+                                    <label>Items In Box: <span class="text-danger"></span></label>
+                                    <input class="form-control input-sm serialize" id="itemsInBox" type="number"
+                                        min="0" name="itemsInBox" placeholder=" Number " onchange="checkType()"
+                                        >
+                                    <span class="text-danger" id="itemsInBoxError"></span>
+                                </div>
+                           
+                         
+                            {{-- serializ --}}
+                            <div class="d-none form-group col-md-3">
+                                <label> Type <span class="text-danger"> * </span></label>
+                                <select id="type" name="type" class="form-control input-sm"
+                                    onchange="checkType()">
+                                    <option value="regular"> Regular </option>
+                                    <option value="serialize"> Serialize </option>
+                                  
+                                </select>
+                                <span class="text-danger" id="typeError"></span>
+                            </div>
+                          
                             <div class="form-group col-md-3">
                                 <label> Opening Stock <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm openingStock" min="0" id="opening_stock"
@@ -160,50 +203,15 @@
                                 placeholder="Reminder Stock" type="number" name="remainder_quantity">
                                 <span class="text-danger" id="remainder_quantityError"></span>
                             </div>
-                            <div class=" form-group col-md-3">
-                                <label> Select Warehouse <span class="text-danger"> * </span></label>
-                                <select class="form-control input-sm" id="stock_warehouse" name="stock_warehouse">
-                                    <option value="" selected> Select Warehouse </option>
-                                    @foreach ($warehouses as $warehouse)
-                                        <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger" id="stock_warehouseError"></span>
-                            </div>
-                            <div class="form-group col-md-3">
+
+                            <div class=" row col-md-6">
+                               
+                                <div class="form-group col-md-6">
                                 <label>Notes</label>
                                 <input class="form-control input-sm" id="notes" type="text" name="notes"
                                     placeholder=" notes about product ">
                                 <span class="text-danger" id="notesError"></span>
                             </div>
-                            {{-- serializ --}}
-                            <div class="d-none form-group col-md-3">
-                                <label> Type <span class="text-danger"> * </span></label>
-                                <select id="type" name="type" class="form-control input-sm"
-                                    onchange="checkType()">
-                                    <option value="regular"> Regular </option>
-                                    <option value="serialize"> Serialize </option>
-                                  
-                                </select>
-                                <span class="text-danger" id="typeError"></span>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label> Stock Check <span class="text-danger"> * </span></label>
-                                <select id="stockCheck" name="stockCheck" class="form-control input-sm">
-                                    <option value="No"> No </option>
-                                    <option value="Yes"> Yes</option>
-                                </select>
-                                <span class="text-danger" id="stockCheckError"></span>
-                            </div>
-                            <div class=" row col-md-6">
-                                <div class="form-group col-md-6">
-                                    <label>Items In Box: <span class="text-danger"></span></label>
-                                    <input class="form-control input-sm serialize" id="itemsInBox" type="number"
-                                        min="0" name="itemsInBox" placeholder=" Number " onchange="checkType()"
-                                        >
-                                    <span class="text-danger" id="itemsInBoxError"></span>
-                                </div>
                                 <div class="form-group col-md-6 d-none" id="showBtn">
                                     <label style="color: white;">.</label>
                                     <button type="button" class="btn btn-success form-control " onclick="checkType()"><i
@@ -211,6 +219,7 @@
                                         Show Serialize Table</button>
                                 </div>
                             </div>
+                               
                             {{-- serializ --}}
                             <div class="form-group col-md-12">
                                 <div class="row">
@@ -767,6 +776,20 @@
 
 @section('javascript')
     <script>
+        function validatePrice(input) {
+        // Replace non-numeric characters (except for decimals) and ensure positive value
+        input.value = input.value.replace(/[^0-9.]/g, ''); 
+        
+        // Ensure there's only one decimal point
+        if ((input.value.match(/\./g) || []).length > 1) {
+            input.value = input.value.slice(0, -1); 
+        }
+
+        // Optionally, you can add further checks, such as for minimum/maximum price limits
+        if (input.value && parseFloat(input.value) < 0) {
+            input.value = ''; // or display an error message
+        }
+    }
         //=========== Start Serialize Product ===========//
         var serialNumbers = [];
         var stockQuantities = [];
@@ -960,6 +983,82 @@
             rowNumber++;
         } // End add new spec row
 
+
+
+
+        function generateSlug() {
+            const productName = document.getElementById('name').value;
+            const brandName = document.getElementById('brand_id').value;
+            const categoryName = document.getElementById('category_id').value;
+            var _token = $('input[name="_token"]').val();
+            var fd = new FormData();
+                    fd.append('productName', productName);
+                    fd.append('brandName', brandName);
+                    fd.append('categoryName', categoryName);
+                    fd.append('_token', _token);
+            $.ajax({
+                        url: "{{ route('products.generate_slug') }}",
+                        method: "POST",
+                        data: fd,
+                        contentType: false,
+                        processData: false,
+                        success: function(result) {
+                        //    alert(JSON.stringify(result));
+                        $("#slug").val(result);
+                        },
+                        error: function(response) {
+                            alert(JSON.stringify(response));
+                        
+                        },
+            })
+
+}
+
+
+
+$("#sisterconcern").change(function() {
+            // alert(id);
+            var sisterconcern_id = $("#sisterconcern").val();
+            
+            var _token = $('input[name="_token"]').val();
+                var fd = new FormData();
+                fd.append('sisterconcern_id', sisterconcern_id);
+                fd.append('_token', _token);
+                $.ajax({
+                    url: "{{ route('products.sisterconcernwarehouse') }}",
+                    method: "POST",
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(result) {
+                        // alert(JSON.stringify(result));
+                        let viewWarehouse = '<option value="" selected>Select Warehouse</option>';
+                        for (warehouse of result) {
+                            viewWarehouse += '<option value="' + warehouse.id + '" >' + warehouse
+                                .name + '</option>';
+                        }
+                        $("#stock_warehouse").html(viewWarehouse);
+                    },
+                    error: function(response) {
+                      alert(JSON.stringify(response));
+                        Swal.fire("Error!", result.response, "error");
+                    },
+                    beforeSend: function() {
+                        $('#loading').show();
+                    },
+                    complete: function() {
+                        $('#loading').hide();
+                    }
+                })
+            });
+
+
+
+
+
+
+
+        
         // Start edit spec row 
         var editRowNumber = 0;
 
@@ -1210,7 +1309,7 @@
                 contentType: false,
                 processData: false,
                 success: function(result) {
-                    // alert(JSON.stringify(result));
+                //    alert(JSON.stringify(result));
                     if (result['success']) {
                         $("#modal").modal('hide');
                         Swal.fire("Product saved!", result.success, "success");
@@ -1225,7 +1324,7 @@
                     }
                 },
                 error: function(response) {
-                    // alert(JSON.stringify(response));
+                    alert(JSON.stringify(response));
                     $('#nameError').text(response.responseJSON.errors.name);
                     $("#codeError").text(response.responseJSON.errors.code);
                     $("#barcode_noError").text(response.responseJSON.errors.barcode_no);

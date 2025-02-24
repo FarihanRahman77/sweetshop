@@ -129,6 +129,8 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::name('products.')->group(function () {
 			Route::get('/view', [ProductController::class, 'index'])->name('view');
 			Route::get('/viewTypes', [ProductController::class, 'getProducts'])->name('getProducts');
+			Route::post('/generate_slug', [ProductController::class, 'slug_generate'])->name('generate_slug');
+			Route::post('/sisterconcernwarehouse', [ProductController::class, 'sisterconcernwisewarehouse'])->name('sisterconcernwarehouse');
 			Route::post('/store', [ProductController::class, 'store'])->name('store');
 			Route::post('/service/store', [ProductController::class, 'servicestore'])->name('servicestore');
 			Route::get('/edit', [ProductController::class, 'edit'])->name('edit');
@@ -261,6 +263,7 @@ Route::group(['middleware' => ['auth']], function () {
 		});
 		Route::post('/getWarehouseByProductID', [ProductController::class, 'getWarehouseByProductID'])->name('getWarehouseByProductID');
 		Route::post('/getStockByProductWarehouse', [ProductController::class, 'getStockByProductWarehouse'])->name('getStockByProductWarehouse');
+		Route::post('/getStockByProduct_type', [ProductController::class, 'getStockByProduct_type'])->name('getStockByProduct_type');
 		Route::get('/invoice/{id}', [ProductController::class, 'createPDF']);
 	});
 	
