@@ -1064,8 +1064,8 @@ class ProductController extends Controller
 
     public function damageStore(Request $request)
     {
-
- return $request;
+   
+//   return $request;
        
         $request->validate([
             'damage_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
@@ -1088,16 +1088,26 @@ class ProductController extends Controller
             $DamageProduct->created_date = Carbon::now();
             $DamageProduct->deleted = 'No';
             $DamageProduct->save();
+
             Product::find($request->products_id)->decrement('current_stock', $request->damage_quantity);
+
             if ($request->damage_quantity > 0 && $request->warehouse_id > 0) {
             
-                $stockEntry = DB::table('tbl_currentstock')
+              $stockEntry = DB::table('tbl_currentstock')
                     ->where('tbl_productsId', $request->products_id)
                     ->where('tbl_wareHouseId', '=', $request->warehouse_id)
                     ->where('deleted', '=', 'No');
                 if ($stockEntry->get()) {
-                    $stockEntry->decrement('currentStock', $request->damage_quantity);
-                    $stockEntry->increment('damageProducts', $request->damage_quantity);
+                    if($request->ProductType=='regular'){
+                        $stockEntry->decrement('currentStock', $request->damage_quantity);
+                        $stockEntry->increment('damageProducts', $request->damage_quantity);
+                    }
+                   else  if($request->ProductType=='broken'){
+                        $stockEntry->decrement('currentStock', $request->current_stock);
+                        $stockEntry->decrement('broken_remaining', $request->damage_quantity);
+                        $stockEntry->increment('broken_damage', $request->damage_quantity);
+                    }
+                    
                 } else {
                     $currentStock = new Currentstock();
                     $currentStock->tbl_productsId = $request->products_id;
