@@ -157,7 +157,9 @@
                                             <td colspan="4" class="text-right">Payment Method:</td>
                                             <td colspan="2"> 
                                                 <select class="form-control" id="payment_method">
-                                                    <option value="1">Cash</option>
+                                                    @foreach($payemntMethods as $paymentMethod)
+                                                    <option value="{{$paymentMethod->id}}">{{$paymentMethod->name}}</option>
+                                                    @endforeach
                                                 </select>
                                              </td>
                                             <td></td>
@@ -657,11 +659,11 @@ function placeOrder() {
     var breakslicepRiece = document.getElementById('break_slice_price').value;
     let break_item_subtotal = $("#menubreak_item_subtotal").text();
     let break_item_subtotal_price = $("#menubreak_item_subtotal_price").text();
-    var totalAmount = $("#totalAmount").text();
+    var grandTotal = $("#totalAmount").text();
     var discount = $("#discount").val();
     var vat = $("#vat").val();
     var ait = $("#ait").val();
-    var grandTotal =  $('#grandTotal').val();
+    var  totalAmount =  $('#grandTotal').val();
     var payment_method =  $('#payment_method').val();
     var payment =  $('#payment').val();
     var fd = new FormData();
