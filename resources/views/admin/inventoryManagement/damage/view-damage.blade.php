@@ -255,15 +255,17 @@
                     contentType: false,
                     processData: false,
                     success: function(result) {
-                      alert(JSON.stringify(result));
+                    //   alert(JSON.stringify(result));
                            if (result.type === 'regular') {
                             $("#current_stock").val(result.currentStock);
+                            $("#damagebroken_quantity").val(0);
                         } else if (result.type === 'broken') {
+                            $("#current_stock").val(0);
                             $("#damagebroken_quantity").val(result.currentStock);
                         }
                                     },
                     error: function(response) {
-                       alert(JSON.stringify(response));
+                    //    alert(JSON.stringify(response));
                         Swal.fire("Error!", result.response, "error");
                     },
                     beforeSend: function() {
@@ -286,6 +288,7 @@
             var damage_quantity = $("#damage_quantity").val();
             var damagebroken_quantity = $("#damagebroken_quantity").val();
             var current_stock = $("#current_stock").val();
+            var ProductType = $("#producttype").val();
             var warehouse_id = $("#warehouse").val();
             var remarks = $("#remark").val();
             var damage_date = $("#date").val();
@@ -294,7 +297,9 @@
                 var fd = new FormData();
                 fd.append('products_id', products_id);
                 fd.append('warehouse_id', warehouse_id);
+                fd.append('current_stock', current_stock);
                 fd.append('damage_quantity', damage_quantity);
+                fd.append('ProductType', ProductType);
                 fd.append('damagebroken_quantity', damagebroken_quantity);
                 fd.append('remarks', remarks);
                 fd.append('damage_date', damage_date);
@@ -306,7 +311,7 @@
                     contentType: false,
                     processData: false,
                     success: function(result) {
-                        // alert(JSON.stringify(result));
+                         alert(JSON.stringify(result));
                         $("#modal").modal('hide');
                         Swal.fire("Saved!", result.success, "success");
                         table.ajax.reload(null, false);

@@ -143,8 +143,9 @@
                             <div class="form-group col-md-3">
                                 <label> Stock Check <span class="text-danger"> * </span></label>
                                 <select id="stockCheck" name="stockCheck" class="form-control input-sm">
-                                    <option value="No"> No </option>
                                     <option value="Yes"> Yes</option>
+                                    <option value="No"> No </option>
+                               
                                 </select>
                                 <span class="text-danger" id="stockCheckError"></span>
                             </div>
@@ -152,19 +153,20 @@
                             <div class="form-group col-md-3">
                                 <label>Minimun Price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="minimum_price" type="number"
-                                    name="minimum_price" placeholder=" Minimum price " min="0">
+                                    name="minimum_price" placeholder=" Minimum price " min="0" onkeyup="validatePrice(this)">
                                 <span class="text-danger" id="minimum_priceError"></span>
                             </div>
+
                             <div class="form-group col-md-3">
                                 <label>Maximun price <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="maximum_price" type="number"
-                                    name="maximum_price" placeholder=" Maximum price " min="0">
+                                    name="maximum_price" placeholder=" Maximum price " min="0"  onkeyup="validatePrice(this)">
                                 <span class="text-danger" id="maximum_priceError"></span>
                             </div>
                             <div class="form-group col-md-3 ">
                                 <label> Discount Amount</label>
                                 <input class="form-control input-sm" id="discount" type="number" placeholder="Discount" value=""
-                                    name="discount">
+                                    name="discount"  onkeyup="validatePrice(this)">
                                 <span class="text-danger" id="discountError"></span>
                             </div>
                             <div class="form-group col-md-3">
@@ -774,6 +776,20 @@
 
 @section('javascript')
     <script>
+        function validatePrice(input) {
+        // Replace non-numeric characters (except for decimals) and ensure positive value
+        input.value = input.value.replace(/[^0-9.]/g, ''); 
+        
+        // Ensure there's only one decimal point
+        if ((input.value.match(/\./g) || []).length > 1) {
+            input.value = input.value.slice(0, -1); 
+        }
+
+        // Optionally, you can add further checks, such as for minimum/maximum price limits
+        if (input.value && parseFloat(input.value) < 0) {
+            input.value = ''; // or display an error message
+        }
+    }
         //=========== Start Serialize Product ===========//
         var serialNumbers = [];
         var stockQuantities = [];
