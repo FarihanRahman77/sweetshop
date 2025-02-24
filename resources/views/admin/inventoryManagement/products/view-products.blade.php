@@ -1971,11 +1971,12 @@
                     table.ajax.reload(null, false);
                 },
                 error: function(response) {
-                    // alert(JSON.stringify(response));
+                   alert(JSON.stringify(response));
                     $('#editNameError').text(response.responseJSON.errors.name);
                     $('#editCodeError').text(response.responseJSON.errors.code);
                     $('#editBarcodeError').text(response.responseJSON.errors.barcode_no);
                     $('#editCategoryError').text(response.responseJSON.errors.category_id);
+                    $('#sisterconcernid').text(response.responseJSON.errors.sister_concern_id);
                     $('#editBrandError').text(response.responseJSON.errors.brand_id);
                     $('#editUnitError').text(response.responseJSON.errors.unit_id);
                     $('#editOpenStockError').text(response.responseJSON.errors.opening_stock);

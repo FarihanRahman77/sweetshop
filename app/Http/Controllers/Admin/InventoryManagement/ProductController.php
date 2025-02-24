@@ -356,7 +356,7 @@ class ProductController extends Controller
             'category_id' => 'required',
             'sisterconcern' => 'required',
             'brand_id' => 'required',
-             'stock_warehouse' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
+             'stock_warehouse' => 'required',
             'unit_id' => 'required',
             'purchase_price' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'sale_price' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
@@ -759,7 +759,7 @@ class ProductController extends Controller
 
     public function update(Request $request)
     {         
-           return $request;
+          
        
         $discount = $request->discount;
         $lastChar = substr($discount, -1); //get last character
@@ -777,7 +777,8 @@ class ProductController extends Controller
             'opening_stock' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'remainder_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'category_id' => 'required',
-            'brand_id' => 'nullable',
+            'sisterconcern_id' => 'required',
+            'brand_id' => 'required',
             'unit_id' => 'required',
             'status' => 'required',
             'purchase_price' => 'required|max:10|regex:/^\d+(\.\d{1,2})?$/',
