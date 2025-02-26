@@ -38,39 +38,7 @@
                             ->get();
                             @endphp
 
-                            <!-- <div class="col-md-12 mt-3">
-                                <div class="row">
-                                    @foreach($inventoryProducts as $menu)
-                                    <div class="card col-lg-4 col-md-3 col-sm-4 col-4 col-xl-2 p-2"
-                                        onclick="menudetailsmodal({{$menu->id}})">
-                                        <div class="image-container text-center">
-                                            <img src="{{asset('upload/product_images/thumbs/' . $menu->image)}}"
-                                                class="card-img-top img-fluid" alt="{{$menu->image}}" />
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <h5 class="card-title text-truncate">{{substr($menu->name, 0, 33)}}</h5>
-                                            @if($menu->discount > 0)
-                                            <p class="mb-1">
-                                                <span class="text-danger font-weight-bold">{{$menu->sale_price}}</span>
-                                            </p>
-                                            @else
-                                            <p class="mb-1">{{$menu->sale_price}}<br>{{$menu->purchase_price}}</p>
-                                            @endif
-                                            <div class="d-flex justify-content-between">
-                                                <a href="#" class="btn btn-primary">
-                                                    <i class="fa fa-eye"
-                                                        onclick="event.stopPropagation(); addmenuitemtocard({{$menu->id}})"></i>
-                                                </a>
-                                                <a href="#" class="btn btn-primary">
-                                                    <i class="fa fa-shopping-cart"
-                                                        onclick="event.stopPropagation(); addmenuitemtocard({{$menu->id}})"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div> -->
+                          
                             <div class="col-md-12 mt-3">
                                 <div class="row">
                                     @foreach($inventoryProducts as $menu)
@@ -208,38 +176,56 @@
     </section>
 </div>
 
+
 <!-- The item Details Modal -->
-<div class="modal" id="menumodal">
-    <div class="modal-dialog">
+<div class="modal fade" id="menumodal" tabindex="-1" role="dialog" aria-labelledby="menumodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <div class="row" id="imageDiv"></div>
-            </div>
+            
             <!-- Modal body -->
-            <div class="modal-body">
-                <h3 id="menu_name"></h3>
-                <div class="price">
-                    <span> {{ Session::get('companySettings')[0]['currency'] }} </span> <span id="max_price"></span><br>
-                    <!-- <span> {{ Session::get('companySettings')[0]['currency'] }} </span> <span id="min_price"></span> -->
-                </div>
-                <br>
-                <div class="notes">
-                    <p id="menu_remarks"></p>
-                </div>
-                <div id="menu_specs">
+            <div class="modal-body p-4">
+                <!-- Image Section -->
+                <div class="d-flex justify-content-center mb-3" id="imageDiv"></div>
 
+                <!-- Product Info Section -->
+                <div class="text-center">
+                    <h4 id="menu_name" class="font-weight-bold"></h4>
+                    <p id="menucategory" class="text-muted mb-2"></p>
+                </div>
+                
+               <!-- Stock and Pricing Details -->
+                <div class="row justify-content-center text-center mx-0 mb-3">
+                    <div class="col-6">
+                        <p class="mb-1"><b>Brand: </b><span id="menubrand"></span></p>
+                        <p class="mb-1"><b>Broken Stock: </b><span id="brokenremainingstock"></span></p>
+                        <p class="mb-1"><b>Price: </b><span id="max_price"></span> {{ Session::get('companySettings')[0]['currency'] }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-1"><b>Current Stock: </b><span id="menustock"></span>  <span id="menunit"></span></p>
+                        <p class="mb-1"><b>Discount Price: </b><span id="min_price"></span> {{ Session::get('companySettings')[0]['currency'] }}</p>
+                    </div>
                 </div>
 
+                <!-- Additional Information -->
+                <div class="text-center">
+                    <p id="menu_remarks" class="font-italic text-muted"></p>
+                </div>
+
+                <!-- Specifications -->
+                <div id="menu_specs" class="text-center"></div>
             </div>
+
             <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn" id="modalclosebtn" data-dismiss="modal">Close</button>
+            <div class="modal-footer justify-content-center">
+                <a href="#" class="btn btn-danger" id="getmenuid"   onclick="addmenuitemtocard($(this).val())">
+                    <i class="fa fa-shopping-cart"></i> Buy
+                </a>
+                <button type="button" class="btn btn-secondary" id="modalclosebtn" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Item Cut Modal -->
 
@@ -345,6 +331,7 @@
 @section('javascript')
 
 <script>
+   
 $(document).ready(function() {
     $("#main-wrapper").toggleClass("mini-sidebar");
     $("#main-wrapper").attr("data-sidebartype", "mini-sidebar");
@@ -732,17 +719,25 @@ function menudetailsmodal(id) {
         },
         datatype: "json",
         success: function(result) {
-            // alert(JSON.stringify(result));
+            //  alert(JSON.stringify(result));
             $('#imageDiv').html(result.imageHtml);
+            $('#getmenuid').val(result.menu.id);
             $('#menu_name').text(result.menu.name);
+            $('#menunit').text(result.menu.unitName);
+            $('#menucategory').text(result.menu.categoryName);
+            $('#menubrand').text(result.menu.brandName);
+            $('#menustock').text(result.menu.current_stock);
+            $('#brokenstock').text(result.menu.broken_quantity);
+            $('#brokenremainingstock').text(result.menu.broken_remaining);
+            $('#brokendamagestock').text(result.menu.broken_damage);
             if (result.menu.discount > 0) {
-                // let priceafterdiscount = result.menu.sale_price - result.menu.discount;
-                // $('#min_price').text(priceafterdiscount).addClass('text-danger font-weight-bold');
+               let priceafterdiscount = result.menu.sale_price - result.menu.discount;
+               $('#min_price').text(priceafterdiscount).addClass('text-danger font-weight-bold');
                 $('#max_price').html(result.menu.sale_price).addClass('text-danger font-weight-bold');
-                // $('#max_price').html('<del>' + result.menu.sale_price + '</del>');
+                $('#max_price').html('<del>' + result.menu.sale_price + '</del>');
             } else {
                 $('#max_price').text(result.menu.sale_price);
-                // $('#min_price').text(priceafterdiscount);
+              $('#min_price').text(priceafterdiscount);
             }
             $('#menu_remarks').text(result.menu.notes);
             $("#menumodal").modal('show');
@@ -754,13 +749,14 @@ function menudetailsmodal(id) {
             $('#loading').hide();
         },
         error: function(response) {
-            // alert(JSON.stringify(response));
+           alert(JSON.stringify(response));
         },
     });
 }
 
 
 function addmenuitemtocard(id) {
+  
     var menu_card_id = id;
     var menu_quantity = 1;
     $.ajax({

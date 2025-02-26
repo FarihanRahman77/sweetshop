@@ -511,15 +511,6 @@ class ProductController extends Controller
     }
 
 
-
-
-
-    
-
-
-
-
-
     public function servicestore(Request $request)
     {
         // return $request->specNames;
@@ -665,15 +656,6 @@ class ProductController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
     public function edit(Request $request)
     {
         $product = Product::find($request->id);
@@ -748,12 +730,6 @@ class ProductController extends Controller
         // End Serialize Products
         return response()->json(['product' => $product, 'productSpecs' => $productSpecs, 'initialStockData' => $initialStockData, 'serializeProductRows' => $serializeProductRows]);
     }
-
-
-
-
-
-
 
 
 
@@ -876,11 +852,6 @@ class ProductController extends Controller
 
 
 
-
-
-
-
-
     public function updateProductOpenStock(Request $request)
     {
         $request->validate([
@@ -955,12 +926,6 @@ class ProductController extends Controller
             return response()->json(['success' => $e]);
         }
     }
-
-
-
-
-
-
 
 
 
@@ -1131,13 +1096,13 @@ class ProductController extends Controller
                     ->where('tbl_productsId', $request->products_id)
                     ->where('tbl_wareHouseId', '=', $request->warehouse_id)
                     ->where('deleted', '=', 'No');
-                if ($stockEntry->get()) {
-                    if($request->ProductType=='regular'){
+                if ($stockEntry->exists()) {
+                    if($request->ProductType =='regular'){
                         $stockEntry->decrement('currentStock', $request->damage_quantity);
                         $stockEntry->increment('damageProducts', $request->damage_quantity);
                     }
-                   else  if($request->ProductType=='broken'){
-                        $stockEntry->decrement('currentStock', $request->current_stock);
+                   elseif($request->ProductType =='broken'){
+                      
                         $stockEntry->decrement('broken_remaining', $request->damage_quantity);
                         $stockEntry->increment('broken_damage', $request->damage_quantity);
                     }

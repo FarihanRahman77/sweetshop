@@ -129,7 +129,46 @@ class SweetMenuController extends Controller
     public function getmenucarddetails(Request $request)
     {
         $menu_id = $request->id;
-        $menu = Product::find($menu_id);
+        // $menu = Product::find($menu_id);
+        $menu =DB::table('tbl_inventory_products')
+        ->leftJoin('tbl_setups_brands', 'tbl_inventory_products.brand_id', '=', 'tbl_setups_brands.id')
+        ->leftJoin('tbl_setups_units', 'tbl_inventory_products.unit_id', '=', 'tbl_setups_units.id')
+        ->leftJoin('tbl_currentstock', 'tbl_inventory_products.id', '=', 'tbl_currentstock.tbl_productsId') // Corrected join condition
+        ->leftJoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id') // Corrected join condition
+        ->select(
+            'tbl_inventory_products.id', 
+            'tbl_inventory_products.status', 
+            'tbl_inventory_products.type', 
+            'tbl_inventory_products.image', 
+            'tbl_inventory_products.name', 
+            'tbl_inventory_products.model_no', 
+            'tbl_inventory_products.code', 
+            'tbl_inventory_products.barcode_no',
+            'tbl_inventory_products.opening_stock', 
+            'tbl_inventory_products.current_stock', 
+            'tbl_inventory_products.remainder_quantity',
+            'tbl_inventory_products.purchase_price', 
+            'tbl_inventory_products.sale_price', 
+            'tbl_inventory_products.discount', 
+            'tbl_setups_categories.name as categoryName', 
+            'tbl_setups_brands.name as brandName', 
+            'tbl_setups_units.name as unitName',
+            'tbl_currentstock.broken_remaining', 
+            'tbl_currentstock.broken_damage', 
+            'tbl_currentstock.broken_quantity', 
+            'tbl_currentstock.broken_sold'
+        )
+        ->where('tbl_inventory_products.deleted', 'No')
+        ->where('tbl_inventory_products.status', 'Active')
+        ->where('tbl_setups_brands.deleted', 'No')
+        ->where('tbl_setups_brands.status', 'Active')
+        ->where('tbl_setups_categories.deleted', 'No')
+        ->where('tbl_setups_categories.status', 'Active')
+        ->where('tbl_inventory_products.id', '=', $menu_id)
+        ->orderBy('tbl_inventory_products.id', 'DESC')
+        ->first();
+    
+
        $menuImages = DB::table('tbl_inventory_products')
         ->where('id', '=', $request->id)
         ->where('deleted', 'No')
@@ -148,9 +187,9 @@ class SweetMenuController extends Controller
             $imageUrl = '';
             foreach ($menuImages as $image) {
                 $imageUrl .= asset('upload/product_images/thumbs/' . $image->image);
-                $imageHtml .= '<div class="col-md-12">
-                                    <img src="' . $imageUrl . '" class="img-fluid Rounded Corners menuimg" alt="{{$image->image}}">
-                                </div>';
+                $imageHtml .= '<div class="d-flex justify-content-center " >
+                                <img src="' . $imageUrl . '" class="img-fluid" style="width:200px;" alt="{{ $image->image }}">
+                            </div>';
             }
         }
 
