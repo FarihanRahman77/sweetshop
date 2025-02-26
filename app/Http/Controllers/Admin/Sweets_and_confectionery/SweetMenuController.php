@@ -30,9 +30,12 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
+use App\Traits\PaymentVoucherTrait;
+
 
 class SweetMenuController extends Controller
 {
+    use PaymentVoucherTrait;
     public function index()
     {    
         $data['categories'] = Category::where('deleted', 'No')->where('status','=','Active')->where('name','!=','Service')->get();
@@ -57,6 +60,7 @@ class SweetMenuController extends Controller
             ->where('tbl_setups_sisterconcern_categories.status', '=', 'Active')
             ->where('tbl_setups_categories.status', '=', 'Active')
             ->get();
+        
         return view('admin.Sweets_and_confectionery.menu.menuAdd', ['categories' => $categories]);
     }
 
@@ -211,15 +215,13 @@ class SweetMenuController extends Controller
 
     public function checkoutmenuOrder(Request $request)
     {  
-         
-//   return $request;
-        $Party_id = $request->partyid;
+       // return $request;
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
 
-     
+        $Party_id = $request->partyid;
         $party = Party::find($Party_id);
         
         if (!$party) {
-           
             $party = new Party();
             $party->name = $request->partyname;
             $party->contact = $request->partyPhoneNumber;
@@ -231,40 +233,43 @@ class SweetMenuController extends Controller
             $party->deleted = 'No';
             $party->status = 'Active';
             $party->save();
-        
-          
             $Party_id = $party->id;
         }
-        $totalAmount = $request->grandTotal;
-     
+
+        $totalAmount = $request->totalAmount;
+        
         $Current_Balance = '0.00';
         $userId = auth()->user()->id;
         $cartString = 'menu_item_purchase_cart_array_' . $userId;
-    
+        
         if (!Session::has($cartString) || empty(Session::get($cartString))) {
             return response()->json(['status' => 'error', 'message' => 'No items in the cart to checkout']);
         }
         
         DB::beginTransaction();
-    
         try {
+            $due=$request->totalAmount - $request->payment;
             $cartData = Session::get($cartString);
             $maxCode = OrderModel::where('deleted', 'No')->max('code');
             $maxCode++;
             $maxCode = str_pad($maxCode, 6, '0', STR_PAD_LEFT);
             $order = new OrderModel();
             $order->code =  $maxCode;
-            $order->total_amount = $totalAmount;
+            $order->discount = $request->discount;
+            $order->vat = $request->vat;
+            $order->ait = $request->ait;
+            $order->grand_total = $request->grandTotal;
+            $order->total_amount = $request->totalAmount;
+            $order->payment_method = $request->payment_method;
             $order->party_id = $Party_id;
-            $order->grand_total = $totalAmount;
-            $order->paid_amount = $totalAmount;
+            $order->paid_amount = $request->payment;
             $order->order_status = 'Closed';
-            $order->due ='0.00';
+            $order->due =$due;
             $order->created_by= auth()->user()->id;
             $order->save();
             $order_id=$order->id;
             foreach ($cartData as $cartItem) {
-                
+                 
                 $menuPrice = isset($cartItem['menu_price']) ? $cartItem['menu_price'] : 0;
                 $itemTotalAmount = $cartItem['menu_quantity'] * $cartItem['menu_price_after_discount'];
                 $subitemTotalAmount = $cartItem['sell_qty'] * $cartItem['menu_price_after_break'];
@@ -281,7 +286,6 @@ class SweetMenuController extends Controller
                     $orderDetail->unit_discount_price = '0';
                     $orderDetail->unit_price_after_discount = $cartItem['menu_price'];
                     $orderDetail->unit_total_price = $subitemTotalAmount;
-
                 } else {
                     $orderDetail->product_broken_type = 'No'; 
                     $orderDetail->sub_quantity = 0; 
@@ -298,14 +302,11 @@ class SweetMenuController extends Controller
                 $orderDetail->save();
 
                 $Currentstock = Currentstock::where("tbl_productsId", $cartItem['product_id'])
-                ->where("deleted", 'No')
-                ->first();
+                                ->where("deleted", 'No')
+                                ->first();
             
             if ($Currentstock) {
-                // Decrement the current stock
                 $Currentstock->decrement('currentStock', $cartItem['menu_quantity']);
-                
-                // Increment the sales stock
                 $Currentstock->increment('salesStock', $cartItem['menu_quantity']); 
                 $Currentstock->broken_quantity = $cartItem['broken_qty']; 
                 $Currentstock->broken_sold     = $cartItem['sell_qty'];
@@ -315,7 +316,6 @@ class SweetMenuController extends Controller
                 $Currentstock->entryDate       = date('Y-m-d H:i:s');
                 $Currentstock->save();
             } else {
-                // Insert a new record if no current stock found
                 $Currentstock_insert = new Currentstock();
                 $Currentstock_insert->tbl_productsId  = $cartItem['product_id'];
                 $Currentstock_insert->currentStock    = $cartItem['Current_Stock'];
@@ -329,57 +329,45 @@ class SweetMenuController extends Controller
                 $Currentstock_insert->save();
             }
 
-              
-
-
-
             }
         
-            if (floatval($totalAmount) > 0) {
-              
+                $payemntMethod=ChartOfAccounts::find($request->payment_method);
+
                 $maxCode = PaymentVoucher::where('deleted', 'No')->max('voucherNo');
                 $maxCode++;
-                $maxCode = str_pad($maxCode, 6, '000000', STR_PAD_LEFT);;
-                $paymentVoucher = new PaymentVoucher();
-                $paymentVoucher->voucherNo = $maxCode;
-                $paymentVoucher->amount = floatval($totalAmount);
-                $paymentVoucher->resturant_order_id = $order->id;
-                $paymentVoucher->party_id = $Party_id;
-                $paymentVoucher->payment_method = 'Cash';
-                $paymentVoucher->paymentDate  = now();
-                $paymentVoucher->discount  ='0.00';
-                $paymentVoucher->type  = 'Payment Received';
-                $paymentVoucher->voucherType  = 'WalkinSale';
-                $paymentVoucher->remarks  = 'WalkinSale: ' . ' payment: ' . $totalAmount;
-                $paymentVoucher->entryBy  = auth()->user()->id;
-                $paymentVoucher->save(); 
-            }
-                                    $voucher = new AccountsVoucher();
-                                    $voucher->tbl_resturantOrder_id  = $order_id;
-                                    $voucher->vendor_id = $Party_id;
-                                    $voucher->transaction_date = now();
-                                    $voucher->amount = floatval($totalAmount);
-                                    $voucher->payment_method = 'Cash';
-                                    $voucher->deleted = "No";
-                                    $voucher->status = "Active";
-                                    $voucher->created_by = Auth::user()->id;
-                                    $voucher->created_date = date('Y-m-d h:s');
-                                    $voucher->save();
-    
-    
-                                    $voucherId = $voucher->id;
-                                    $salesCoaId = ChartOfAccounts::where('slug', '=', 'Sales')->first()->id;
-                                    $voucherDetails = new AccountsVoucherDetails();
-                                    $voucherDetails->tbl_acc_voucher_id = $voucherId;
-                                    $voucherDetails->tbl_acc_coa_id = $salesCoaId;
-                                    $voucherDetails->transaction_date = now();
-                                    $voucherDetails->credit = floatval($totalAmount);
-                                    $voucherDetails->voucher_title = 'Order amount paid ' . $totalAmount . ' Tk , Date:  '. (new \DateTime())->format('Y-m-d H:i:s');
-                                    $voucherDetails->deleted = "No";
-                                    $voucherDetails->status = "Active";
-                                    $voucherDetails->created_by = Auth::user()->id;
-                                    $voucherDetails->created_date = date('Y-m-d h:s');
-                                    $voucherDetails->save();
+                $maxCode = str_pad($maxCode, 6, '000000', STR_PAD_LEFT);
+
+                $this->storePartyPayable($maxCode, $Party_id, $request->totalAmount, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Party Payable', $remarks='WalkinSale: ' . ' party payable: ' . $request->totalAmount);
+                if($request->payment >0){
+                    $this->storePaymentReceived($maxCode, $Party_id, $request->payment, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Payment Received', $remarks='WalkinSale: ' . 'payment received: ' . $request->payment);
+                }
+
+                $voucher = new AccountsVoucher();
+                $voucher->tbl_resturantOrder_id  = $order_id;
+                $voucher->vendor_id = $Party_id;
+                $voucher->transaction_date = now();
+                $voucher->amount = floatval($totalAmount);
+                $voucher->payment_method = 'Cash';
+                $voucher->deleted = "No";
+                $voucher->status = "Active";
+                $voucher->created_by = Auth::user()->id;
+                $voucher->created_date = date('Y-m-d h:s');
+                $voucher->save();
+
+                $voucherId = $voucher->id;
+                $salesCoaId = ChartOfAccounts::where('slug', '=', 'Sales')->first()->id;
+                $voucherDetails = new AccountsVoucherDetails();
+                $voucherDetails->tbl_acc_voucher_id = $voucherId;
+                $voucherDetails->tbl_acc_coa_id = $salesCoaId;
+                $voucherDetails->transaction_date = now();
+                $voucherDetails->credit = floatval($totalAmount);
+                $voucherDetails->voucher_title = 'Order amount paid ' . $totalAmount . ' Tk , Date:  '. (new \DateTime())->format('Y-m-d H:i:s');
+                $voucherDetails->deleted = "No";
+                $voucherDetails->status = "Active";
+                $voucherDetails->created_by = Auth::user()->id;
+                $voucherDetails->created_date = date('Y-m-d h:s');
+                $voucherDetails->save();
+
             Session::forget($cartString);
             DB::commit();
             return response()->json(['status' => 'success', 'message' => 'Order successfully placed', 'menuorder_id' => $order->id]);
@@ -404,8 +392,9 @@ class SweetMenuController extends Controller
             ->where('tbl_setups_categories.status', '=', 'Active')
             ->get();
 
-
-        return view('admin.Sweets_and_confectionery.menu.menu_itms_lists', ['categories' => $categories]);
+        $defaultParty=Party::find(1);
+        $payemntMethods=ChartOfAccounts::where('parent_id','5')->get();
+        return view('admin.Sweets_and_confectionery.menu.menu_itms_lists', ['categories' => $categories,'defaultParty'=>$defaultParty,'payemntMethods'=>$payemntMethods]);
     }
 
 
@@ -669,6 +658,10 @@ class SweetMenuController extends Controller
         return response()->json($data);
     }
 
+
+
+
+
     public function fetch_menu_Cart_item_modaldata(Request $request)
     {
          // return $request;
@@ -734,6 +727,9 @@ class SweetMenuController extends Controller
 
 
 
+
+
+
     public function removeCartmenuitem(Request $request)
     {
       
@@ -760,29 +756,29 @@ class SweetMenuController extends Controller
 
 
 
+
+
+
     public function updateCartmenuitem(Request $request){
         $data = ""; 
-    $userId=$request->userId;
-    $menuId=$request->menu_id;
-    $cartString = 'menu_item_purchase_cart_array_' . $userId;
-    $cartData = Session::get($cartString);
-       
-        if ($cartData) {
-            foreach ($cartData as $key => $value) {
-                if ($value['product_id'] == $menuId && $value['user_id'] == $userId) {
-                    $cartData[$key]['menu_quantity'] = $request->menu_quantity;
-                    $cartData[$key]['menu_price_after_discount'] = $request->min_price;
-                    Session::put($cartString, $cartData);
-                    $data = ["status" => "success", "message" => "Cart updated successfully."];
-                    break; 
+        $userId=$request->userId;
+        $menuId=$request->menu_id;
+        $cartString = 'menu_item_purchase_cart_array_' . $userId;
+        $cartData = Session::get($cartString);
+        
+            if ($cartData) {
+                foreach ($cartData as $key => $value) {
+                    if ($value['product_id'] == $menuId && $value['user_id'] == $userId) {
+                        $cartData[$key]['menu_quantity'] = $request->menu_quantity;
+                        $cartData[$key]['menu_price_after_discount'] = $request->min_price;
+                        Session::put($cartString, $cartData);
+                        $data = ["status" => "success", "message" => "Cart updated successfully."];
+                        break; 
+                    }
                 }
-            }
-    } else {
-        
-        $data = ["status" => "error", "message" => "Cart data not found."];
-    }
-
-        
+        } else {
+            $data = ["status" => "error", "message" => "Cart data not found."];
+        }
         return response()->json($data); 
     }
 
@@ -814,9 +810,7 @@ class SweetMenuController extends Controller
                 
                 $data = ["status" => "error", "message" => "Cart data not found."];
             }
-        
-                
-                return response()->json($data);
+            return response()->json($data);
          }
 
 
