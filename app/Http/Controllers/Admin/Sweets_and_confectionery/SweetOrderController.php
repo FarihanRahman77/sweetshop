@@ -1011,10 +1011,10 @@ public function getorderlist(Request $request, $filterByTypeDateParty) {
         $output['data'][] = array(
             $i++ . '<input type="hidden" name="id" id="id" value="' . $order['order_id'] . '" />',
          $order['code'],
-            '<b>Order date: </b>' . $order['order_date'],
+         $order['order_date'],
          '<b>Party: </b>' . $order['party_name'] . '<br><b>Contact: </b>' . $order['party_contact'] . '<br><b>Address: </b>' . $order['party_address'],
-            '<b>Total: </b>'. $order['order_total']. '<br><b>Discount: </b>' . $order['grand_discount']. '<br><b>vat: </b>' . $order['vat']. '<br><b>Grand Total: </b>' . $order['order_total']. '<br><b>Paid Amount: </b>' . $order['paid_amount'] ,
-            '<b>Payment Method: </b>'. $order['payment_method'] ,
+            '<b>Total: </b>'. $order['order_total']. '<br><b>Discount: </b>' . $order['grand_discount']. '<br><b>Vat: </b>' . $order['vat']. '<br><b>Ait: </b>' . $order['vat']. '<br><b>Grand Total: </b>' . $order['order_total']. '<br><b>Paid Amount: </b>' . $order['paid_amount'] ,
+            $order['payment_method'] ,
             $order['order_status'],
             $button
         );
@@ -1080,8 +1080,8 @@ public function orderdelete(Request $request)
 
         $orderinvoicedata = DB::table('tbl_restaurant_order_details')
         ->leftJoin('tbl_restaurant_order', 'tbl_restaurant_order_details.order_id', '=', 'tbl_restaurant_order.id')
-        ->leftJoin('tables', 'tbl_restaurant_order.table_id', '=', 'tables.id')
-        ->leftJoin('menus', 'tbl_restaurant_order_details.menu_id', '=', 'menus.id')
+      
+        ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
         ->leftJoin('tbl_crm_parties', 'tbl_restaurant_order.party_id', '=', 'tbl_crm_parties.id')
         ->select(
             'tbl_restaurant_order_details.id', 
@@ -1098,8 +1098,7 @@ public function orderdelete(Request $request)
             'tbl_crm_parties.name AS party_name', 
             'tbl_crm_parties.code AS party_code', 
             'tbl_crm_parties.contact AS party_contact', 
-            'tables.name AS table_name', 
-            'menus.name AS menu_name',
+            'tbl_inventory_products.name AS menu_name',
             'tbl_restaurant_order.order_date', 
             'tbl_restaurant_order.due', 
             'tbl_restaurant_order.grand_total AS order_total',
@@ -1111,7 +1110,7 @@ public function orderdelete(Request $request)
           ->get();
 
           
-      
+        //   $customPaper = array(0,0,283.80,567.00);
 
         $pdf = PDF::loadView('admin.Sweets_and_confectionery.order.order_invoice', ['orderinvoicedata'=> $orderinvoicedata]);
         return $pdf->stream('order_invoice-pdf.pdf', array("Attachment" => false));
