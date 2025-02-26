@@ -130,7 +130,9 @@ Route::group(['middleware' => ['auth']], function () {
 			Route::get('/view', [ProductController::class, 'index'])->name('view');
 			Route::get('/viewTypes', [ProductController::class, 'getProducts'])->name('getProducts');
 			Route::post('/generate_slug', [ProductController::class, 'slug_generate'])->name('generate_slug');
+			Route::post('/editgenerate_slug', [ProductController::class, 'edit_slug_generate'])->name('editgenerate_slug');
 			Route::post('/sisterconcernwarehouse', [ProductController::class, 'sisterconcernwisewarehouse'])->name('sisterconcernwarehouse');
+			Route::post('/sisterconcerneditwarehouse', [ProductController::class, 'sisterconcernwisewarehouseedit'])->name('sisterconcerneditwarehouse');
 			Route::post('/store', [ProductController::class, 'store'])->name('store');
 			Route::post('/service/store', [ProductController::class, 'servicestore'])->name('servicestore');
 			Route::get('/edit', [ProductController::class, 'edit'])->name('edit');

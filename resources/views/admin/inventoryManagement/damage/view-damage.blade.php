@@ -97,16 +97,16 @@
                                     Disabled>
                                 <span class="text-danger" id="nameError"></span>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <label> Broken Item Stock</label>
                                 <input class="form-control input-sm" id="damagebroken_quantity" type="text" name="damagebroken_quantity"
                                     Disabled>
                                 <span class="text-danger" id="nameError"></span>
-                            </div>
+                            </div> -->
                             <div class="col-md-6">
                                 <label> Quantity <span class="text-danger"> * </span></label>
                                 <input class="form-control input-sm" id="damage_quantity" type="text"
-                                    name="damage_quantity">
+                                    name="damage_quantity"  oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
                                 <span class="text-danger" id="nameError"></span>
                             </div>
                         </div>
@@ -256,13 +256,10 @@
                     processData: false,
                     success: function(result) {
                     //   alert(JSON.stringify(result));
-                           if (result.type === 'regular') {
+                          
                             $("#current_stock").val(result.currentStock);
-                            $("#damagebroken_quantity").val(0);
-                        } else if (result.type === 'broken') {
-                            $("#current_stock").val(0);
-                            $("#damagebroken_quantity").val(result.currentStock);
-                        }
+                         
+                        
                                     },
                     error: function(response) {
                     //    alert(JSON.stringify(response));
@@ -286,7 +283,6 @@
             clearMessages();
             var products_id = $("#productId").val();
             var damage_quantity = $("#damage_quantity").val();
-            var damagebroken_quantity = $("#damagebroken_quantity").val();
             var current_stock = $("#current_stock").val();
             var ProductType = $("#producttype").val();
             var warehouse_id = $("#warehouse").val();
@@ -300,7 +296,6 @@
                 fd.append('current_stock', current_stock);
                 fd.append('damage_quantity', damage_quantity);
                 fd.append('ProductType', ProductType);
-                fd.append('damagebroken_quantity', damagebroken_quantity);
                 fd.append('remarks', remarks);
                 fd.append('damage_date', damage_date);
                 fd.append('_token', _token);
@@ -311,7 +306,7 @@
                     contentType: false,
                     processData: false,
                     success: function(result) {
-                         alert(JSON.stringify(result));
+                        //  alert(JSON.stringify(result));
                         $("#modal").modal('hide');
                         Swal.fire("Saved!", result.success, "success");
                         table.ajax.reload(null, false);

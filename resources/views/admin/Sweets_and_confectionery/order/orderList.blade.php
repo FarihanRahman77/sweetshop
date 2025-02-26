@@ -14,8 +14,8 @@
         <section class="content box-border">
             <div class="card">
                 <div class="card-header">
-                    <h4 style="float:left;"> Order List </h4>
-                    <a href="{{url('sweetsconfectionary/menu/getMenu_itms_list')}}"  class="btn btn-outline-success float-right" ><i class="fa fa-plus circle"></i> Add Order</a>
+                    <h4 style="float:left;"> Sale List </h4>
+                    <a href="{{url('sweetsconfectionary/menu/getMenu_itms_list')}}"  class="btn btn-outline-success float-right" ><i class="fa fa-plus circle"></i> Add sale</a>
                     <a class="btn btn-outline-success" style="margin-left:20px;" onclick="reloadDt()"><i class="fas fa-sync"></i> Refresh </a>
                    
                     <!-- <div class="form-group float-right col-3">
@@ -49,8 +49,8 @@
                                         <thead>
                                             <tr>
                                                 <td width="6%">SL</td>
-                                                <td width="6%">order Num</td>
-                                                <td>Order Date</td>
+                                                <td width="6%">Sale No</td>
+                                                <td>Sale Date</td>
                                                 <td>Party Info</td>
                                                 <td>Amount</td>
                                                 <td>Payment Method:</td>

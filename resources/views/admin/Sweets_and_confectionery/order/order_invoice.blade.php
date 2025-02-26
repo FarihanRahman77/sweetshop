@@ -229,7 +229,7 @@
                                 @foreach ($orderinvoicedata as $user)
                                     <div><strong>Customer Name : </strong>{{ $user->party_name}}</div>
                                     <div><strong>Contact: </strong>{{ $user->party_contact }}</div>
-                                    <div><strong>Table Name: </strong>{{ $user->table_name }}</div>
+                                
                         
                                 @break
                             @endforeach
