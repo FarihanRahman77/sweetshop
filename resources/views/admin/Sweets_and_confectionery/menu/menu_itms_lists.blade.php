@@ -32,9 +32,27 @@
                             style="display: none; max-height: 600px; overflow-y: auto;">
                             @php
                             $inventoryProducts = DB::table('tbl_inventory_products')
-                            ->where('category_id', '=', $category->category_id)
-                            ->where('deleted', 'No')
-                            ->where('status', '=', 'Active')
+                           ->leftJoin('tbl_currentstock', 'tbl_inventory_products.id', '=', 'tbl_currentstock.tbl_productsId')
+                           ->select(
+                                            'tbl_inventory_products.id', 
+                                            'tbl_inventory_products.status', 
+                                            'tbl_inventory_products.type', 
+                                            'tbl_inventory_products.image', 
+                                            'tbl_inventory_products.name', 
+                                            'tbl_inventory_products.model_no', 
+                                            'tbl_inventory_products.code', 
+                                            'tbl_inventory_products.barcode_no',
+                                            'tbl_inventory_products.opening_stock', 
+                                            'tbl_currentstock.currentStock', 
+                                            'tbl_inventory_products.remainder_quantity',
+                                            'tbl_inventory_products.purchase_price', 
+                                            'tbl_inventory_products.sale_price', 
+                                            'tbl_inventory_products.discount', 
+                                            'tbl_currentstock.currentStock'
+                                        )
+                            ->where('tbl_inventory_products.category_id', '=', $category->category_id)
+                            ->where('tbl_inventory_products.deleted', 'No')
+                            ->where('tbl_inventory_products.status', '=', 'Active')
                             ->get();
                             @endphp
 
@@ -46,13 +64,19 @@
                                         <div class="image-container text-center position-relative">
                                             <img src="{{asset('upload/product_images/thumbs/' . $menu->image)}}" class="card-img-top img-fluid" alt="{{$menu->image}}" />
                                             <div class="position-absolute w-100 d-flex justify-content-between" style="top: 100%; transform: translateY(-50%);">
-                                                <a href="#" class="btn btn-primary mx-1" onclick="menudetailsmodal({{$menu->id}})">
-                                                    <i class="fa fa-eye"> Details</i>
-                                                </a>
-                                                <a href="#" class="btn btn-primary mx-1" onclick="addmenuitemtocard({{$menu->id}})">
-                                                    <i class="fa fa-shopping-cart"> Buy</i>
-                                                </a>
-                                            </div>
+                                                        <a href="#" class="btn btn-primary mx-1" onclick="menudetailsmodal({{$menu->id}})">
+                                                            <i class="fa fa-eye"> Details</i>
+                                                        </a>
+                                              @if($menu->currentStock > 0)
+                                            <a href="#" class="btn btn-primary mx-1" onclick="addmenuitemtocard({{$menu->id}})">
+                                                <i class="fa fa-shopping-cart"> Buy</i>
+                                            </a>
+                                        @else
+                                        <a href="#" class="btn btn-primary mx-1" onclick="Swal.fire('Out of Stock', 'This product is out of stock', 'warning'); return false;">
+                                                <i class="fa fa-shopping-cart"> Buy</i>
+                                            </a>
+                                        @endif
+                                                    </div>
                                         </div>
                                         <div class="card-body text-center">
                                             <h5 class="card-title text-truncate">{{substr($menu->name, 0, 33)}}</h5>
@@ -118,7 +142,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right">Grand Total:</td>
-                                            <td colspan="2" class="text-right"> <span id="grandTotal"></span> </td>
+                                            <td colspan="2" class="text-right"> <span id="grandTotal"></span>  </td>
                                             <td></td>
                                         </tr>
                                         <tr>
@@ -143,14 +167,14 @@
                             <div class="form-group">
                                 <label>Customer Name</label>
                                 <input type="text" name="customerName" id="customerName" class="form-control"  value="{{$defaultParty->name}}"
-                                    placeholder="Customer Name">
+                                    placeholder="Customer Name" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '');">
                             </div>
                             <div class="form-group">
-                                <input type="hidden" id="party_id" name="party_id" value="0" />
+                                <input type="hidden" id="party_id" name="party_id" value="{{ $defaultParty->id }}" />
                                 <label>Phone: <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="text" id="partyPhoneNumber" name="partyPhoneNumber" class="form-control" placeholder="Phone Number"
-                                        onchange="getCustomerInfo(0,'Walkin_Customer')" value="{{$defaultParty->contact}}"
+                                        onkeyup="getCustomerInfo(0,'Walkin_Customer')" value="{{$defaultParty->contact}}"
                                         oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-danger" type="button"
@@ -196,12 +220,12 @@
                 
                <!-- Stock and Pricing Details -->
                 <div class="row justify-content-center text-center mx-0 mb-3">
-                    <div class="col-6">
+                    <div class="col-6 text-left ">
                         <p class="mb-1"><b>Brand: </b><span id="menubrand"></span></p>
                         <p class="mb-1"><b>Broken Stock: </b><span id="brokenremainingstock"></span></p>
                         <p class="mb-1"><b>Price: </b><span id="max_price"></span> {{ Session::get('companySettings')[0]['currency'] }}</p>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 text-right">
                         <p class="mb-1"><b>Current Stock: </b><span id="menustock"></span>  <span id="menunit"></span></p>
                         <p class="mb-1"><b>Discount Price: </b><span id="min_price"></span> {{ Session::get('companySettings')[0]['currency'] }}</p>
                     </div>
@@ -218,7 +242,9 @@
 
             <!-- Modal footer -->
             <div class="modal-footer justify-content-center">
-                <a href="#" class="btn btn-danger" id="getmenuid"   onclick="addmenuitemtocard($(this).val())">
+              
+
+                <a href="#" class="btn btn-danger" id="getmenuid"   onclick="checkStockAndAddToCart()">
                     <i class="fa fa-shopping-cart"></i> Buy
                 </a>
                 <button type="button" class="btn btn-secondary" id="modalclosebtn" data-dismiss="modal">Close</button>
@@ -332,12 +358,17 @@
 @section('javascript')
 
 <script>
-   
+ 
+ $(document).ready(function() {
+    var default_customer_id=1;
+    var default_customer_type="Walkin_Customer";
+    
+    //getCustomerInfo(default_customer_id ,default_customer_type);
+});
+
 $(document).ready(function() {
     $("#main-wrapper").toggleClass("mini-sidebar");
     $("#main-wrapper").attr("data-sidebartype", "mini-sidebar");
-
-    
 });
 function validateNumericInput(input) {
     input.value = input.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
@@ -382,7 +413,17 @@ document.getElementById('menulist').addEventListener('scroll', updateScrollButto
 window.addEventListener('resize', updateScrollButtons);
 document.addEventListener('DOMContentLoaded', updateScrollButtons);
 
+function checkStockAndAddToCart() {
+        var stock_check = $("#menustock").text(); // Make sure #menustock is an input element, or use .text() for non-inputs
 
+        if (stock_check > 0) {
+            // Proceed with adding the item to the cart
+            addmenuitemtocard($('#getmenuid').val());
+        } else {
+            // Show an alert for out of stock
+            Swal.fire('Out of Stock', 'This product is out of stock', 'warning')
+        }
+    }
 
 
 
@@ -471,6 +512,7 @@ function cutitems(id) {
 
 
 function getCustomerInfo(id, customer_type) {
+    //alert(id + customer_type);
     if (id == undefined) {
         id = 0;
     }
@@ -489,25 +531,27 @@ function getCustomerInfo(id, customer_type) {
         processData: false,
         datatype: "json",
         success: function(result) {
-            //  alert(JSON.stringify(result));
-            let isEpmty = Object.keys(result).length;
-            if (isEpmty > 0) {
-                $("#party_id").val(result['id']);
-                $("#partyPhoneNumber").val(result['contact']);
-                $("#customerName").val(result['name']);
+            //   alert(JSON.stringify(result));
+            // let isEpmty = Object.keys(result).length;
+            // alerty(isEmpty);
+            if (result.status == 'Yes') {
+                $("#party_id").val(result.customerInfo['id']);
+                $("#partyPhoneNumber").val(result.customerInfo['contact']);
+                $("#customerName").val(result.customerInfo['name']);
                 $("#customerName").prop('disabled', true);
                 $("#partyPhoneNumber").prop('disabled', true);
-            } else {
+            } else if(result.status == 'No'){
                 $("#customerName").prop('disabled', false);
                 $("#partyPhoneNumber").prop('disabled', false);
+                $("#party_id").val(0);
             }
         },
-        beforeSend: function() {
-            $('#loading').show();
-        },
-        complete: function() {
-            $('#loading').hide();
-        },
+        // beforeSend: function() {
+        //     $('#loading').show();
+        // },
+        // complete: function() {
+        //     $('#loading').hide();
+        // },
         error: function(response) {
             $("#barcodeError").text("No such product available in your system");
             // alert(JSON.stringify(response));
@@ -680,9 +724,10 @@ function placeOrder() {
         contentType: false,
         processData: false,
         success: function(result) {
-            alert(JSON.stringify(result));
+            // alert(JSON.stringify(result));
             let menuorderId = result.menuorder_id;
             fetch_menu_Cart_item();
+            
             if (result.status === 'success') {
                 Swal.fire({
                     title: "Saved Order!",
@@ -694,11 +739,13 @@ function placeOrder() {
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'OK'
                 });
-                $("#customerName").val("");
-                $("#partyPhoneNumber").val("");
-                $("#customerName").prop('disabled', false);
-                $("#partyPhoneNumber").prop('disabled', false);
+                // $("#customerName").val("");
+                // $("#partyPhoneNumber").val("");
+                // $("#customerName").prop('disabled', false);
+                // $("#partyPhoneNumber").prop('disabled', false);
                 menuorderprint(menuorderId);
+                reset();
+               
             } else {
                 Swal.fire("Error: ", "Please Check Required Field!", "error");
             }
@@ -742,7 +789,12 @@ function menudetailsmodal(id) {
             $('#menunit').text(result.menu.unitName);
             $('#menucategory').text(result.menu.categoryName);
             $('#menubrand').text(result.menu.brandName);
-            $('#menustock').text(result.menu.current_stock);
+            if(result.menu.currentStock > 0){
+                $('#menustock').text(result.menu.currentStock);
+            }
+           else{
+            $('#menustock').text('0');
+           }
             $('#brokenstock').text(result.menu.broken_quantity);
             $('#brokenremainingstock').text(result.menu.broken_remaining);
             $('#brokendamagestock').text(result.menu.broken_damage);
@@ -772,7 +824,9 @@ function menudetailsmodal(id) {
 
 
 function addmenuitemtocard(id) {
-  
+
+ 
+ 
     var menu_card_id = id;
     var menu_quantity = 1;
     $.ajax({
@@ -814,8 +868,6 @@ function fetch_menu_Cart_item() {
         }
     });
 }
-
-
 
 
 function fetch_modal_menu_Cart_item(productId) {
@@ -882,6 +934,8 @@ function deleteCartItem(menu_id, userId) {
     });
 }
 
+
+
 function updatemenuCart(menu_id, userId) {
     var menu_quantity = $('#menu_quantity_' + menu_id + '_' + userId).val();
     var min_price = $('#min_price_' + menu_id + '_' + userId).val();
@@ -912,6 +966,18 @@ function updatemenuCart(menu_id, userId) {
         }
     });
 }
+
+
+
+              function reset() {
+                    $("#customerName").val("");
+                    $("#partyPhoneNumber").val("");
+                    $("#totalAmount").val("0");
+                    $("#discount").val("0");
+                    $("#vat").val("0");
+                    $("#ait").val("0");
+                    $("#grandTotal").val("0");
+                  }
 
 
 

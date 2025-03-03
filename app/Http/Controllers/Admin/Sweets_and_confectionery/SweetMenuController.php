@@ -132,13 +132,14 @@ class SweetMenuController extends Controller
 
     public function getmenucarddetails(Request $request)
     {
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $menu_id = $request->id;
         // $menu = Product::find($menu_id);
         $menu =DB::table('tbl_inventory_products')
         ->leftJoin('tbl_setups_brands', 'tbl_inventory_products.brand_id', '=', 'tbl_setups_brands.id')
         ->leftJoin('tbl_setups_units', 'tbl_inventory_products.unit_id', '=', 'tbl_setups_units.id')
-        ->leftJoin('tbl_currentstock', 'tbl_inventory_products.id', '=', 'tbl_currentstock.tbl_productsId') // Corrected join condition
-        ->leftJoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id') // Corrected join condition
+        ->leftJoin('tbl_currentstock', 'tbl_inventory_products.id', '=', 'tbl_currentstock.tbl_productsId')
+        ->leftJoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id') 
         ->select(
             'tbl_inventory_products.id', 
             'tbl_inventory_products.status', 
@@ -149,7 +150,7 @@ class SweetMenuController extends Controller
             'tbl_inventory_products.code', 
             'tbl_inventory_products.barcode_no',
             'tbl_inventory_products.opening_stock', 
-            'tbl_inventory_products.current_stock', 
+            'tbl_currentstock.currentStock', 
             'tbl_inventory_products.remainder_quantity',
             'tbl_inventory_products.purchase_price', 
             'tbl_inventory_products.sale_price', 
@@ -215,17 +216,27 @@ class SweetMenuController extends Controller
 
     public function checkoutmenuOrder(Request $request)
     {  
-       // return $request;
+            
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
 
-        $Party_id = $request->partyid;
-        $party = Party::find($Party_id);
-        
-        if (!$party) {
+        if ($request->partyid > 0) {
+            $maxCode = Party::where('deleted', 'No')->max('code');
+            $maxCode++;
+            $maxCode = str_pad($maxCode, 6, '0', STR_PAD_LEFT);
+            $Party_id = $request->partyid;
+            $party = Party::find($Party_id);
+            $party -> code =  $maxCode;
+            $party->current_due += ($request->totalAmount - $request->payment);
+            $party->save();
+        }else{
+            $maxCode = Party::where('deleted', 'No')->max('code');
+            $maxCode++;
+            $maxCode = str_pad($maxCode, 6, '0', STR_PAD_LEFT);
             $party = new Party();
             $party->name = $request->partyname;
             $party->contact = $request->partyPhoneNumber;
-            $party->current_due = '0.00';
+            $party->current_due =$request->totalAmount - $request->payment;
+            $party -> code =  $maxCode;
             $party->opening_due = '0.00';
             $party->party_type = 'Walkin_Customer';
             $party->created_by = auth()->user()->id;
@@ -240,7 +251,7 @@ class SweetMenuController extends Controller
         
         $Current_Balance = '0.00';
         $userId = auth()->user()->id;
-        $cartString = 'menu_item_purchase_cart_array_' . $userId;
+         $cartString = 'menu_item_purchase_cart_array_' . $userId;
         
         if (!Session::has($cartString) || empty(Session::get($cartString))) {
             return response()->json(['status' => 'error', 'message' => 'No items in the cart to checkout']);
@@ -255,7 +266,7 @@ class SweetMenuController extends Controller
             $maxCode = str_pad($maxCode, 6, '0', STR_PAD_LEFT);
             $order = new OrderModel();
             $order->code =  $maxCode;
-            $order->discount = $request->discount;
+            $order->grand_discount = $request->discount;
             $order->vat = $request->vat;
             $order->ait = $request->ait;
             $order->grand_total = $request->grandTotal;
@@ -618,7 +629,7 @@ class SweetMenuController extends Controller
                                     ' . $menu_name . '
                                 </td>
                                 <td class="p-1">
-                                    <input type="text" class="form-control text-center" style="width: 100%;"  id="menu_quantity_' . $product_id . '_' . $userId . '" name="menu_quantity[]" oninput="loadmenuCartandUpdate(' . $product_id . ',' . $userId . ');validateNumericInput(this);" value="'. $menu_quantity . '" step="1" min="0" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                    <input type="text" class="form-control text-center" style="width: 100%;"  id="menu_quantity_' . $product_id . '_' . $userId . '" name="menu_quantity[]" oninput="loadmenuCartandUpdate(' . $product_id . ',' . $userId . ');validateNumericInput(this);" value="'. $menu_quantity . '" step="1" min="0" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46 && this.value.indexOf('.') == -1);"/>
                                 </td>
                                 <td class="p-1" id="menubreak_item_subtotal">
                                     ' .$menu_broken_Sell_quantity. '
@@ -816,12 +827,14 @@ class SweetMenuController extends Controller
 
     
     public function createmenuPDF($id)
-    {
+    {        
+    //   $payemntMethod = ChartOfAccounts::find($id);
         
         $orderinvoicedata = DB::table('tbl_restaurant_order_details')
         ->leftJoin('tbl_restaurant_order', 'tbl_restaurant_order_details.order_id', '=', 'tbl_restaurant_order.id')
         ->leftJoin('tbl_crm_parties', 'tbl_restaurant_order.party_id', '=', 'tbl_crm_parties.id')
         ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
+        ->leftJoin('tbl_accounts_coas', 'tbl_accounts_coas.id', '=', 'tbl_restaurant_order.payment_method')
  
         ->select(
             'tbl_restaurant_order_details.id', 
@@ -829,9 +842,13 @@ class SweetMenuController extends Controller
             'tbl_restaurant_order.id as order_id', 
             'tbl_restaurant_order.paid_amount', 
             'tbl_restaurant_order.grand_discount', 
+            'tbl_restaurant_order.total_amount', 
+            'tbl_restaurant_order.grand_total', 
+            'tbl_restaurant_order.ait',
             'tbl_restaurant_order.vat', 
             'tbl_restaurant_order.code AS restaurant_order_code', 
             'tbl_restaurant_order.due', 
+            'tbl_accounts_coas.name as paymentmethodName', 
             'tbl_restaurant_order.created_by', 
             'tbl_crm_parties.name AS party_name',  
             'tbl_crm_parties.contact AS party_contact', 

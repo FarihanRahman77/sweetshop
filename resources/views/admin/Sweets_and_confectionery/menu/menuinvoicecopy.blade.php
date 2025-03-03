@@ -83,29 +83,9 @@
         }
 
         .totals-table td {
-            /* padding: 6px 5px; */
+            padding: 6px 5px;
             text-align: right;
             font-size: 8px;
-        }
-        .totalstable {
-    width: 100%;
-    margin-top: 10px;
-    border-collapse: collapse;
-        }
-
-        .totalstable td {
-            font-size: 12px;
-            padding: 6px 5px;
-        }
-
-        .totalstable .left-col {
-            text-align: right;
-            width: 80%;  
-        }
-
-        .totalstable .right-col {
-            text-align: right;
-            width: 20%;  
         }
 
         .total-row {
@@ -178,10 +158,6 @@
                 font-size: 0.65rem;
             }
         }
-
-        .text-right{
-            text-align: right;
-        }
     </style>
     <title>Restaurant Invoice</title>
 </head>
@@ -251,7 +227,7 @@
                 $unitPrice=$item->unit_price;
             }
         @endphp
-            
+
     <tr>
         <td>{{ $index + 1 }}</td>
         <td style="text-align: left;">{{ $item->menu_name }}</td>
@@ -261,45 +237,21 @@
     </tr>
 
     @php
-        $grandTotal = $item->total_amount;
-        $Paidamount = $item->paid_amount;
+        $grandTotal += $unitPrice * $qty;
     @endphp
 @endforeach
 
         </tbody>
     </table>
-    <table class="totalstable">
-    <tr>
-        <td class="left-col">Total Amount :</td>
-        <td class="right-col">{{ $item->grand_total }}</td>
-    </tr>
-    <tr>
-        <td class="left-col">Discount :</td>
-        <td class="right-col">{{ $item->grand_discount }}</td>
-    </tr>
-    <tr>
-        <td class="left-col">Vat :</td>
-        <td class="right-col">{{ $item->vat }}</td>
-    </tr>
-    <tr>
-        <td class="left-col">Ait :</td>
-        <td class="right-col">{{ $item->ait }}</td>
-    </tr>
-    <tr>
-        <td class="left-col">Payment Method :</td>
-        <td class="right-col">{{ $item->paymentmethodName }}</td>
-    </tr>
-    <tr >
-            <td class="left-col"><b>Grand Total:</b></td>
-            <td class="right-col">{{ number_format($grandTotal, 2) }}</td>
+
+    <table class="totals-table">
+        <tr class="total-row">
+            <td>Grand Total:</td>
+            <td>{{ number_format($grandTotal, 2) }}</td>
         </tr>
-    <tr >
-            <td class="left-col">Paid Amount:</td>
-            <td class="right-col">{{ number_format($Paidamount, 2) }}</td>
-        </tr>
-      
-</table>
-    
+        
+    </table>
+
     <div class="amount-in-words" style="margin-bottom:10px;">
         <strong>Amount in Words:</strong> {{ ucfirst(numberToWord($grandTotal)) }} taka only
     </div>

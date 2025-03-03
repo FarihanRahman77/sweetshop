@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2025 at 12:57 PM
+-- Generation Time: Feb 27, 2025 at 01:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hotel_management`
+-- Database: `sweets_shop`
 --
 
 -- --------------------------------------------------------
@@ -1100,7 +1100,7 @@ INSERT INTO `tbl_accounts_coas` (`id`, `name`, `slug`, `amount`, `code`, `our_co
 (5, 'Bank', 'Bank', 0.00, 500000000, 500000000, 500000000, 599999999, 0, 'No', 'Active', 'No', 0, NULL, NULL, NULL, '2024-02-03 23:37:16', '2024-02-03 23:37:16'),
 (6, 'Sales', 'Sales', 0.00, 301000000, 301000000, 301000000, 309900000, 3, 'No', 'Active', 'No', 0, NULL, NULL, NULL, '2024-02-03 23:37:16', '2024-02-03 23:37:16'),
 (7, 'Purchase', 'Purchase', 0.00, 401000000, 401000000, 401000000, 409900000, 4, 'No', 'Active', 'No', 0, NULL, NULL, NULL, '2024-02-03 23:37:16', '2024-02-03 23:37:16'),
-(8, 'Cash', 'cash', 144763.00, 501000000, 501000000, 501000000, 509900000, 5, 'No', 'Active', 'No', 0, NULL, NULL, NULL, '2024-02-03 23:37:16', '2025-01-09 01:30:43'),
+(8, 'Cash', 'cash', 144143.00, 501000000, 501000000, 501000000, 509900000, 5, 'No', 'Active', 'No', 0, NULL, NULL, NULL, '2024-02-03 23:37:16', '2025-02-27 03:19:15'),
 (9, 'Cash Amount', 'cash-amount', 0.00, 501010000, 501010000, 501010000, 501099000, 8, 'No', 'Active', 'No', 0, NULL, NULL, NULL, '2024-02-03 23:37:16', '2024-02-03 23:37:16'),
 (10, 'Discount', 'Discount', 0.00, 502000000, 502000000, 502000000, 509900000, 5, 'No', 'Active', 'No', 0, NULL, NULL, NULL, '2024-02-03 23:37:16', '2024-02-03 23:37:16');
 
@@ -1175,7 +1175,40 @@ INSERT INTO `tbl_accounts_vouchers` (`id`, `vendor_id`, `tbl_booking_id`, `tbl_r
 (27, 44, NULL, 1, NULL, NULL, NULL, NULL, 0, 0, 0, 1900.00, NULL, '2025-02-06 11:01:22', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-06 11:22:00', NULL, NULL, NULL, NULL, '2025-02-06 05:01:22', '2025-02-06 05:01:22'),
 (28, 45, NULL, 2, NULL, NULL, NULL, NULL, 0, 0, 0, 713.00, NULL, '2025-02-06 11:03:53', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-06 11:53:00', NULL, NULL, NULL, NULL, '2025-02-06 05:03:53', '2025-02-06 05:03:53'),
 (29, 46, NULL, 3, NULL, NULL, NULL, NULL, 0, 0, 0, 1062.00, NULL, '2025-02-06 11:32:00', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-06 11:00:00', NULL, NULL, NULL, NULL, '2025-02-06 05:32:00', '2025-02-06 05:32:00'),
-(30, 47, NULL, 4, NULL, NULL, NULL, NULL, 0, 0, 0, 580.00, NULL, '2025-02-06 11:36:42', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-06 11:42:00', NULL, NULL, NULL, NULL, '2025-02-06 05:36:42', '2025-02-06 05:36:42');
+(30, 47, NULL, 4, NULL, NULL, NULL, NULL, 0, 0, 0, 580.00, NULL, '2025-02-06 11:36:42', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-06 11:42:00', NULL, NULL, NULL, NULL, '2025-02-06 05:36:42', '2025-02-06 05:36:42'),
+(31, 48, NULL, 5, NULL, NULL, NULL, NULL, 0, 0, 0, 390.00, NULL, '2025-02-22 10:12:40', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-22 10:40:00', NULL, NULL, NULL, NULL, '2025-02-22 04:12:40', '2025-02-22 04:12:40'),
+(32, 4, NULL, 6, NULL, NULL, NULL, NULL, 0, 0, 0, 390.00, NULL, '2025-02-22 11:24:32', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-22 11:32:00', NULL, NULL, NULL, NULL, '2025-02-22 05:24:32', '2025-02-22 05:24:32'),
+(33, 4, NULL, 7, NULL, NULL, NULL, NULL, 0, 0, 0, 390.00, NULL, '2025-02-22 12:53:28', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-22 12:28:00', NULL, NULL, NULL, NULL, '2025-02-22 06:53:28', '2025-02-22 06:53:28'),
+(34, 4, NULL, 8, NULL, NULL, NULL, NULL, 0, 0, 0, 370.00, NULL, '2025-02-22 12:53:55', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-22 12:55:00', NULL, NULL, NULL, NULL, '2025-02-22 06:53:55', '2025-02-22 06:53:55'),
+(35, 4, NULL, 9, NULL, NULL, NULL, NULL, 0, 0, 0, 150.00, NULL, '2025-02-25 07:08:46', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-25 07:46:00', NULL, NULL, NULL, NULL, '2025-02-25 01:08:46', '2025-02-25 01:08:46'),
+(36, 49, NULL, 10, NULL, NULL, NULL, NULL, 0, 0, 0, 390.00, NULL, '2025-02-26 04:43:51', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-26 04:51:00', NULL, NULL, NULL, NULL, '2025-02-25 22:43:51', '2025-02-25 22:43:51'),
+(37, 9, NULL, 14, NULL, NULL, NULL, NULL, 0, 0, 0, 370.00, NULL, '2025-02-26 05:21:26', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-26 05:26:00', NULL, NULL, NULL, NULL, '2025-02-25 23:21:26', '2025-02-25 23:21:26'),
+(38, 10, NULL, 15, NULL, NULL, NULL, NULL, 0, 0, 0, 350.00, NULL, '2025-02-26 06:27:29', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-26 06:29:00', NULL, NULL, NULL, NULL, '2025-02-26 00:27:29', '2025-02-26 00:27:29'),
+(39, 1, NULL, 16, NULL, NULL, NULL, NULL, 0, 0, 0, 760.00, NULL, '2025-02-26 06:31:53', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-26 06:53:00', NULL, NULL, NULL, NULL, '2025-02-26 00:31:53', '2025-02-26 00:31:53'),
+(40, 1, NULL, 17, NULL, NULL, NULL, NULL, 0, 0, 0, 810.00, NULL, '2025-02-26 06:33:21', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-26 06:21:00', NULL, NULL, NULL, NULL, '2025-02-26 00:33:21', '2025-02-26 00:33:21'),
+(41, 1, NULL, 18, NULL, NULL, NULL, NULL, 0, 0, 0, 810.00, NULL, '2025-02-26 07:29:45', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-26 07:45:00', NULL, NULL, NULL, NULL, '2025-02-26 01:29:45', '2025-02-26 01:29:45'),
+(42, 11, NULL, 19, NULL, NULL, NULL, NULL, 0, 0, 0, 810.00, NULL, '2025-02-26 07:39:32', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-26 07:32:00', NULL, NULL, NULL, NULL, '2025-02-26 01:39:32', '2025-02-26 01:39:32'),
+(43, 1, NULL, 20, NULL, NULL, NULL, NULL, 0, 0, 0, 770.00, NULL, '2025-02-27 06:56:24', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 06:24:00', NULL, NULL, NULL, NULL, '2025-02-27 00:56:24', '2025-02-27 00:56:24'),
+(44, 12, NULL, 21, NULL, NULL, NULL, NULL, 0, 0, 0, 250.00, NULL, '2025-02-27 07:00:03', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:03:00', NULL, NULL, NULL, NULL, '2025-02-27 01:00:03', '2025-02-27 01:00:03'),
+(45, 12, NULL, 22, NULL, NULL, NULL, NULL, 0, 0, 0, 470.00, NULL, '2025-02-27 07:01:04', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:04:00', NULL, NULL, NULL, NULL, '2025-02-27 01:01:04', '2025-02-27 01:01:04'),
+(46, 1, NULL, 23, NULL, NULL, NULL, NULL, 0, 0, 0, 420.00, NULL, '2025-02-27 07:02:15', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:15:00', NULL, NULL, NULL, NULL, '2025-02-27 01:02:15', '2025-02-27 01:02:15'),
+(47, 1, NULL, 24, NULL, NULL, NULL, NULL, 0, 0, 0, 380.00, NULL, '2025-02-27 07:03:37', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:37:00', NULL, NULL, NULL, NULL, '2025-02-27 01:03:37', '2025-02-27 01:03:37'),
+(48, 1, NULL, 25, NULL, NULL, NULL, NULL, 0, 0, 0, 730.00, NULL, '2025-02-27 07:19:48', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:48:00', NULL, NULL, NULL, NULL, '2025-02-27 01:19:48', '2025-02-27 01:19:48'),
+(49, 1, NULL, 26, NULL, NULL, NULL, NULL, 0, 0, 0, 620.00, NULL, '2025-02-27 07:21:05', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:05:00', NULL, NULL, NULL, NULL, '2025-02-27 01:21:05', '2025-02-27 01:21:05'),
+(50, 1, NULL, 27, NULL, NULL, NULL, NULL, 0, 0, 0, 1520.00, NULL, '2025-02-27 07:25:28', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:28:00', NULL, NULL, NULL, NULL, '2025-02-27 01:25:28', '2025-02-27 01:25:28'),
+(51, 1, NULL, 28, NULL, NULL, NULL, NULL, 0, 0, 0, 770.00, NULL, '2025-02-27 07:26:04', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 07:04:00', NULL, NULL, NULL, NULL, '2025-02-27 01:26:04', '2025-02-27 01:26:04'),
+(52, 10, NULL, NULL, NULL, NULL, 12, NULL, 0, 0, 0, 260.00, NULL, '2025-02-27', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 09:55:00', NULL, NULL, NULL, NULL, '2025-02-27 03:06:55', '2025-02-27 03:06:55'),
+(53, 10, NULL, NULL, NULL, NULL, 13, NULL, 0, 0, 0, 120.00, NULL, '2025-02-27', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 09:12:00', NULL, NULL, NULL, NULL, '2025-02-27 03:13:12', '2025-02-27 03:13:12'),
+(54, 10, NULL, NULL, NULL, NULL, 14, NULL, 0, 0, 0, 240.00, NULL, '2025-02-27', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 09:15:00', NULL, NULL, NULL, NULL, '2025-02-27 03:19:15', '2025-02-27 03:19:15'),
+(55, 1, NULL, 29, NULL, NULL, NULL, NULL, 0, 0, 0, 205.00, NULL, '2025-02-27 10:07:35', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 10:35:00', NULL, NULL, NULL, NULL, '2025-02-27 04:07:35', '2025-02-27 04:07:35'),
+(56, 1, NULL, 30, NULL, NULL, NULL, NULL, 0, 0, 0, 400.00, NULL, '2025-02-27 10:32:31', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 10:31:00', NULL, NULL, NULL, NULL, '2025-02-27 04:32:31', '2025-02-27 04:32:31'),
+(57, 1, NULL, 31, NULL, NULL, NULL, NULL, 0, 0, 0, 245.00, NULL, '2025-02-27 10:47:23', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 10:23:00', NULL, NULL, NULL, NULL, '2025-02-27 04:47:23', '2025-02-27 04:47:23'),
+(58, 1, NULL, 32, NULL, NULL, NULL, NULL, 0, 0, 0, 245.00, NULL, '2025-02-27 10:57:03', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 10:03:00', NULL, NULL, NULL, NULL, '2025-02-27 04:57:03', '2025-02-27 04:57:03'),
+(59, 1, NULL, 33, NULL, NULL, NULL, NULL, 0, 0, 0, 1132.00, NULL, '2025-02-27 11:11:51', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 11:51:00', NULL, NULL, NULL, NULL, '2025-02-27 05:11:51', '2025-02-27 05:11:51'),
+(60, 1, NULL, 34, NULL, NULL, NULL, NULL, 0, 0, 0, 861.00, NULL, '2025-02-27 11:15:56', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 11:56:00', NULL, NULL, NULL, NULL, '2025-02-27 05:15:56', '2025-02-27 05:15:56'),
+(61, 1, NULL, 35, NULL, NULL, NULL, NULL, 0, 0, 0, 1650.00, NULL, '2025-02-27 11:30:41', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 11:41:00', NULL, NULL, NULL, NULL, '2025-02-27 05:30:41', '2025-02-27 05:30:41'),
+(62, 1, NULL, 36, NULL, NULL, NULL, NULL, 0, 0, 0, 1460.00, NULL, '2025-02-27 11:59:57', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 11:57:00', NULL, NULL, NULL, NULL, '2025-02-27 05:59:57', '2025-02-27 05:59:57'),
+(63, 1, NULL, 37, NULL, NULL, NULL, NULL, 0, 0, 0, 10790.00, NULL, '2025-02-27 12:12:24', NULL, NULL, 'Cash', 'Active', 0, 'No', 1, '2025-02-27 12:24:00', NULL, NULL, NULL, NULL, '2025-02-27 06:12:24', '2025-02-27 06:12:24');
 
 -- --------------------------------------------------------
 
@@ -1244,7 +1277,43 @@ INSERT INTO `tbl_acc_voucher_details` (`id`, `tbl_acc_coa_id`, `tbl_acc_voucher_
 (27, 6, 27, NULL, NULL, 0, NULL, NULL, 1900.00, 'Order amount paid 1900 Tk , Date:  2025-02-06 11:01:22', NULL, NULL, '2025-02-06', 'Active', 0, 'No', 1, '2025-02-06 11:22:00', NULL, NULL, NULL, NULL, '2025-02-06 05:01:22', '2025-02-06 05:01:22'),
 (28, 6, 28, NULL, NULL, 0, NULL, NULL, 713.00, 'Order amount paid 713 Tk , Date:  2025-02-06 11:03:53', NULL, NULL, '2025-02-06', 'Active', 0, 'No', 1, '2025-02-06 11:53:00', NULL, NULL, NULL, NULL, '2025-02-06 05:03:53', '2025-02-06 05:03:53'),
 (29, 6, 29, NULL, NULL, 0, NULL, NULL, 1062.00, 'Order amount paid 1062 Tk , Date:  2025-02-06 11:32:00', NULL, NULL, '2025-02-06', 'Active', 0, 'No', 1, '2025-02-06 11:00:00', NULL, NULL, NULL, NULL, '2025-02-06 05:32:00', '2025-02-06 05:32:00'),
-(30, 6, 30, NULL, NULL, 0, NULL, NULL, 580.00, 'Order amount paid 580 Tk , Date:  2025-02-06 11:36:42', NULL, NULL, '2025-02-06', 'Active', 0, 'No', 1, '2025-02-06 11:42:00', NULL, NULL, NULL, NULL, '2025-02-06 05:36:42', '2025-02-06 05:36:42');
+(30, 6, 30, NULL, NULL, 0, NULL, NULL, 580.00, 'Order amount paid 580 Tk , Date:  2025-02-06 11:36:42', NULL, NULL, '2025-02-06', 'Active', 0, 'No', 1, '2025-02-06 11:42:00', NULL, NULL, NULL, NULL, '2025-02-06 05:36:42', '2025-02-06 05:36:42'),
+(31, 6, 31, NULL, NULL, 0, NULL, NULL, 390.00, 'Order amount paid 390 Tk , Date:  2025-02-22 10:12:40', NULL, NULL, '2025-02-22', 'Active', 0, 'No', 1, '2025-02-22 10:40:00', NULL, NULL, NULL, NULL, '2025-02-22 04:12:40', '2025-02-22 04:12:40'),
+(32, 6, 32, NULL, NULL, 0, NULL, NULL, 390.00, 'Order amount paid 390 Tk , Date:  2025-02-22 11:24:32', NULL, NULL, '2025-02-22', 'Active', 0, 'No', 1, '2025-02-22 11:32:00', NULL, NULL, NULL, NULL, '2025-02-22 05:24:32', '2025-02-22 05:24:32'),
+(33, 6, 33, NULL, NULL, 0, NULL, NULL, 390.00, 'Order amount paid 390 Tk , Date:  2025-02-22 12:53:28', NULL, NULL, '2025-02-22', 'Active', 0, 'No', 1, '2025-02-22 12:28:00', NULL, NULL, NULL, NULL, '2025-02-22 06:53:28', '2025-02-22 06:53:28'),
+(34, 6, 34, NULL, NULL, 0, NULL, NULL, 370.00, 'Order amount paid 370 Tk , Date:  2025-02-22 12:53:55', NULL, NULL, '2025-02-22', 'Active', 0, 'No', 1, '2025-02-22 12:55:00', NULL, NULL, NULL, NULL, '2025-02-22 06:53:55', '2025-02-22 06:53:55'),
+(35, 6, 35, NULL, NULL, 0, NULL, NULL, 150.00, 'Order amount paid 150 Tk , Date:  2025-02-25 07:08:46', NULL, NULL, '2025-02-25', 'Active', 0, 'No', 1, '2025-02-25 07:46:00', NULL, NULL, NULL, NULL, '2025-02-25 01:08:46', '2025-02-25 01:08:46'),
+(36, 6, 36, NULL, NULL, 0, NULL, NULL, 390.00, 'Order amount paid 390 Tk , Date:  2025-02-26 04:43:51', NULL, NULL, '2025-02-26', 'Active', 0, 'No', 1, '2025-02-26 04:51:00', NULL, NULL, NULL, NULL, '2025-02-25 22:43:51', '2025-02-25 22:43:51'),
+(37, 6, 37, NULL, NULL, 0, NULL, NULL, 370.00, 'Order amount paid 370 Tk , Date:  2025-02-26 05:21:26', NULL, NULL, '2025-02-26', 'Active', 0, 'No', 1, '2025-02-26 05:26:00', NULL, NULL, NULL, NULL, '2025-02-25 23:21:26', '2025-02-25 23:21:26'),
+(38, 6, 38, NULL, NULL, 0, NULL, NULL, 350.00, 'Order amount paid 350 Tk , Date:  2025-02-26 06:27:29', NULL, NULL, '2025-02-26', 'Active', 0, 'No', 1, '2025-02-26 06:29:00', NULL, NULL, NULL, NULL, '2025-02-26 00:27:29', '2025-02-26 00:27:29'),
+(39, 6, 39, NULL, NULL, 0, NULL, NULL, 760.00, 'Order amount paid 760 Tk , Date:  2025-02-26 06:31:53', NULL, NULL, '2025-02-26', 'Active', 0, 'No', 1, '2025-02-26 06:53:00', NULL, NULL, NULL, NULL, '2025-02-26 00:31:53', '2025-02-26 00:31:53'),
+(40, 6, 40, NULL, NULL, 0, NULL, NULL, 810.00, 'Order amount paid 810 Tk , Date:  2025-02-26 06:33:21', NULL, NULL, '2025-02-26', 'Active', 0, 'No', 1, '2025-02-26 06:21:00', NULL, NULL, NULL, NULL, '2025-02-26 00:33:21', '2025-02-26 00:33:21'),
+(41, 6, 41, NULL, NULL, 0, NULL, NULL, 810.00, 'Order amount paid 810 Tk , Date:  2025-02-26 07:29:45', NULL, NULL, '2025-02-26', 'Active', 0, 'No', 1, '2025-02-26 07:45:00', NULL, NULL, NULL, NULL, '2025-02-26 01:29:45', '2025-02-26 01:29:45'),
+(42, 6, 42, NULL, NULL, 0, NULL, NULL, 810.00, 'Order amount paid 810 Tk , Date:  2025-02-26 07:39:32', NULL, NULL, '2025-02-26', 'Active', 0, 'No', 1, '2025-02-26 07:32:00', NULL, NULL, NULL, NULL, '2025-02-26 01:39:32', '2025-02-26 01:39:32'),
+(43, 6, 43, NULL, NULL, 0, NULL, NULL, 770.00, 'Order amount paid 770 Tk , Date:  2025-02-27 06:56:24', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 06:24:00', NULL, NULL, NULL, NULL, '2025-02-27 00:56:24', '2025-02-27 00:56:24'),
+(44, 6, 44, NULL, NULL, 0, NULL, NULL, 250.00, 'Order amount paid 250 Tk , Date:  2025-02-27 07:00:03', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:03:00', NULL, NULL, NULL, NULL, '2025-02-27 01:00:03', '2025-02-27 01:00:03'),
+(45, 6, 45, NULL, NULL, 0, NULL, NULL, 470.00, 'Order amount paid 470 Tk , Date:  2025-02-27 07:01:04', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:04:00', NULL, NULL, NULL, NULL, '2025-02-27 01:01:04', '2025-02-27 01:01:04'),
+(46, 6, 46, NULL, NULL, 0, NULL, NULL, 420.00, 'Order amount paid 420 Tk , Date:  2025-02-27 07:02:15', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:15:00', NULL, NULL, NULL, NULL, '2025-02-27 01:02:15', '2025-02-27 01:02:15'),
+(47, 6, 47, NULL, NULL, 0, NULL, NULL, 380.00, 'Order amount paid 380 Tk , Date:  2025-02-27 07:03:37', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:37:00', NULL, NULL, NULL, NULL, '2025-02-27 01:03:37', '2025-02-27 01:03:37'),
+(48, 6, 48, NULL, NULL, 0, NULL, NULL, 730.00, 'Order amount paid 730 Tk , Date:  2025-02-27 07:19:48', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:48:00', NULL, NULL, NULL, NULL, '2025-02-27 01:19:48', '2025-02-27 01:19:48'),
+(49, 6, 49, NULL, NULL, 0, NULL, NULL, 620.00, 'Order amount paid 620 Tk , Date:  2025-02-27 07:21:05', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:05:00', NULL, NULL, NULL, NULL, '2025-02-27 01:21:05', '2025-02-27 01:21:05'),
+(50, 6, 50, NULL, NULL, 0, NULL, NULL, 1520.00, 'Order amount paid 1520 Tk , Date:  2025-02-27 07:25:28', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:28:00', NULL, NULL, NULL, NULL, '2025-02-27 01:25:28', '2025-02-27 01:25:28'),
+(51, 6, 51, NULL, NULL, 0, NULL, NULL, 770.00, 'Order amount paid 770 Tk , Date:  2025-02-27 07:26:04', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 07:04:00', NULL, NULL, NULL, NULL, '2025-02-27 01:26:04', '2025-02-27 01:26:04'),
+(52, 30, 52, NULL, NULL, 0, NULL, 260.00, NULL, 'Purchase created with Purchase code 000011', NULL, NULL, NULL, 'Active', 0, 'No', 1, '2025-02-27 09:06:55', NULL, NULL, NULL, NULL, '2025-02-27 03:06:55', '2025-02-27 03:06:55'),
+(53, 30, 52, NULL, NULL, 0, NULL, NULL, 260.00, 'Purchase amount paid with Purchase code 000011', NULL, NULL, NULL, 'Active', 0, 'No', 1, '2025-02-27 09:55:00', NULL, NULL, NULL, NULL, '2025-02-27 03:06:55', '2025-02-27 03:06:55'),
+(54, 30, 53, NULL, NULL, 0, NULL, 120.00, NULL, 'Purchase created with Purchase code 000012', NULL, NULL, NULL, 'Active', 0, 'No', 1, '2025-02-27 09:13:12', NULL, NULL, NULL, NULL, '2025-02-27 03:13:12', '2025-02-27 03:13:12'),
+(55, 30, 53, NULL, NULL, 0, NULL, NULL, 120.00, 'Purchase amount paid with Purchase code 000012', NULL, NULL, NULL, 'Active', 0, 'No', 1, '2025-02-27 09:12:00', NULL, NULL, NULL, NULL, '2025-02-27 03:13:12', '2025-02-27 03:13:12'),
+(56, 30, 54, NULL, NULL, 0, NULL, 240.00, NULL, 'Purchase created with Purchase code 000013', NULL, NULL, NULL, 'Active', 0, 'No', 1, '2025-02-27 09:19:15', NULL, NULL, NULL, NULL, '2025-02-27 03:19:15', '2025-02-27 03:19:15'),
+(57, 30, 54, NULL, NULL, 0, NULL, NULL, 240.00, 'Purchase amount paid with Purchase code 000013', NULL, NULL, NULL, 'Active', 0, 'No', 1, '2025-02-27 09:15:00', NULL, NULL, NULL, NULL, '2025-02-27 03:19:15', '2025-02-27 03:19:15'),
+(58, 6, 55, NULL, NULL, 0, NULL, NULL, 205.00, 'Order amount paid 205 Tk , Date:  2025-02-27 10:07:35', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 10:35:00', NULL, NULL, NULL, NULL, '2025-02-27 04:07:35', '2025-02-27 04:07:35'),
+(59, 6, 56, NULL, NULL, 0, NULL, NULL, 400.00, 'Order amount paid 400 Tk , Date:  2025-02-27 10:32:31', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 10:31:00', NULL, NULL, NULL, NULL, '2025-02-27 04:32:31', '2025-02-27 04:32:31'),
+(60, 6, 57, NULL, NULL, 0, NULL, NULL, 245.00, 'Order amount paid 245 Tk , Date:  2025-02-27 10:47:23', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 10:23:00', NULL, NULL, NULL, NULL, '2025-02-27 04:47:23', '2025-02-27 04:47:23'),
+(61, 6, 58, NULL, NULL, 0, NULL, NULL, 245.00, 'Order amount paid 245 Tk , Date:  2025-02-27 10:57:03', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 10:03:00', NULL, NULL, NULL, NULL, '2025-02-27 04:57:03', '2025-02-27 04:57:03'),
+(62, 6, 59, NULL, NULL, 0, NULL, NULL, 1132.00, 'Order amount paid 1132 Tk , Date:  2025-02-27 11:11:51', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 11:51:00', NULL, NULL, NULL, NULL, '2025-02-27 05:11:51', '2025-02-27 05:11:51'),
+(63, 6, 60, NULL, NULL, 0, NULL, NULL, 861.00, 'Order amount paid 861 Tk , Date:  2025-02-27 11:15:56', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 11:56:00', NULL, NULL, NULL, NULL, '2025-02-27 05:15:56', '2025-02-27 05:15:56'),
+(64, 6, 61, NULL, NULL, 0, NULL, NULL, 1650.00, 'Order amount paid 1650 Tk , Date:  2025-02-27 11:30:41', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 11:41:00', NULL, NULL, NULL, NULL, '2025-02-27 05:30:41', '2025-02-27 05:30:41'),
+(65, 6, 62, NULL, NULL, 0, NULL, NULL, 1460.00, 'Order amount paid 1460 Tk , Date:  2025-02-27 11:59:57', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 11:57:00', NULL, NULL, NULL, NULL, '2025-02-27 05:59:57', '2025-02-27 05:59:57'),
+(66, 6, 63, NULL, NULL, 0, NULL, NULL, 10790.00, 'Order amount paid 10790 Tk , Date:  2025-02-27 12:12:24', NULL, NULL, '2025-02-27', 'Active', 0, 'No', 1, '2025-02-27 12:24:00', NULL, NULL, NULL, NULL, '2025-02-27 06:12:24', '2025-02-27 06:12:24');
 
 -- --------------------------------------------------------
 
@@ -2887,7 +2956,7 @@ CREATE TABLE `tbl_crm_parties` (
   `nid_image` varchar(255) DEFAULT NULL,
   `remarks` longtext DEFAULT NULL,
   `status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
-  `deleted` enum('Yes','No') NOT NULL DEFAULT 'Yes',
+  `deleted` enum('Yes','No') NOT NULL DEFAULT 'No',
   `created_by` bigint(20) DEFAULT NULL,
   `last_updated_by` bigint(20) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
@@ -2904,27 +2973,10 @@ CREATE TABLE `tbl_crm_parties` (
 --
 
 INSERT INTO `tbl_crm_parties` (`id`, `name`, `code`, `address`, `district`, `country_name`, `email`, `contact_person`, `contact`, `alternate_contact`, `party_variety`, `customer_type`, `credit_limit`, `current_due`, `opening_due`, `party_type`, `nid_no`, `nid_image`, `remarks`, `status`, `deleted`, `created_by`, `last_updated_by`, `created_date`, `updated_by`, `updated_date`, `deleted_by`, `deleted_date`, `created_at`, `updated_at`) VALUES
-(3, 'Farhan', '000001', 'GEC', NULL, NULL, NULL, NULL, '01887922063', NULL, NULL, NULL, NULL, 1000.00, NULL, 'Walkin_Customer', '12345555433', '', 'Everything is good!', 'Active', 'No', 1, NULL, '2025-01-09 10:47:29', NULL, NULL, NULL, NULL, '2025-01-09 04:47:29', '2025-01-09 04:47:29'),
-(4, 'Tonmoy', '000002', 'GEC', NULL, NULL, NULL, NULL, '01875642457', NULL, NULL, NULL, NULL, 13099.00, NULL, 'Walkin_Customer', '98765678900', '1736594284fff.jpg', 'Everything is good!', 'Active', 'No', 1, NULL, '2025-01-11 11:18:04', NULL, NULL, NULL, NULL, '2025-01-11 05:18:04', '2025-01-29 01:20:22'),
-(5, 'jam shed', NULL, NULL, NULL, NULL, NULL, NULL, '028474539235', NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-01 09:27:35', NULL, NULL, NULL, NULL, '2025-02-01 03:27:35', '2025-02-01 03:27:35'),
-(6, 'Salim', NULL, NULL, NULL, NULL, NULL, NULL, '01456789034', NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-01 10:20:49', NULL, NULL, NULL, NULL, '2025-02-01 04:20:49', '2025-02-01 04:20:49'),
-(31, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 06:02:55', NULL, NULL, NULL, NULL, '2025-02-06 00:02:55', '2025-02-06 00:02:55'),
-(32, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 06:15:33', NULL, NULL, NULL, NULL, '2025-02-06 00:15:33', '2025-02-06 00:15:33'),
-(33, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 06:15:51', NULL, NULL, NULL, NULL, '2025-02-06 00:15:51', '2025-02-06 00:15:51'),
-(34, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 06:18:21', NULL, NULL, NULL, NULL, '2025-02-06 00:18:21', '2025-02-06 00:18:21'),
-(35, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 06:56:59', NULL, NULL, NULL, NULL, '2025-02-06 00:56:59', '2025-02-06 00:56:59'),
-(36, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 09:08:55', NULL, NULL, NULL, NULL, '2025-02-06 03:08:55', '2025-02-06 03:08:55'),
-(37, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 09:10:41', NULL, NULL, NULL, NULL, '2025-02-06 03:10:41', '2025-02-06 03:10:41'),
-(38, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 09:14:00', NULL, NULL, NULL, NULL, '2025-02-06 03:14:00', '2025-02-06 03:14:00'),
-(39, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 09:17:25', NULL, NULL, NULL, NULL, '2025-02-06 03:17:25', '2025-02-06 03:17:25'),
-(40, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 09:20:05', NULL, NULL, NULL, NULL, '2025-02-06 03:20:05', '2025-02-06 03:20:05'),
-(41, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 09:36:33', NULL, NULL, NULL, NULL, '2025-02-06 03:36:33', '2025-02-06 03:36:33'),
-(42, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 09:50:32', NULL, NULL, NULL, NULL, '2025-02-06 03:50:32', '2025-02-06 03:50:32'),
-(43, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 10:59:25', NULL, NULL, NULL, NULL, '2025-02-06 04:59:25', '2025-02-06 04:59:25'),
-(44, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 11:01:22', NULL, NULL, NULL, NULL, '2025-02-06 05:01:22', '2025-02-06 05:01:22'),
-(45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 11:03:53', NULL, NULL, NULL, NULL, '2025-02-06 05:03:53', '2025-02-06 05:03:53'),
-(46, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 11:32:00', NULL, NULL, NULL, NULL, '2025-02-06 05:32:00', '2025-02-06 05:32:00'),
-(47, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-06 11:36:42', NULL, NULL, NULL, NULL, '2025-02-06 05:36:42', '2025-02-06 05:36:42');
+(1, 'No party', NULL, NULL, NULL, NULL, NULL, NULL, '01876543245', NULL, NULL, NULL, NULL, 0.00, NULL, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'No party', NULL, NULL, NULL, NULL, NULL, NULL, '01876543245', NULL, NULL, NULL, NULL, 0.00, 0.00, 'Supplier', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-26 06:27:29', NULL, NULL, NULL, NULL, '2025-02-26 00:27:29', '2025-02-27 03:19:15'),
+(11, 'No party', NULL, NULL, NULL, NULL, NULL, NULL, '01876543248', NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-26 07:39:32', NULL, NULL, NULL, NULL, '2025-02-26 01:39:32', '2025-02-26 01:39:32'),
+(12, 'Ali', NULL, NULL, NULL, NULL, NULL, NULL, '01876543277', NULL, NULL, NULL, NULL, 0.00, 0.00, 'Walkin_Customer', NULL, NULL, NULL, 'Active', 'No', 1, NULL, '2025-02-27 07:00:03', NULL, NULL, NULL, NULL, '2025-02-27 01:00:03', '2025-02-27 01:00:03');
 
 -- --------------------------------------------------------
 
@@ -2937,6 +2989,7 @@ CREATE TABLE `tbl_currentstock` (
   `tbl_productsId` bigint(20) NOT NULL,
   `tbl_wareHouseId` bigint(20) DEFAULT NULL,
   `currentStock` float NOT NULL,
+  `sister_concern_id` bigint(20) DEFAULT NULL,
   `purchaseStock` float NOT NULL DEFAULT 0,
   `salesStock` float NOT NULL DEFAULT 0,
   `purchaseReturnStock` decimal(10,0) NOT NULL DEFAULT 0,
@@ -2945,7 +2998,7 @@ CREATE TABLE `tbl_currentstock` (
   `break_Quantity` int(20) DEFAULT NULL,
   `broken_quantity` bigint(20) DEFAULT NULL,
   `broken_sold` bigint(20) DEFAULT NULL,
-  `broken_damage` bigint(20) DEFAULT NULL,
+  `broken_damage` int(11) NOT NULL DEFAULT 0,
   `broken_remaining` bigint(20) DEFAULT NULL,
   `broken_perslice_price` decimal(10,2) DEFAULT NULL,
   `purchaseDelete` int(11) NOT NULL DEFAULT 0,
@@ -2974,48 +3027,51 @@ CREATE TABLE `tbl_currentstock` (
 -- Dumping data for table `tbl_currentstock`
 --
 
-INSERT INTO `tbl_currentstock` (`id`, `tbl_productsId`, `tbl_wareHouseId`, `currentStock`, `purchaseStock`, `salesStock`, `purchaseReturnStock`, `salesReturnStock`, `initialStock`, `break_Quantity`, `broken_quantity`, `broken_sold`, `broken_damage`, `broken_remaining`, `broken_perslice_price`, `purchaseDelete`, `salesDelete`, `transferFrom`, `transferTo`, `transferFromDelete`, `transferToDelete`, `lastUpdatedDate`, `lastUpdatedBy`, `deleted`, `entryBy`, `entryDate`, `updated_at`, `created_at`, `purchaseReturnDelete`, `salesReturnDelete`, `damageProducts`, `damageDelete`, `deletedBy`, `deletedDate`, `dbInsertDate`) VALUES
-(7, 13, 5, 0, 30, 0, 5, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 30, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-25 13:07:02', '2024-11-27 23:51:45', '2024-11-25 07:07:02', 5.00, 0.00, 0, 0, NULL, NULL, '2024-11-25 19:07:02'),
-(6, 13, 1, 60, 20, 0, 0, 0, 50, NULL, NULL, NULL, NULL, NULL, NULL, 10, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-25 10:49:32', '2024-11-27 23:50:34', '2024-11-25 04:49:32', 0.00, 0.00, 10, 10, NULL, NULL, '2024-11-25 16:49:32'),
-(5, 13, NULL, 20, 0, 0, 0, 0, 20, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-25 10:48:56', '2024-11-25 04:48:56', '2024-11-25 04:48:56', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-25 16:48:56'),
-(8, 13, 10, -25, 30, 0, 55, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-26 07:39:45', '2024-11-27 04:59:07', '2024-11-26 01:39:45', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-26 13:39:45'),
-(9, 14, NULL, 20, 0, 0, 0, 0, 20, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-27 13:07:20', '2024-11-27 07:07:20', '2024-11-27 07:07:20', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-27 19:07:20'),
-(10, 14, 1, 30, 0, 0, 0, 0, 30, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-27 13:07:57', '2024-11-27 07:07:57', '2024-11-27 07:07:57', 0.00, 0.00, 5, 5, NULL, NULL, '2024-11-27 19:07:57'),
-(11, 14, 5, -40, 10, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 50, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-27 13:10:22', '2024-11-27 23:42:19', '2024-11-27 07:10:22', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-27 19:10:22'),
-(12, 15, NULL, 45, 0, 0, 10, 0, 50, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-28 05:54:22', '2024-11-28 00:08:51', '2024-11-27 23:54:22', 5.00, 0.00, 0, 0, NULL, NULL, '2024-11-28 11:54:22'),
-(13, 15, 1, 40, 0, 0, 0, 0, 40, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-28 05:55:05', '2024-11-27 23:55:05', '2024-11-27 23:55:05', 0.00, 0.00, 10, 10, NULL, NULL, '2024-11-28 11:55:05'),
-(14, 15, 5, 10, 10, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-28 05:56:43', '2024-11-27 23:56:43', '2024-11-27 23:56:43', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-28 11:56:43'),
-(15, 13, 4, 1, 1, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-12-05 11:17:38', '2024-12-05 05:17:38', '2024-12-05 05:17:38', 0.00, 0.00, 0, 0, NULL, NULL, '2024-12-05 17:17:38'),
-(16, 16, NULL, 1, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 07:20:22', '2025-01-12 01:20:22', '2025-01-12 01:20:22', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 13:20:22'),
-(17, 16, 1, 20, 0, 0, 0, 0, 20, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 07:21:14', '2025-01-12 01:21:14', '2025-01-12 01:21:14', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 13:21:14'),
-(18, 17, NULL, 10, 0, 0, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:13:15', '2025-01-12 03:13:15', '2025-01-12 03:13:15', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:13:15'),
-(19, 18, NULL, 9.5, 0, 0.5, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:14:50', '2025-02-06 00:02:55', '2025-01-12 03:14:50', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:14:50'),
-(20, 19, NULL, 10, 0, 0, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:16:28', '2025-01-12 03:16:28', '2025-01-12 03:16:28', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:16:28'),
-(21, 20, NULL, 7, 0, 3, 0, 0, 10, NULL, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 03:19:24', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:19:24'),
-(22, 21, NULL, 98, 0, 2, 0, 0, 100, NULL, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 03:20:11', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:20:11'),
-(23, 22, NULL, 98, 0, 2, 0, 0, 100, NULL, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 03:21:18', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:21:18'),
-(24, 23, NULL, 99, 0, 1, 0, 0, 100, NULL, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:36:42', '2025-02-06 05:36:42', '2025-01-12 03:23:41', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:23:41'),
-(25, 24, NULL, 15, 0, 0, 0, 0, 15, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:24:35', '2025-01-12 03:24:35', '2025-01-12 03:24:35', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:24:35'),
-(26, 25, NULL, 97, 0, 3, 0, 0, 100, NULL, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:36:42', '2025-02-06 05:36:42', '2025-01-12 03:26:10', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:26:10'),
-(27, 26, NULL, 100, 0, 0, 0, 0, 100, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:30:16', '2025-01-12 03:30:16', '2025-01-12 03:30:16', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:30:16'),
-(28, 27, NULL, 99, 0, 1, 0, 0, 100, NULL, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:03:53', '2025-02-06 05:03:53', '2025-01-12 03:31:06', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:31:06'),
-(29, 28, NULL, 100, 0, 0, 0, 0, 100, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:31:52', '2025-01-12 03:31:52', '2025-01-12 03:31:52', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:31:52'),
-(30, 29, NULL, 7, 0, 3, 0, 0, 10, NULL, 10, 8, NULL, 2, 39.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 04:19:06', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 16:19:06'),
-(31, 30, NULL, 0, 0, 1, 0, 0, 100, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 10:20:02', '2025-02-05 04:53:12', '2025-01-12 04:20:02', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 16:20:02'),
-(32, 31, NULL, 10, 0, 0, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 12:23:02', '2025-01-12 06:23:02', '2025-01-12 06:23:02', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 18:23:02'),
-(33, 32, NULL, 10, 0, 0, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 12:25:33', '2025-01-12 06:25:33', '2025-01-12 06:25:33', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 18:25:33'),
-(34, 33, NULL, 10, 0, 0, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 12:28:08', '2025-01-12 06:28:08', '2025-01-12 06:28:08', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 18:28:08'),
-(35, 34, NULL, 3, 0, 0, 0, 0, 3, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-26 08:34:16', '2025-01-26 02:34:16', '2025-01-26 02:34:16', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-26 14:34:16'),
-(36, 35, NULL, 9, 0, 1, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-27 05:43:19', '2025-02-05 05:09:19', '2025-01-26 23:43:19', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-27 11:43:19'),
-(37, 36, NULL, 10, 0, 0, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-27 05:44:09', '2025-01-26 23:44:09', '2025-01-26 23:44:09', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-27 11:44:09'),
-(38, 37, NULL, 15, 0, 0, 0, 0, 15, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-27 05:46:42', '2025-01-26 23:46:42', '2025-01-26 23:46:42', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-27 11:46:42'),
-(39, 38, NULL, 10, 0, 0, 0, 0, 10, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-28 10:00:50', '2025-01-28 04:00:50', '2025-01-28 04:00:50', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:00:50'),
-(40, 39, NULL, 15, 0, 0, 0, 0, 15, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-28 10:01:38', '2025-01-28 04:01:38', '2025-01-28 04:01:38', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:01:38'),
-(41, 40, NULL, 15, 0, 0, 0, 0, 15, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-28 10:02:33', '2025-01-28 04:02:33', '2025-01-28 04:02:33', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:02:33'),
-(42, 41, NULL, 20, 0, 0, 0, 0, 20, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-28 10:03:29', '2025-01-28 04:03:29', '2025-01-28 04:03:29', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:03:29'),
-(43, 42, NULL, 15, 0, 0, 0, 0, 15, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-28 10:41:41', '2025-01-28 04:41:41', '2025-01-28 04:41:41', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:41:41'),
-(44, 30, 1, 150, 0, 0, 0, 0, 150, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-05 10:56:31', '2025-02-05 04:56:31', '2025-02-05 04:56:31', 0.00, 0.00, 0, 0, NULL, NULL, '2025-02-05 16:56:31'),
-(47, 45, NULL, 88, 0, 12, 0, 0, 100, NULL, 10, 5, NULL, 5, 40.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:36:42', '2025-02-06 05:36:42', '2025-02-06 03:35:46', 0.00, 0.00, 0, 0, NULL, NULL, '2025-02-06 15:35:46');
+INSERT INTO `tbl_currentstock` (`id`, `tbl_productsId`, `tbl_wareHouseId`, `currentStock`, `sister_concern_id`, `purchaseStock`, `salesStock`, `purchaseReturnStock`, `salesReturnStock`, `initialStock`, `break_Quantity`, `broken_quantity`, `broken_sold`, `broken_damage`, `broken_remaining`, `broken_perslice_price`, `purchaseDelete`, `salesDelete`, `transferFrom`, `transferTo`, `transferFromDelete`, `transferToDelete`, `lastUpdatedDate`, `lastUpdatedBy`, `deleted`, `entryBy`, `entryDate`, `updated_at`, `created_at`, `purchaseReturnDelete`, `salesReturnDelete`, `damageProducts`, `damageDelete`, `deletedBy`, `deletedDate`, `dbInsertDate`) VALUES
+(7, 13, 5, 0, NULL, 30, 0, 5, 0, 0, NULL, NULL, NULL, 0, NULL, NULL, 30, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-25 13:07:02', '2024-11-27 23:51:45', '2024-11-25 07:07:02', 5.00, 0.00, 0, 0, NULL, NULL, '2024-11-25 19:07:02'),
+(6, 13, 1, 60, NULL, 20, 0, 0, 0, 50, NULL, NULL, NULL, 0, NULL, NULL, 10, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-25 10:49:32', '2024-11-27 23:50:34', '2024-11-25 04:49:32', 0.00, 0.00, 10, 10, NULL, NULL, '2024-11-25 16:49:32'),
+(5, 13, NULL, 20, NULL, 0, 0, 0, 0, 20, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-25 10:48:56', '2024-11-25 04:48:56', '2024-11-25 04:48:56', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-25 16:48:56'),
+(8, 13, 10, -25, NULL, 30, 0, 55, 0, 0, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-26 07:39:45', '2024-11-27 04:59:07', '2024-11-26 01:39:45', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-26 13:39:45'),
+(9, 14, NULL, 20, NULL, 0, 0, 0, 0, 20, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-27 13:07:20', '2024-11-27 07:07:20', '2024-11-27 07:07:20', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-27 19:07:20'),
+(10, 14, 1, 30, NULL, 0, 0, 0, 0, 30, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-27 13:07:57', '2024-11-27 07:07:57', '2024-11-27 07:07:57', 0.00, 0.00, 5, 5, NULL, NULL, '2024-11-27 19:07:57'),
+(11, 14, 5, -40, NULL, 10, 0, 0, 0, 0, NULL, NULL, NULL, 0, NULL, NULL, 50, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-27 13:10:22', '2024-11-27 23:42:19', '2024-11-27 07:10:22', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-27 19:10:22'),
+(12, 15, NULL, 45, NULL, 0, 0, 10, 0, 50, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-28 05:54:22', '2024-11-28 00:08:51', '2024-11-27 23:54:22', 5.00, 0.00, 0, 0, NULL, NULL, '2024-11-28 11:54:22'),
+(13, 15, 1, 40, NULL, 0, 0, 0, 0, 40, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-28 05:55:05', '2024-11-27 23:55:05', '2024-11-27 23:55:05', 0.00, 0.00, 10, 10, NULL, NULL, '2024-11-28 11:55:05'),
+(14, 15, 5, 10, NULL, 10, 0, 0, 0, 0, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-11-28 05:56:43', '2024-11-27 23:56:43', '2024-11-27 23:56:43', 0.00, 0.00, 0, 0, NULL, NULL, '2024-11-28 11:56:43'),
+(15, 13, 4, 1, NULL, 1, 0, 0, 0, 0, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2024-12-05 11:17:38', '2024-12-05 05:17:38', '2024-12-05 05:17:38', 0.00, 0.00, 0, 0, NULL, NULL, '2024-12-05 17:17:38'),
+(16, 16, NULL, 1, NULL, 0, 0, 0, 0, 1, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 07:20:22', '2025-01-12 01:20:22', '2025-01-12 01:20:22', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 13:20:22'),
+(17, 16, 1, 20, NULL, 0, 0, 0, 0, 20, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 07:21:14', '2025-01-12 01:21:14', '2025-01-12 01:21:14', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 13:21:14'),
+(18, 17, NULL, 5, NULL, 0, 5, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-12 03:13:15', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:13:15'),
+(19, 18, NULL, 2, NULL, 0, 8, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 11:59:57', '2025-02-27 05:59:57', '2025-01-12 03:14:50', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:14:50'),
+(20, 19, NULL, -1, NULL, 0, 11, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 06:56:24', '2025-02-27 00:56:24', '2025-01-12 03:16:28', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:16:28'),
+(21, 20, NULL, 7, NULL, 0, 3, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 03:19:24', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:19:24'),
+(22, 21, NULL, 98, NULL, 0, 2, 0, 0, 100, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 03:20:11', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:20:11'),
+(23, 22, NULL, 98, NULL, 0, 2, 0, 0, 100, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 03:21:18', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:21:18'),
+(24, 23, NULL, 97, NULL, 0, 3, 0, 0, 100, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-12 03:23:41', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:23:41'),
+(25, 24, NULL, 13, NULL, 0, 2, 0, 0, 15, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-12 03:24:35', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:24:35'),
+(26, 25, NULL, 95, NULL, 0, 5, 0, 0, 100, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-12 03:26:10', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:26:10'),
+(27, 26, NULL, 100, NULL, 0, 0, 0, 0, 100, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:30:16', '2025-01-12 03:30:16', '2025-01-12 03:30:16', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:30:16'),
+(28, 27, NULL, 90, NULL, 0, 10, 0, 0, 100, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 07:21:05', '2025-02-27 01:21:05', '2025-01-12 03:31:06', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:31:06'),
+(29, 28, NULL, 100, NULL, 0, 0, 0, 0, 100, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 09:31:52', '2025-01-12 03:31:52', '2025-01-12 03:31:52', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 15:31:52'),
+(30, 29, NULL, 7, NULL, 0, 3, 0, 0, 10, NULL, 10, 8, 0, 2, 39.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-06 11:32:00', '2025-02-06 05:32:00', '2025-01-12 04:19:06', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 16:19:06'),
+(31, 30, NULL, 0, NULL, 0, 1, 0, 0, 100, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 10:20:02', '2025-02-05 04:53:12', '2025-01-12 04:20:02', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 16:20:02'),
+(32, 31, NULL, 10, NULL, 0, 0, 0, 0, 10, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-12 12:23:02', '2025-01-12 06:23:02', '2025-01-12 06:23:02', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 18:23:02'),
+(33, 32, NULL, 6, NULL, 0, 4, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-12 06:25:33', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 18:25:33'),
+(34, 33, NULL, 7, NULL, 0, 3, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 11:30:41', '2025-02-27 05:30:41', '2025-01-12 06:28:08', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-12 18:28:08'),
+(35, 34, NULL, 3, NULL, 0, 0, 0, 0, 3, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-26 08:34:16', '2025-01-26 02:34:16', '2025-01-26 02:34:16', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-26 14:34:16'),
+(36, 35, NULL, -2, NULL, 0, 12, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-26 23:43:19', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-27 11:43:19'),
+(37, 36, NULL, 7, NULL, 0, 3, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-26 23:44:09', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-27 11:44:09'),
+(38, 37, NULL, 10, NULL, 0, 5, 0, 0, 15, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-26 23:46:42', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-27 11:46:42'),
+(39, 38, NULL, 5, NULL, 0, 5, 0, 0, 10, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 07:25:28', '2025-02-27 01:25:28', '2025-01-28 04:00:50', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:00:50'),
+(40, 39, NULL, 9, NULL, 0, 6, 0, 0, 15, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-28 04:01:38', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:01:38'),
+(41, 40, NULL, 14, NULL, 0, 1, 0, 0, 15, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 11:15:56', '2025-02-27 05:15:56', '2025-01-28 04:02:33', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:02:33'),
+(42, 41, NULL, 15, NULL, 0, 5, 0, 0, 20, NULL, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-01-28 04:03:29', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:03:29'),
+(43, 42, NULL, 15, NULL, 0, 0, 0, 0, 15, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-01-28 10:41:41', '2025-01-28 04:41:41', '2025-01-28 04:41:41', 0.00, 0.00, 0, 0, NULL, NULL, '2025-01-28 16:41:41'),
+(44, 30, 1, 150, NULL, 0, 0, 0, 0, 150, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-05 10:56:31', '2025-02-05 04:56:31', '2025-02-05 04:56:31', 0.00, 0.00, 0, 0, NULL, NULL, '2025-02-05 16:56:31'),
+(47, 45, 6, 82, 2, 0, 13, 0, 0, 100, NULL, 10, 3, 5, 1, 50.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-25 07:08:46', '2025-02-25 01:08:46', '2025-02-06 03:35:46', 0.00, 0.00, 7, 2, NULL, NULL, '2025-02-06 15:35:46'),
+(48, 46, 6, 7, 2, 0, 3, 0, 0, 10, 0, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 12:12:24', '2025-02-27 06:12:24', '2025-02-22 06:27:37', 0.00, 0.00, 0, 0, NULL, NULL, '2025-02-22 18:27:37'),
+(49, 25, 6, 3, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 09:06:55', '2025-02-27 03:13:12', '2025-02-27 03:06:55', 0.00, 0.00, 0, 0, NULL, NULL, '2025-02-27 15:06:55'),
+(50, 27, 6, 102, NULL, 2, 0, 0, 0, 100, NULL, NULL, NULL, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, NULL, NULL, 'No', 1, '2025-02-27 09:17:53', '2025-02-27 03:19:15', '2025-02-27 03:17:53', 0.00, 0.00, 0, 0, NULL, NULL, '2025-02-27 15:17:53');
 
 -- --------------------------------------------------------
 
@@ -3241,7 +3297,21 @@ INSERT INTO `tbl_inventory_damage_products` (`id`, `damage_order_no`, `products_
 (2, '000002', 13, 1, 5, '2024-11-25', NULL, 'Active', 'Yes', 1, NULL, 1, '2024-11-25', '2024-11-25 10:52:58', NULL, '2024-11-25 04:52:58', '2024-11-25 05:02:45'),
 (3, '000003', 13, 1, 5, '2024-11-25', NULL, 'Active', 'Yes', 1, NULL, 1, '2024-11-25', '2024-11-25 11:03:11', NULL, '2024-11-25 05:03:11', '2024-11-25 05:03:25'),
 (4, '000004', 14, 1, 5, '2024-11-27', NULL, 'Active', 'Yes', 1, NULL, 1, '2024-11-27', '2024-11-27 13:08:12', NULL, '2024-11-27 07:08:12', '2024-11-27 07:08:51'),
-(5, '000005', 15, 1, 10, '2024-11-28', NULL, 'Active', 'Yes', 1, NULL, 1, '2024-11-28', '2024-11-28 05:55:32', NULL, '2024-11-27 23:55:32', '2024-11-27 23:56:02');
+(5, '000005', 15, 1, 10, '2024-11-28', NULL, 'Active', 'Yes', 1, NULL, 1, '2024-11-28', '2024-11-28 05:55:32', NULL, '2024-11-27 23:55:32', '2024-11-27 23:56:02'),
+(9, '000006', 45, 6, 2, '2025-02-24', NULL, 'Active', 'Yes', 1, NULL, 1, '2025-02-27', '2025-02-24 08:12:49', NULL, '2025-02-24 02:12:49', '2025-02-27 00:45:26'),
+(10, '000007', 45, 6, 1, '2025-02-25', NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 06:59:07', NULL, '2025-02-25 00:59:07', '2025-02-25 00:59:07'),
+(11, '000008', 45, 6, 1, '2025-02-25', NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:02:13', NULL, '2025-02-25 01:02:13', '2025-02-25 01:02:13'),
+(12, '000009', 45, 6, 1, '2025-02-25', NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:05:02', NULL, '2025-02-25 01:05:02', '2025-02-25 01:05:02'),
+(13, '000010', 45, 6, 1, '2025-02-25', NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:05:57', NULL, '2025-02-25 01:05:57', '2025-02-25 01:05:57'),
+(14, '000011', 45, 6, 1, '2025-02-25', NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:09:21', NULL, '2025-02-25 01:09:21', '2025-02-25 01:09:21'),
+(15, '000012', 45, 6, 1, '2025-02-25', NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:10:31', NULL, '2025-02-25 01:10:31', '2025-02-25 01:10:31'),
+(16, '000013', 45, 6, 2, '2025-02-25', '2 Pieces damage', 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:17:09', NULL, '2025-02-25 01:17:09', '2025-02-25 01:17:09'),
+(17, '000014', 45, 6, 1, '2025-02-25', '1 full quantity  damage', 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:17:37', NULL, '2025-02-25 01:17:37', '2025-02-25 01:17:37'),
+(18, '000015', 45, 6, 1, '2025-02-25', '1 full quantity  damage', 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:20:45', NULL, '2025-02-25 01:20:45', '2025-02-25 01:20:45'),
+(19, '000016', 45, 6, 1, '2025-02-25', '1 Pieces damage', 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:21:23', NULL, '2025-02-25 01:21:23', '2025-02-25 01:21:23'),
+(20, '000017', 45, 6, 1, '2025-02-25', '1 full quantity  damage', 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:24:31', NULL, '2025-02-25 01:24:31', '2025-02-25 01:24:31'),
+(21, '000018', 45, 6, 1, '2025-02-25', '1 Pieces damage', 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 07:25:16', NULL, '2025-02-25 01:25:16', '2025-02-25 01:25:16'),
+(22, '000019', 45, 6, 1, '2025-02-25', NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-25 11:05:16', NULL, '2025-02-25 05:05:16', '2025-02-25 05:05:16');
 
 -- --------------------------------------------------------
 
@@ -3276,6 +3346,7 @@ CREATE TABLE `tbl_inventory_products` (
   `stock_check` enum('Yes','No') DEFAULT NULL,
   `slug` varchar(191) DEFAULT NULL,
   `sister_concern_id` bigint(20) DEFAULT NULL,
+  `tbl_warehouseid` int(20) DEFAULT NULL,
   `status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
   `deleted` enum('Yes','No') NOT NULL DEFAULT 'No',
   `created_by` bigint(20) DEFAULT NULL,
@@ -3292,38 +3363,39 @@ CREATE TABLE `tbl_inventory_products` (
 -- Dumping data for table `tbl_inventory_products`
 --
 
-INSERT INTO `tbl_inventory_products` (`id`, `name`, `code`, `image`, `barcode_no`, `model_no`, `category_id`, `brand_id`, `unit_id`, `opening_stock`, `remainder_quantity`, `purchase_quantity`, `current_stock`, `sale_quantity`, `items_in_box`, `purchase_price`, `sale_price`, `discount`, `total_purchase_price`, `total_sale_price`, `remaining_price`, `notes`, `type`, `stock_check`, `slug`, `sister_concern_id`, `status`, `deleted`, `created_by`, `updated_by`, `deleted_by`, `deleted_date`, `created_date`, `updated_date`, `created_at`, `updated_at`) VALUES
-(13, 'Tomato', '000001', '1732531736tomato.jfif', '', NULL, 4, NULL, 1, 70, 10, NULL, 105, NULL, 0, 10.00, 12.00, NULL, NULL, NULL, NULL, NULL, 'regular', 'Yes', NULL, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2024-11-25 10:48:56', NULL, '2024-11-25 04:48:56', '2024-12-05 05:17:38'),
-(14, 'potato', '000002', '1732712839download (1).jfif', '0', NULL, 4, 1, 1, 50, 5, NULL, 60, NULL, 0, 10.00, 12.00, NULL, NULL, NULL, NULL, NULL, 'regular', 'Yes', NULL, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2024-11-27 13:07:20', '2024-11-27 13:07:41', '2024-11-27 07:07:20', '2024-11-27 07:11:14'),
-(15, 'mutton biriyani', '000003', '1732773261istockphoto-960867816-612x612.jpg', '0', NULL, 5, 1, 1, 90, 10, NULL, 100, NULL, 0, 370.00, 390.00, NULL, NULL, NULL, NULL, 'best biriyani', 'regular', 'Yes', NULL, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2024-11-28 05:54:22', '2024-11-28 05:54:42', '2024-11-27 23:54:22', '2024-11-28 00:08:51'),
-(16, 'Mountain due', '000004', '1736666421due.jpg', '0', NULL, 7, 5, 1, 21, 5, NULL, 21, NULL, 0, 50.00, 60.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', NULL, 2, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 07:20:22', '2025-01-12 09:09:59', '2025-01-12 01:20:22', '2025-01-12 03:09:59'),
-(17, 'Cream Tost', '000005', '1736673195CreamToast.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 250.00, 280.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cream_tost', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:13:15', NULL, '2025-01-12 03:13:15', '2025-01-12 03:13:15'),
-(18, 'Cream jam', '000006', '1736673290CreamJam.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 390.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cream_jam', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:14:50', NULL, '2025-01-12 03:14:50', '2025-01-12 03:14:50'),
-(19, 'Khir Tost', '000007', '1736673388khirToast.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 390.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Khir_tost', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:16:28', NULL, '2025-01-12 03:16:28', '2025-01-12 03:16:28'),
-(20, 'Chocolate Milk', '000008', '17366735641640842331-Amul Milk Chocolate - 150 gm.jpg', '', NULL, 37, 5, 1, 10, 5, NULL, 10, NULL, 0, 270.00, 290.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chocolate_Milk', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:19:24', NULL, '2025-01-12 03:19:24', '2025-01-12 03:19:24'),
-(21, 'Kitkat', '000009', '1736673611kitkat.jpg', '', NULL, 37, 5, 1, 100, 10, NULL, 100, NULL, 0, 150.00, 170.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Kitkat', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:20:11', NULL, '2025-01-12 03:20:11', '2025-01-12 03:20:11'),
-(22, 'Dark Milk', '000010', '17366736771640781336-Cadbury Dairy Milk Bubbly Chocolate Bar 120gm.jpg', '', NULL, 37, 5, 1, 100, 10, NULL, 100, NULL, 0, 260.00, 290.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Dark_Milk', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:21:18', NULL, '2025-01-12 03:21:18', '2025-01-12 03:21:18'),
-(23, 'Chocolate Cookies', '000011', '1736673821biscuits1.jpg', '0', NULL, 38, 5, 5, 100, 10, NULL, 100, NULL, 0, 210.00, 230.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chocolate_Cookies', 2, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 09:23:41', '2025-01-12 09:25:09', '2025-01-12 03:23:41', '2025-01-12 03:25:09'),
-(24, 'Butter cookies', '000012', '1736673875buttercokies.jpg', '0', NULL, 38, 5, 5, 15, 11, NULL, 15, NULL, 0, 170.00, 200.00, 3.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Butter_cookies', 2, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 09:24:35', '2025-01-12 09:25:17', '2025-01-12 03:24:35', '2025-01-12 03:25:17'),
-(25, 'Amul Chocolate Biscuits', '000013', '1736673970amulcookies.jpg', '', NULL, 38, 5, 5, 100, 10, NULL, 100, NULL, 0, 120.00, 150.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Amul_Chocolate_Biscuits', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:26:10', NULL, '2025-01-12 03:26:10', '2025-01-12 03:26:10'),
-(26, 'Cream Buns', '000014', '1736674216buns2.jpg', '', NULL, 40, 5, 1, 100, 10, NULL, 100, NULL, 0, 30.00, 45.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Cream_Buns', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:30:16', NULL, '2025-01-12 03:30:16', '2025-01-12 03:30:16'),
-(27, 'Chicken Buns', '000015', '1736674266burbun.jpg', '', NULL, 40, 5, 1, 100, 10, NULL, 100, NULL, 0, 120.00, 150.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chicken_Buns', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:31:06', NULL, '2025-01-12 03:31:06', '2025-01-12 03:31:06'),
-(28, 'Butter Buns', '000016', '1736674312butterbuns.jpg', '', NULL, 40, 5, 1, 100, 10, NULL, 100, NULL, 0, 30.00, 50.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Butter_Buns', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:31:52', NULL, '2025-01-12 03:31:52', '2025-01-12 03:31:52'),
-(29, 'Fruits Cake', '000017', '1736677146cakes2.jpg', '', NULL, 39, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 390.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'No', 'Fruits_Cake', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 10:19:06', NULL, '2025-01-12 04:19:06', '2025-01-12 04:19:06'),
-(30, 'cake-Deleted-30', '000018-Deleted-30', '17366772021632311908614b1a64dea24.png', '-Deleted-30', NULL, 39, 5, 5, 250, 10, NULL, 250, NULL, 0, 370.00, 400.00, 3.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cake', 2, 'Inactive', 'Yes', 1, NULL, 1, '2025-02-05 10:57:45', '2025-01-12 10:20:02', NULL, '2025-01-12 04:20:02', '2025-02-05 04:57:45'),
-(31, 'Rosogolla', '000019', '1736684582rosogolla.jpg', '', NULL, 7, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 370.00, 10.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Rosogolla', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 12:23:02', NULL, '2025-01-12 06:23:02', '2025-01-12 06:23:02'),
-(32, 'Chomcom', '000020', '1736684742rosogolla.jpg', '0', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 370.00, 10.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chomcom', 2, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 12:25:33', '2025-01-12 12:25:42', '2025-01-12 06:25:33', '2025-01-12 06:25:42'),
-(33, 'KhirChomcom', '000021', '1736684888rosogolla.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 470.00, 20.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Khir_Chomcom', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 12:28:08', NULL, '2025-01-12 06:28:08', '2025-01-12 06:28:08'),
-(34, 'celebration Cake', '000022', '1737880455cake-2.png', '', NULL, 6, 5, 4, 3, 1, NULL, 3, NULL, 0, 480.00, 520.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'celebration_Cake', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-26 08:34:16', NULL, '2025-01-26 02:34:16', '2025-01-26 02:34:16'),
-(35, 'Alfatun', '000023', '1737956598Aplatun.jpg', '', NULL, 36, 5, 4, 10, 3, NULL, 10, NULL, 0, 370.00, 420.00, 50.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Alfatun', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-27 05:43:19', NULL, '2025-01-26 23:43:19', '2025-01-26 23:43:19'),
-(36, 'Doi', '000024', '1737956649Doi.jpg', '', NULL, 36, 5, 4, 10, 3, NULL, 10, NULL, 0, 420.00, 450.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Doi', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-27 05:44:09', NULL, '2025-01-26 23:44:09', '2025-01-26 23:44:09'),
-(37, 'Mix sweets', '000025', '1737956802bonoful_sweets7.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 350.00, 370.00, 20.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Mix_sweets', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-27 05:46:42', NULL, '2025-01-26 23:46:42', '2025-01-26 23:46:42'),
-(38, 'KanchaGolla', '000026', '1738058449KanchaGolla.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 380.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KanchaGolla', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:00:50', NULL, '2025-01-28 04:00:50', '2025-01-28 04:00:50'),
-(39, 'KanchaSondes', '000027', '1738058498KanchaSondes.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 420.00, 450.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KanchaSondes', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:01:38', NULL, '2025-01-28 04:01:38', '2025-01-28 04:01:38'),
-(40, 'KadamLaddu', '000028', '1738058553KadamLaddu.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 370.00, 390.00, 20.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KadamLaddu', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:02:33', NULL, '2025-01-28 04:02:33', '2025-01-28 04:02:33'),
-(41, 'KhirChamcham', '000029', '1738058609KhirChamcham.jpg', '', NULL, 36, 5, 4, 20, 5, NULL, 20, NULL, 0, 350.00, 380.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KhirChamcham', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:03:29', NULL, '2025-01-28 04:03:29', '2025-01-28 04:03:29'),
-(42, 'RajVogue', '000030', '1738060901RajVogue.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 350.00, 370.00, 20.00, NULL, NULL, NULL, 'Best Quality', 'regular', 'Yes', 'RajVogue', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:41:41', NULL, '2025-01-28 04:41:41', '2025-01-28 04:41:41'),
-(45, 'cake', '000031', '17388345451632311908614b1a64dea24.png', '', NULL, 39, 5, 1, 100, 10, NULL, 100, NULL, 0, 370.00, 400.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cake', 2, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-06 09:35:46', NULL, '2025-02-06 03:35:46', '2025-02-06 03:35:46');
+INSERT INTO `tbl_inventory_products` (`id`, `name`, `code`, `image`, `barcode_no`, `model_no`, `category_id`, `brand_id`, `unit_id`, `opening_stock`, `remainder_quantity`, `purchase_quantity`, `current_stock`, `sale_quantity`, `items_in_box`, `purchase_price`, `sale_price`, `discount`, `total_purchase_price`, `total_sale_price`, `remaining_price`, `notes`, `type`, `stock_check`, `slug`, `sister_concern_id`, `tbl_warehouseid`, `status`, `deleted`, `created_by`, `updated_by`, `deleted_by`, `deleted_date`, `created_date`, `updated_date`, `created_at`, `updated_at`) VALUES
+(13, 'Tomato', '000001', '1732531736tomato.jfif', '', NULL, 4, NULL, 1, 70, 10, NULL, 105, NULL, 0, 10.00, 12.00, NULL, NULL, NULL, NULL, NULL, 'regular', 'Yes', NULL, NULL, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2024-11-25 10:48:56', NULL, '2024-11-25 04:48:56', '2024-12-05 05:17:38'),
+(14, 'potato', '000002', '1732712839download (1).jfif', '0', NULL, 4, 1, 1, 50, 5, NULL, 60, NULL, 0, 10.00, 12.00, NULL, NULL, NULL, NULL, NULL, 'regular', 'Yes', NULL, NULL, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2024-11-27 13:07:20', '2024-11-27 13:07:41', '2024-11-27 07:07:20', '2024-11-27 07:11:14'),
+(15, 'mutton biriyani', '000003', '1732773261istockphoto-960867816-612x612.jpg', '0', NULL, 5, 1, 1, 90, 10, NULL, 100, NULL, 0, 370.00, 390.00, NULL, NULL, NULL, NULL, 'best biriyani', 'regular', 'Yes', NULL, NULL, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2024-11-28 05:54:22', '2024-11-28 05:54:42', '2024-11-27 23:54:22', '2024-11-28 00:08:51'),
+(16, 'Mountain due', '000004', '1736666421due.jpg', '0', NULL, 7, 5, 1, 21, 5, NULL, 21, NULL, 0, 50.00, 60.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', NULL, 2, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 07:20:22', '2025-01-12 09:09:59', '2025-01-12 01:20:22', '2025-01-12 03:09:59'),
+(17, 'Cream Tost', '000005', '1736673195CreamToast.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 250.00, 280.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cream_tost', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:13:15', NULL, '2025-01-12 03:13:15', '2025-01-12 03:13:15'),
+(18, 'Cream jam', '000006', '1736673290CreamJam.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 390.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cream_jam', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:14:50', NULL, '2025-01-12 03:14:50', '2025-01-12 03:14:50'),
+(19, 'Khir Tost', '000007', '1736673388khirToast.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 390.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Khir_tost', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:16:28', NULL, '2025-01-12 03:16:28', '2025-01-12 03:16:28'),
+(20, 'Chocolate Milk', '000008', '17366735641640842331-Amul Milk Chocolate - 150 gm.jpg', '', NULL, 37, 5, 1, 10, 5, NULL, 10, NULL, 0, 270.00, 290.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chocolate_Milk', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:19:24', NULL, '2025-01-12 03:19:24', '2025-01-12 03:19:24'),
+(21, 'Kitkat', '000009', '1736673611kitkat.jpg', '', NULL, 37, 5, 1, 100, 10, NULL, 100, NULL, 0, 150.00, 170.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Kitkat', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:20:11', NULL, '2025-01-12 03:20:11', '2025-01-12 03:20:11'),
+(22, 'Dark Milk', '000010', '17366736771640781336-Cadbury Dairy Milk Bubbly Chocolate Bar 120gm.jpg', '', NULL, 37, 5, 1, 100, 10, NULL, 100, NULL, 0, 260.00, 290.00, 4.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Dark_Milk', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:21:18', NULL, '2025-01-12 03:21:18', '2025-01-12 03:21:18'),
+(23, 'Chocolate Cookies', '000011', '1736673821biscuits1.jpg', '0', NULL, 38, 5, 5, 100, 10, NULL, 100, NULL, 0, 210.00, 230.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chocolate_Cookies', 2, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 09:23:41', '2025-01-12 09:25:09', '2025-01-12 03:23:41', '2025-01-12 03:25:09'),
+(24, 'Butter cookies', '000012', '1736673875buttercokies.jpg', '0', NULL, 38, 5, 5, 15, 11, NULL, 15, NULL, 0, 170.00, 200.00, 3.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Butter_cookies', 2, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 09:24:35', '2025-01-12 09:25:17', '2025-01-12 03:24:35', '2025-01-12 03:25:17'),
+(25, 'Amul Chocolate Biscuits', '000013', '1736673970amulcookies.jpg', '', NULL, 38, 5, 5, 100, 10, NULL, 103, NULL, 0, 120.00, 150.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Amul_Chocolate_Biscuits', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:26:10', NULL, '2025-01-12 03:26:10', '2025-02-27 03:13:12'),
+(26, 'Cream Buns', '000014', '1736674216buns2.jpg', '', NULL, 40, 5, 1, 100, 10, NULL, 100, NULL, 0, 30.00, 45.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Cream_Buns', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:30:16', NULL, '2025-01-12 03:30:16', '2025-01-12 03:30:16'),
+(27, 'Chicken Buns', '000015', '1736674266burbun.jpg', '', NULL, 40, 5, 1, 200, 10, NULL, 202, NULL, 0, 120.00, 150.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chicken_Buns', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:31:06', NULL, '2025-01-12 03:31:06', '2025-02-27 03:19:15'),
+(28, 'Butter Buns', '000016', '1736674312butterbuns.jpg', '', NULL, 40, 5, 1, 100, 10, NULL, 100, NULL, 0, 30.00, 50.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Butter_Buns', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 09:31:52', NULL, '2025-01-12 03:31:52', '2025-01-12 03:31:52'),
+(29, 'Fruits Cake', '000017', '1736677146cakes2.jpg', '', NULL, 39, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 390.00, 2.00, NULL, NULL, NULL, NULL, 'regular', 'No', 'Fruits_Cake', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 10:19:06', NULL, '2025-01-12 04:19:06', '2025-01-12 04:19:06'),
+(30, 'cake-Deleted-30', '000018-Deleted-30', '17366772021632311908614b1a64dea24.png', '-Deleted-30', NULL, 39, 5, 5, 250, 10, NULL, 250, NULL, 0, 370.00, 400.00, 3.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cake', 2, NULL, 'Inactive', 'Yes', 1, NULL, 1, '2025-02-05 10:57:45', '2025-01-12 10:20:02', NULL, '2025-01-12 04:20:02', '2025-02-05 04:57:45'),
+(31, 'Rosogolla', '000019', '1736684582rosogolla.jpg', '', NULL, 7, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 370.00, 10.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Rosogolla', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 12:23:02', NULL, '2025-01-12 06:23:02', '2025-01-12 06:23:02'),
+(32, 'Chomcom', '000020', '1736684742rosogolla.jpg', '0', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 370.00, 10.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Chomcom', 2, NULL, 'Active', 'No', 1, 1, NULL, NULL, '2025-01-12 12:25:33', '2025-01-12 12:25:42', '2025-01-12 06:25:33', '2025-01-12 06:25:42'),
+(33, 'KhirChomcom', '000021', '1736684888rosogolla.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 470.00, 20.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Khir_Chomcom', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-12 12:28:08', NULL, '2025-01-12 06:28:08', '2025-01-12 06:28:08'),
+(34, 'celebration Cake', '000022', '1737880455cake-2.png', '', NULL, 6, 5, 4, 3, 1, NULL, 3, NULL, 0, 480.00, 520.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'celebration_Cake', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-26 08:34:16', NULL, '2025-01-26 02:34:16', '2025-01-26 02:34:16'),
+(35, 'Alfatun', '000023', '1737956598Aplatun.jpg', '', NULL, 36, 5, 4, 10, 3, NULL, 10, NULL, 0, 370.00, 420.00, 50.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Alfatun', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-27 05:43:19', NULL, '2025-01-26 23:43:19', '2025-01-26 23:43:19'),
+(36, 'Doi', '000024', '1737956649Doi.jpg', '', NULL, 36, 5, 4, 10, 3, NULL, 10, NULL, 0, 420.00, 450.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Doi', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-27 05:44:09', NULL, '2025-01-26 23:44:09', '2025-01-26 23:44:09'),
+(37, 'Mix sweets', '000025', '1737956802bonoful_sweets7.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 350.00, 370.00, 20.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'Mix_sweets', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-27 05:46:42', NULL, '2025-01-26 23:46:42', '2025-01-26 23:46:42'),
+(38, 'KanchaGolla', '000026', '1738058449KanchaGolla.jpg', '', NULL, 36, 5, 4, 10, 5, NULL, 10, NULL, 0, 350.00, 380.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KanchaGolla', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:00:50', NULL, '2025-01-28 04:00:50', '2025-01-28 04:00:50'),
+(39, 'KanchaSondes', '000027', '1738058498KanchaSondes.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 420.00, 450.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KanchaSondes', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:01:38', NULL, '2025-01-28 04:01:38', '2025-01-28 04:01:38'),
+(40, 'KadamLaddu', '000028', '1738058553KadamLaddu.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 370.00, 390.00, 20.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KadamLaddu', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:02:33', NULL, '2025-01-28 04:02:33', '2025-01-28 04:02:33'),
+(41, 'KhirChamcham', '000029', '1738058609KhirChamcham.jpg', '', NULL, 36, 5, 4, 20, 5, NULL, 20, NULL, 0, 350.00, 380.00, 30.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'KhirChamcham', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:03:29', NULL, '2025-01-28 04:03:29', '2025-01-28 04:03:29'),
+(42, 'RajVogue', '000030', '1738060901RajVogue.jpg', '', NULL, 36, 5, 4, 15, 5, NULL, 15, NULL, 0, 350.00, 370.00, 20.00, NULL, NULL, NULL, 'Best Quality', 'regular', 'Yes', 'RajVogue', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-01-28 10:41:41', NULL, '2025-01-28 04:41:41', '2025-01-28 04:41:41'),
+(45, 'cake', '000031', '17388345451632311908614b1a64dea24.png', '', NULL, 39, 5, 1, 100, 10, NULL, 84, NULL, 0, 370.00, 400.00, 5.00, NULL, NULL, NULL, NULL, 'regular', 'Yes', 'cake', 2, NULL, 'Active', 'No', 1, NULL, NULL, NULL, '2025-02-06 09:35:46', NULL, '2025-02-06 03:35:46', '2025-02-27 00:45:26'),
+(46, 'Mix Sweets', '000032', '1740398769asdkjl;asg.jpg', '0', NULL, 36, 5, 4, 10, 10, NULL, 10, NULL, 0, 340.00, 370.00, 10.00, NULL, NULL, NULL, 'Unique Item', 'regular', 'Yes', 'bonoful-sweets-mix-sweets', 2, 6, 'Active', 'No', 1, 1, NULL, NULL, '2025-02-22 12:27:37', '2025-02-24 12:06:10', '2025-02-22 06:27:37', '2025-02-24 06:06:10');
 
 -- --------------------------------------------------------
 
@@ -3528,7 +3600,10 @@ INSERT INTO `tbl_purchases` (`id`, `supplier_id`, `coa_id`, `purchase_no`, `date
 (8, 1, 30, '000007', '2024-11-27 00:00:00', NULL, 100.00, 0.00, 0, 100.00, -700.00, 800.00, 0.00, 800.00, NULL, 0, 'Active', 2, 'No', 1, '2024-11-27 09:36:22', NULL, NULL, NULL, NULL, '2024-11-27 03:36:22', '2024-11-27 03:36:22'),
 (9, 1, 30, '000008', '2024-11-27 00:00:00', NULL, 100.00, 0.00, 0, 100.00, -730.00, 830.00, 0.00, 830.00, NULL, 0, 'Active', 4, 'No', 1, '2024-11-27 13:10:22', NULL, NULL, NULL, NULL, '2024-11-27 07:10:22', '2024-11-27 07:10:22'),
 (10, 1, 30, '000009', '2024-11-28 00:00:00', NULL, 3700.00, 0.00, 0, 3700.00, -730.00, 4430.00, 0.00, 4430.00, NULL, 0, 'Active', 5, 'No', 1, '2024-11-28 05:56:43', NULL, NULL, NULL, NULL, '2024-11-27 23:56:43', '2024-11-27 23:56:43'),
-(11, 1, 30, '000010', '2024-12-05 00:00:00', NULL, 10.00, 0.00, 0, 10.00, -4440.00, 4450.00, 0.00, 4450.00, NULL, 0, 'Active', 2, 'No', 1, '2024-12-05 11:17:38', NULL, NULL, NULL, NULL, '2024-12-05 05:17:38', '2024-12-05 05:17:38');
+(11, 1, 30, '000010', '2024-12-05 00:00:00', NULL, 10.00, 0.00, 0, 10.00, -4440.00, 4450.00, 0.00, 4450.00, NULL, 0, 'Active', 2, 'No', 1, '2024-12-05 11:17:38', NULL, NULL, NULL, NULL, '2024-12-05 05:17:38', '2024-12-05 05:17:38'),
+(12, 10, 30, '000011', '2025-02-27 00:00:00', NULL, 240.00, 0.00, 20, 260.00, 0.00, 260.00, 260.00, 0.00, NULL, 0, 'Active', 2, 'No', 1, '2025-02-27 09:06:55', NULL, NULL, NULL, NULL, '2025-02-27 03:06:55', '2025-02-27 03:06:55'),
+(13, 10, 30, '000012', '2025-02-27 00:00:00', NULL, 120.00, 10.00, 10, 120.00, 0.00, 120.00, 120.00, 0.00, NULL, 0, 'Active', 2, 'No', 1, '2025-02-27 09:13:12', NULL, NULL, NULL, NULL, '2025-02-27 03:13:12', '2025-02-27 03:13:12'),
+(14, 10, 30, '000013', '2025-02-27 00:00:00', NULL, 240.00, 10.00, 10, 240.00, 0.00, 240.00, 240.00, 0.00, NULL, 0, 'Active', 2, 'No', 1, '2025-02-27 09:19:15', NULL, NULL, NULL, NULL, '2025-02-27 03:19:15', '2025-02-27 03:19:15');
 
 -- --------------------------------------------------------
 
@@ -3576,7 +3651,10 @@ INSERT INTO `tbl_purchase_products` (`id`, `purchase_id`, `product_id`, `warehou
 (8, 8, 13, 5, 1, 10.00, 10, 7, 100.00, NULL, 0, 'Active', 'On', 2, 'No', 1, '2024-11-27 09:36:22', NULL, NULL, NULL, NULL, '2024-11-27 03:36:22', '2024-11-27 03:36:22'),
 (9, 9, 14, 5, 1, 10.00, 10, 1, 100.00, NULL, 0, 'Active', 'On', 4, 'No', 1, '2024-11-27 13:10:22', NULL, NULL, NULL, NULL, '2024-11-27 07:10:22', '2024-11-27 07:10:22'),
 (10, 10, 15, 5, 1, 370.00, 10, 1, 3700.00, NULL, 0, 'Active', 'On', 5, 'No', 1, '2024-11-28 05:56:43', NULL, NULL, NULL, NULL, '2024-11-27 23:56:43', '2024-11-27 23:56:43'),
-(11, 11, 13, 4, 1, 10.00, 1, 8, 10.00, NULL, 0, 'Active', 'On', 2, 'No', 1, '2024-12-05 11:17:38', NULL, NULL, NULL, NULL, '2024-12-05 05:17:38', '2024-12-05 05:17:38');
+(11, 11, 13, 4, 1, 10.00, 1, 8, 10.00, NULL, 0, 'Active', 'On', 2, 'No', 1, '2024-12-05 11:17:38', NULL, NULL, NULL, NULL, '2024-12-05 05:17:38', '2024-12-05 05:17:38'),
+(12, 12, 25, 6, 5, 120.00, 2, 1, 240.00, NULL, 0, 'Active', 'On', 2, 'No', 1, '2025-02-27 09:06:55', NULL, NULL, NULL, NULL, '2025-02-27 03:06:55', '2025-02-27 03:06:55'),
+(13, 13, 25, 6, 5, 120.00, 1, 2, 120.00, NULL, 0, 'Active', 'On', 2, 'No', 1, '2025-02-27 09:13:12', NULL, NULL, NULL, NULL, '2025-02-27 03:13:12', '2025-02-27 03:13:12'),
+(14, 14, 27, 6, 1, 120.00, 2, 1, 240.00, NULL, 0, 'Active', 'On', 2, 'No', 1, '2025-02-27 09:19:15', NULL, NULL, NULL, NULL, '2025-02-27 03:19:15', '2025-02-27 03:19:15');
 
 -- --------------------------------------------------------
 
@@ -3593,8 +3671,10 @@ CREATE TABLE `tbl_restaurant_order` (
   `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
   `total_discount` double(10,2) DEFAULT 0.00,
   `vat` decimal(10,2) DEFAULT NULL,
+  `ait` decimal(10,2) NOT NULL,
   `grand_discount` decimal(10,2) DEFAULT NULL,
   `paid_amount` decimal(10,2) DEFAULT 0.00,
+  `payment_method` varchar(191) DEFAULT NULL,
   `due` decimal(10,2) DEFAULT 0.00,
   `order_date` timestamp NULL DEFAULT current_timestamp(),
   `grand_total` decimal(10,2) DEFAULT 0.00,
@@ -3613,11 +3693,41 @@ CREATE TABLE `tbl_restaurant_order` (
 -- Dumping data for table `tbl_restaurant_order`
 --
 
-INSERT INTO `tbl_restaurant_order` (`id`, `code`, `party_id`, `room_id`, `table_id`, `total_amount`, `total_discount`, `vat`, `grand_discount`, `paid_amount`, `due`, `order_date`, `grand_total`, `order_status`, `status`, `deleted`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_by`, `deleted_date`) VALUES
-(1, '000001', 44, NULL, NULL, 1900.00, 0.00, NULL, NULL, 1900.00, 0.00, '2025-02-06 11:01:22', 1900.00, 'Closed', 'Active', 'No', '2025-02-06 05:01:22', 1, '2025-02-06 05:01:22', NULL, NULL, NULL),
-(2, '000002', 45, NULL, NULL, 713.00, 0.00, NULL, NULL, 713.00, 0.00, '2025-02-06 11:03:53', 713.00, 'Closed', 'Active', 'No', '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL, NULL, NULL),
-(3, '000003', 46, NULL, NULL, 1062.00, 0.00, NULL, NULL, 1062.00, 0.00, '2025-02-06 11:32:00', 1062.00, 'Closed', 'Active', 'No', '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL, NULL, NULL),
-(4, '000004', 47, NULL, NULL, 580.00, 0.00, NULL, NULL, 580.00, 0.00, '2025-02-06 11:36:42', 580.00, 'Closed', 'Active', 'No', '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL, NULL, NULL);
+INSERT INTO `tbl_restaurant_order` (`id`, `code`, `party_id`, `room_id`, `table_id`, `total_amount`, `total_discount`, `vat`, `ait`, `grand_discount`, `paid_amount`, `payment_method`, `due`, `order_date`, `grand_total`, `order_status`, `status`, `deleted`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_by`, `deleted_date`) VALUES
+(1, '000001', 44, NULL, NULL, 1900.00, 0.00, NULL, 0.00, NULL, 1900.00, NULL, 0.00, '2025-02-06 11:01:22', 1900.00, 'Closed', 'Active', 'No', '2025-02-06 05:01:22', 1, '2025-02-06 05:01:22', NULL, NULL, NULL),
+(2, '000002', 45, NULL, NULL, 713.00, 0.00, NULL, 0.00, NULL, 713.00, NULL, 0.00, '2025-02-06 11:03:53', 713.00, 'Closed', 'Active', 'No', '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL, NULL, NULL),
+(3, '000003', 46, NULL, NULL, 1062.00, 0.00, NULL, 0.00, NULL, 1062.00, NULL, 0.00, '2025-02-06 11:32:00', 1062.00, 'Closed', 'Active', 'No', '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL, NULL, NULL),
+(4, '000004', 47, NULL, NULL, 580.00, 0.00, NULL, 0.00, NULL, 580.00, NULL, 0.00, '2025-02-06 11:36:42', 580.00, 'Closed', 'Active', 'No', '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL, NULL, NULL),
+(5, '000005', 48, NULL, NULL, 390.00, 0.00, NULL, 0.00, NULL, 390.00, NULL, 0.00, '2025-02-22 10:12:40', 390.00, 'Closed', 'Active', 'No', '2025-02-22 04:12:40', 1, '2025-02-22 04:12:40', NULL, NULL, NULL),
+(6, '000006', 4, NULL, NULL, 390.00, 0.00, NULL, 0.00, NULL, 390.00, NULL, 0.00, '2025-02-22 11:24:32', 390.00, 'Closed', 'Active', 'No', '2025-02-22 05:24:32', 1, '2025-02-22 05:24:32', NULL, NULL, NULL),
+(7, '000007', 4, NULL, NULL, 390.00, 0.00, NULL, 0.00, NULL, 390.00, NULL, 0.00, '2025-02-22 12:53:28', 390.00, 'Closed', 'Active', 'No', '2025-02-22 06:53:28', 1, '2025-02-22 06:53:28', NULL, NULL, NULL),
+(8, '000008', 4, NULL, NULL, 370.00, 0.00, NULL, 0.00, NULL, 370.00, NULL, 0.00, '2025-02-22 12:53:55', 370.00, 'Closed', 'Active', 'No', '2025-02-22 06:53:55', 1, '2025-02-22 06:53:55', NULL, NULL, NULL),
+(9, '000009', 4, NULL, NULL, 150.00, 0.00, NULL, 0.00, NULL, 150.00, NULL, 0.00, '2025-02-25 07:08:46', 150.00, 'Closed', 'Active', 'No', '2025-02-25 01:08:46', 1, '2025-02-25 01:08:46', NULL, NULL, NULL),
+(10, '000010', 49, NULL, NULL, 390.00, 0.00, NULL, 0.00, NULL, 390.00, NULL, 0.00, '2025-02-26 04:43:51', 390.00, 'Closed', 'Active', 'No', '2025-02-25 22:43:51', 1, '2025-02-25 22:43:51', NULL, NULL, NULL),
+(14, '000011', 9, NULL, NULL, 370.00, 0.00, 10.00, 20.00, 50.00, 370.00, '8', 0.00, '2025-02-26 05:21:26', 390.00, 'Closed', 'Active', 'No', '2025-02-25 23:21:26', 1, '2025-02-25 23:21:26', NULL, NULL, NULL),
+(15, '000012', 10, NULL, NULL, 350.00, 0.00, 50.00, 20.00, 100.00, 350.00, '8', 0.00, '2025-02-26 06:27:29', 380.00, 'Closed', 'Active', 'No', '2025-02-26 00:27:29', 1, '2025-02-26 00:27:29', NULL, NULL, NULL),
+(16, '000013', 1, NULL, NULL, 760.00, 0.00, 50.00, 10.00, 80.00, 750.00, '8', 10.00, '2025-02-26 06:31:53', 780.00, 'Closed', 'Active', 'No', '2025-02-26 00:31:53', 1, '2025-02-26 00:31:53', NULL, NULL, NULL),
+(17, '000014', 1, NULL, NULL, 810.00, 0.00, 0.00, 0.00, 0.00, 800.00, '8', 10.00, '2025-02-26 06:33:21', 810.00, 'Closed', 'Active', 'No', '2025-02-26 00:33:21', 1, '2025-02-26 00:33:21', NULL, NULL, NULL),
+(18, '000015', 1, NULL, NULL, 810.00, 0.00, 0.00, 0.00, 0.00, 810.00, '8', 0.00, '2025-02-26 07:29:45', 810.00, 'Closed', 'Active', 'No', '2025-02-26 01:29:45', 1, '2025-02-26 01:29:45', NULL, NULL, NULL),
+(19, '000016', 11, NULL, NULL, 810.00, 0.00, 0.00, 0.00, 0.00, 810.00, '8', 0.00, '2025-02-26 07:39:32', 810.00, 'Closed', 'Active', 'No', '2025-02-26 01:39:32', 1, '2025-02-26 01:39:32', NULL, NULL, NULL),
+(20, '000017', 1, NULL, NULL, 770.00, 0.00, 20.00, 20.00, 50.00, 770.00, '8', 0.00, '2025-02-27 06:56:24', 780.00, 'Closed', 'Active', 'No', '2025-02-27 00:56:24', 1, '2025-02-27 00:56:24', NULL, NULL, NULL),
+(21, '000018', 12, NULL, NULL, 250.00, 0.00, 10.00, 10.00, 50.00, 250.00, '8', 0.00, '2025-02-27 07:00:03', 280.00, 'Closed', 'Active', 'No', '2025-02-27 01:00:03', 1, '2025-02-27 01:00:03', NULL, NULL, NULL),
+(22, '000019', 12, NULL, NULL, 470.00, 0.00, 10.00, 10.00, 20.00, 470.00, '8', 0.00, '2025-02-27 07:01:04', 470.00, 'Closed', 'Active', 'No', '2025-02-27 01:01:04', 1, '2025-02-27 01:01:04', NULL, NULL, NULL),
+(23, '000020', 1, NULL, NULL, 420.00, 0.00, 10.00, 10.00, 20.00, 420.00, '8', 0.00, '2025-02-27 07:02:15', 420.00, 'Closed', 'Active', 'No', '2025-02-27 01:02:15', 1, '2025-02-27 01:02:15', NULL, NULL, NULL),
+(24, '000021', 1, NULL, NULL, 380.00, 0.00, 10.00, 10.00, 20.00, 380.00, '8', 0.00, '2025-02-27 07:03:37', 380.00, 'Closed', 'Active', 'No', '2025-02-27 01:03:37', 1, '2025-02-27 01:03:37', NULL, NULL, NULL),
+(25, '000022', 1, NULL, NULL, 730.00, 0.00, 20.00, 10.00, 50.00, 730.00, '8', 0.00, '2025-02-27 07:19:48', 750.00, 'Closed', 'Active', 'No', '2025-02-27 01:19:48', 1, '2025-02-27 01:19:48', NULL, NULL, NULL),
+(26, '000023', 1, NULL, NULL, 620.00, 0.00, 10.00, 20.00, 10.00, 620.00, '8', 0.00, '2025-02-27 07:21:05', 600.00, 'Closed', 'Active', 'No', '2025-02-27 01:21:05', 1, '2025-02-27 01:21:05', NULL, NULL, NULL),
+(27, '000024', 1, NULL, NULL, 1520.00, 0.00, 10.00, 10.00, 20.00, 1520.00, '8', 0.00, '2025-02-27 07:25:28', 1520.00, 'Closed', 'Active', 'No', '2025-02-27 01:25:28', 1, '2025-02-27 01:25:28', NULL, NULL, NULL),
+(28, '000025', 1, NULL, NULL, 770.00, 0.00, 10.00, 10.00, 10.00, 770.00, '8', 0.00, '2025-02-27 07:26:04', 760.00, 'Closed', 'Active', 'No', '2025-02-27 01:26:04', 1, '2025-02-27 01:26:04', NULL, NULL, NULL),
+(29, '000026', 1, NULL, NULL, 205.00, 0.00, 10.00, 10.00, 10.00, 205.00, '8', 0.00, '2025-02-27 10:07:35', 195.00, 'Closed', 'Active', 'No', '2025-02-27 04:07:35', 1, '2025-02-27 04:07:35', NULL, NULL, NULL),
+(30, '000027', 1, NULL, NULL, 400.00, 0.00, 10.00, 10.00, 10.00, 400.00, '8', 0.00, '2025-02-27 10:32:31', 390.00, 'Closed', 'Active', 'No', '2025-02-27 04:32:31', 1, '2025-02-27 04:32:31', NULL, NULL, NULL),
+(31, '000028', 1, NULL, NULL, 245.00, 0.00, 10.00, 10.00, 10.00, 245.00, '8', 0.00, '2025-02-27 10:47:23', 235.00, 'Closed', 'Active', 'No', '2025-02-27 04:47:23', 1, '2025-02-27 04:47:23', NULL, NULL, NULL),
+(32, '000029', 1, NULL, NULL, 245.00, 0.00, 10.00, 10.00, 10.00, 245.00, '8', 0.00, '2025-02-27 10:57:03', 235.00, 'Closed', 'Active', 'No', '2025-02-27 04:57:03', 1, '2025-02-27 04:57:03', NULL, NULL, NULL),
+(33, '000030', 1, NULL, NULL, 1132.00, 0.00, 11.00, 11.00, 50.00, 1132.00, '8', 0.00, '2025-02-27 11:11:51', 1160.00, 'Closed', 'Active', 'No', '2025-02-27 05:11:51', 1, '2025-02-27 05:11:51', NULL, NULL, NULL),
+(34, '000031', 1, NULL, NULL, 861.00, 0.00, 21.00, 12.00, 12.00, 861.00, '8', 0.00, '2025-02-27 11:15:56', 840.00, 'Closed', 'Active', 'No', '2025-02-27 05:15:56', 1, '2025-02-27 05:15:56', NULL, NULL, NULL),
+(35, '000032', 1, NULL, NULL, 1650.00, 0.00, 100.00, 50.00, 60.00, 1500.00, '8', 150.00, '2025-02-27 11:30:41', 1560.00, 'Closed', 'Active', 'No', '2025-02-27 05:30:41', 1, '2025-02-27 05:30:41', NULL, NULL, NULL),
+(36, '000033', 1, NULL, NULL, 1460.00, 0.00, 50.00, 10.00, 90.00, 1400.00, '8', 60.00, '2025-02-27 11:59:57', 1490.00, 'Closed', 'Active', 'No', '2025-02-27 05:59:57', 1, '2025-02-27 05:59:57', NULL, NULL, NULL),
+(37, '000034', 1, NULL, NULL, 10790.00, 0.00, 150.00, 50.00, 100.00, 10790.00, '8', 0.00, '2025-02-27 12:12:24', 10690.00, 'Closed', 'Active', 'No', '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3630,7 +3740,7 @@ CREATE TABLE `tbl_restaurant_order_details` (
   `order_id` bigint(20) DEFAULT NULL,
   `category_id` bigint(20) DEFAULT NULL,
   `menu_id` bigint(20) DEFAULT NULL,
-  `menu_quantity` bigint(100) DEFAULT NULL,
+  `menu_quantity` decimal(10,2) DEFAULT NULL,
   `unit_price` decimal(10,2) DEFAULT 0.00,
   `unit_discount_price` decimal(10,2) DEFAULT 0.00,
   `unit_price_after_discount` decimal(12,2) DEFAULT NULL,
@@ -3653,17 +3763,69 @@ CREATE TABLE `tbl_restaurant_order_details` (
 --
 
 INSERT INTO `tbl_restaurant_order_details` (`id`, `order_id`, `category_id`, `menu_id`, `menu_quantity`, `unit_price`, `unit_discount_price`, `unit_price_after_discount`, `unit_total_price`, `product_broken_type`, `sub_quantity`, `sub_unit_price`, `status`, `deleted`, `deleted_at`, `deleted_by`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 1, NULL, 45, 5, 400.00, 0.00, 370.00, 2000.00, 'Yes', 95.00, 20.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:01:22', 1, '2025-02-06 05:01:22', NULL),
-(2, 2, NULL, 29, 1, 390.00, 0.00, 350.00, 390.00, 'Yes', 7.00, 39.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL),
-(3, 2, NULL, 27, 1, 150.00, 0.00, 120.00, 150.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL),
-(4, 2, NULL, 22, 1, 290.00, 0.00, 260.00, 290.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL),
-(5, 3, NULL, 29, 1, 390.00, 0.00, 350.00, 312.00, 'Yes', 8.00, 39.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
-(6, 3, NULL, 20, 1, 290.00, 0.00, 270.00, 290.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
-(7, 3, NULL, 22, 1, 290.00, 0.00, 260.00, 290.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
-(8, 3, NULL, 21, 1, 170.00, 0.00, 150.00, 170.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
-(9, 4, NULL, 45, 1, 400.00, 0.00, 370.00, 200.00, 'Yes', 5.00, 40.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL),
-(10, 4, NULL, 25, 1, 150.00, 0.00, 120.00, 150.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL),
-(11, 4, NULL, 23, 1, 230.00, 0.00, 210.00, 230.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL);
+(1, 1, NULL, 45, 5.00, 400.00, 0.00, 370.00, 2000.00, 'Yes', 95.00, 20.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:01:22', 1, '2025-02-06 05:01:22', NULL),
+(2, 2, NULL, 29, 1.00, 390.00, 0.00, 350.00, 390.00, 'Yes', 7.00, 39.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL),
+(3, 2, NULL, 27, 1.00, 150.00, 0.00, 120.00, 150.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL),
+(4, 2, NULL, 22, 1.00, 290.00, 0.00, 260.00, 290.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:03:53', 1, '2025-02-06 05:03:53', NULL),
+(5, 3, NULL, 29, 1.00, 390.00, 0.00, 350.00, 312.00, 'Yes', 8.00, 39.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
+(6, 3, NULL, 20, 1.00, 290.00, 0.00, 270.00, 290.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
+(7, 3, NULL, 22, 1.00, 290.00, 0.00, 260.00, 290.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
+(8, 3, NULL, 21, 1.00, 170.00, 0.00, 150.00, 170.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:32:00', 1, '2025-02-06 05:32:00', NULL),
+(9, 4, NULL, 45, 1.00, 400.00, 0.00, 370.00, 200.00, 'Yes', 5.00, 40.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL),
+(10, 4, NULL, 25, 1.00, 150.00, 0.00, 120.00, 150.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL),
+(11, 4, NULL, 23, 1.00, 230.00, 0.00, 210.00, 230.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-06 05:36:42', 1, '2025-02-06 05:36:42', NULL),
+(12, 5, NULL, 19, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-22 04:12:40', 1, '2025-02-22 04:12:40', NULL),
+(13, 6, NULL, 18, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-22 05:24:32', 1, '2025-02-22 05:24:32', NULL),
+(14, 7, NULL, 18, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-22 06:53:28', 1, '2025-02-22 06:53:28', NULL),
+(15, 8, NULL, 46, 1.00, 370.00, 0.00, 340.00, 370.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-22 06:53:55', 1, '2025-02-22 06:53:55', NULL),
+(16, 9, NULL, 45, 1.00, 400.00, 0.00, 370.00, 150.00, 'Yes', 3.00, 50.00, 'Active', 'No', NULL, NULL, '2025-02-25 01:08:46', 1, '2025-02-25 01:08:46', NULL),
+(17, 10, NULL, 19, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-25 22:43:51', 1, '2025-02-25 22:43:51', NULL),
+(21, 14, NULL, 19, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-25 23:21:26', 1, '2025-02-25 23:21:26', NULL),
+(22, 15, NULL, 41, 1.00, 380.00, 0.00, 350.00, 380.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 00:27:29', 1, '2025-02-26 00:27:29', NULL),
+(23, 16, NULL, 19, 2.00, 390.00, 0.00, 350.00, 780.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 00:31:53', 1, '2025-02-26 00:31:53', NULL),
+(24, 17, NULL, 35, 1.00, 420.00, 0.00, 370.00, 420.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 00:33:21', 1, '2025-02-26 00:33:21', NULL),
+(25, 17, NULL, 18, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 00:33:21', 1, '2025-02-26 00:33:21', NULL),
+(26, 18, NULL, 35, 1.00, 420.00, 0.00, 370.00, 420.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 01:29:45', 1, '2025-02-26 01:29:45', NULL),
+(27, 18, NULL, 19, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 01:29:45', 1, '2025-02-26 01:29:45', NULL),
+(28, 19, NULL, 35, 1.00, 420.00, 0.00, 370.00, 420.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 01:39:32', 1, '2025-02-26 01:39:32', NULL),
+(29, 19, NULL, 18, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-26 01:39:32', 1, '2025-02-26 01:39:32', NULL),
+(30, 20, NULL, 19, 2.00, 390.00, 0.00, 350.00, 780.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 00:56:24', 1, '2025-02-27 00:56:24', NULL),
+(31, 21, NULL, 17, 1.00, 280.00, 0.00, 250.00, 280.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:00:03', 1, '2025-02-27 01:00:03', NULL),
+(32, 22, NULL, 33, 1.00, 470.00, 0.00, 350.00, 470.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:01:04', 1, '2025-02-27 01:01:04', NULL),
+(33, 23, NULL, 35, 1.00, 420.00, 0.00, 370.00, 420.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:02:15', 1, '2025-02-27 01:02:15', NULL),
+(34, 24, NULL, 38, 1.00, 380.00, 0.00, 350.00, 380.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:03:37', 1, '2025-02-27 01:03:37', NULL),
+(35, 25, NULL, 27, 5.00, 150.00, 0.00, 120.00, 750.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:19:48', 1, '2025-02-27 01:19:48', NULL),
+(36, 26, NULL, 27, 4.00, 150.00, 0.00, 120.00, 600.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:21:05', 1, '2025-02-27 01:21:05', NULL),
+(37, 27, NULL, 38, 4.00, 380.00, 0.00, 350.00, 1520.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:25:28', 1, '2025-02-27 01:25:28', NULL),
+(38, 28, NULL, 41, 2.00, 380.00, 0.00, 350.00, 760.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 01:26:04', 1, '2025-02-27 01:26:04', NULL),
+(39, 29, NULL, 18, 1.00, 390.00, 0.00, 350.00, 195.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 04:07:35', 1, '2025-02-27 04:07:35', NULL),
+(40, 30, NULL, 18, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 04:32:31', 1, '2025-02-27 04:32:31', NULL),
+(41, 31, NULL, 33, 1.00, 470.00, 0.00, 350.00, 235.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 04:47:23', 1, '2025-02-27 04:47:23', NULL),
+(42, 32, NULL, 33, 0.50, 470.00, 0.00, 350.00, 235.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 04:57:03', 1, '2025-02-27 04:57:03', NULL),
+(43, 33, NULL, 35, 1.00, 420.00, 0.00, 370.00, 420.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:11:51', 1, '2025-02-27 05:11:51', NULL),
+(44, 33, NULL, 32, 1.00, 370.00, 0.00, 350.00, 370.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:11:51', 1, '2025-02-27 05:11:51', NULL),
+(45, 33, NULL, 37, 1.00, 370.00, 0.00, 350.00, 370.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:11:51', 1, '2025-02-27 05:11:51', NULL),
+(46, 34, NULL, 40, 1.00, 390.00, 0.00, 370.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:15:56', 1, '2025-02-27 05:15:56', NULL),
+(47, 34, NULL, 36, 1.00, 450.00, 0.00, 420.00, 450.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:15:56', 1, '2025-02-27 05:15:56', NULL),
+(48, 35, NULL, 18, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:30:41', 1, '2025-02-27 05:30:41', NULL),
+(49, 35, NULL, 17, 1.00, 280.00, 0.00, 250.00, 280.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:30:41', 1, '2025-02-27 05:30:41', NULL),
+(50, 35, NULL, 33, 1.00, 470.00, 0.00, 350.00, 470.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:30:41', 1, '2025-02-27 05:30:41', NULL),
+(51, 35, NULL, 35, 1.00, 420.00, 0.00, 370.00, 420.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:30:41', 1, '2025-02-27 05:30:41', NULL),
+(52, 36, NULL, 17, 1.00, 280.00, 0.00, 250.00, 280.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:59:57', 1, '2025-02-27 05:59:57', NULL),
+(53, 36, NULL, 18, 1.00, 390.00, 0.00, 350.00, 390.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:59:57', 1, '2025-02-27 05:59:57', NULL),
+(54, 36, NULL, 32, 1.00, 370.00, 0.00, 350.00, 370.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:59:57', 1, '2025-02-27 05:59:57', NULL),
+(55, 36, NULL, 39, 1.00, 450.00, 0.00, 420.00, 450.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 05:59:57', 1, '2025-02-27 05:59:57', NULL),
+(56, 37, NULL, 17, 2.00, 280.00, 0.00, 250.00, 560.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(57, 37, NULL, 32, 2.00, 370.00, 0.00, 350.00, 740.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(58, 37, NULL, 41, 2.00, 380.00, 0.00, 350.00, 760.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(59, 37, NULL, 37, 4.00, 370.00, 0.00, 350.00, 1480.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(60, 37, NULL, 36, 2.00, 450.00, 0.00, 420.00, 900.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(61, 37, NULL, 46, 2.00, 370.00, 0.00, 340.00, 740.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(62, 37, NULL, 23, 2.00, 230.00, 0.00, 210.00, 460.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(63, 37, NULL, 24, 2.00, 200.00, 0.00, 170.00, 400.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(64, 37, NULL, 25, 2.00, 150.00, 0.00, 120.00, 300.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(65, 37, NULL, 39, 5.00, 450.00, 0.00, 420.00, 2250.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL),
+(66, 37, NULL, 35, 5.00, 420.00, 0.00, 370.00, 2100.00, 'No', 0.00, 0.00, 'Active', 'No', NULL, NULL, '2025-02-27 06:12:24', 1, '2025-02-27 06:12:24', NULL);
 
 -- --------------------------------------------------------
 
@@ -4180,6 +4342,7 @@ CREATE TABLE `tbl_voucher_payment_vouchers` (
   `expense_id` bigint(20) DEFAULT NULL,
   `tbl_repairing_center_id` bigint(20) DEFAULT NULL,
   `customerType` enum('WalkingCustomer','Party') NOT NULL DEFAULT 'Party',
+  `payment_method_id` int(11) DEFAULT NULL,
   `voucherNo` varchar(255) NOT NULL,
   `chequeBank` varchar(255) DEFAULT NULL,
   `dbInsertDate` datetime DEFAULT NULL,
@@ -4200,11 +4363,71 @@ CREATE TABLE `tbl_voucher_payment_vouchers` (
 -- Dumping data for table `tbl_voucher_payment_vouchers`
 --
 
-INSERT INTO `tbl_voucher_payment_vouchers` (`id`, `party_id`, `tbl_booking_id`, `resturant_order_id`, `purchase_id`, `order_sale_id`, `amount`, `entryBy`, `discount`, `payment_method`, `chequeNo`, `paymentDate`, `chequeIssueDate`, `accountNo`, `type`, `remarks`, `bill_id`, `tbl_bankInfoId`, `lastUpdatedBy`, `voucherType`, `sales_id`, `purchase_return_id`, `tbl_asset_purchase_id`, `tbl_asset_sale_id`, `sales_return_id`, `expense_id`, `tbl_repairing_center_id`, `customerType`, `voucherNo`, `chequeBank`, `dbInsertDate`, `status`, `from_warehouse`, `deleted`, `created_by`, `created_date`, `updated_by`, `updated_date`, `deleted_by`, `deleted_date`, `created_at`, `updated_at`) VALUES
-(1, 44, 0, 1, NULL, NULL, 1900.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1900', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', '000001', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:01:22', '2025-02-06 05:01:22'),
-(2, 45, 0, 2, NULL, NULL, 713.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 713', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', '000002', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:03:53', '2025-02-06 05:03:53'),
-(3, 46, 0, 3, NULL, NULL, 1062.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1062', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', '000003', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:32:00', '2025-02-06 05:32:00'),
-(4, 47, 0, 4, NULL, NULL, 580.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 580', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', '000004', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:36:42', '2025-02-06 05:36:42');
+INSERT INTO `tbl_voucher_payment_vouchers` (`id`, `party_id`, `tbl_booking_id`, `resturant_order_id`, `purchase_id`, `order_sale_id`, `amount`, `entryBy`, `discount`, `payment_method`, `chequeNo`, `paymentDate`, `chequeIssueDate`, `accountNo`, `type`, `remarks`, `bill_id`, `tbl_bankInfoId`, `lastUpdatedBy`, `voucherType`, `sales_id`, `purchase_return_id`, `tbl_asset_purchase_id`, `tbl_asset_sale_id`, `sales_return_id`, `expense_id`, `tbl_repairing_center_id`, `customerType`, `payment_method_id`, `voucherNo`, `chequeBank`, `dbInsertDate`, `status`, `from_warehouse`, `deleted`, `created_by`, `created_date`, `updated_by`, `updated_date`, `deleted_by`, `deleted_date`, `created_at`, `updated_at`) VALUES
+(1, 44, 0, 1, NULL, NULL, 1900.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1900', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000001', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:01:22', '2025-02-06 05:01:22'),
+(2, 45, 0, 2, NULL, NULL, 713.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 713', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000002', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:03:53', '2025-02-06 05:03:53'),
+(3, 46, 0, 3, NULL, NULL, 1062.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1062', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000003', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:32:00', '2025-02-06 05:32:00'),
+(4, 47, 0, 4, NULL, NULL, 580.00, 1, 0.00, 'Cash', NULL, '2025-02-06', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 580', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000004', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-06 05:36:42', '2025-02-06 05:36:42'),
+(5, 48, 0, 5, NULL, NULL, 390.00, 1, 0.00, 'Cash', NULL, '2025-02-22', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 390', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000005', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-22 04:12:40', '2025-02-22 04:12:40'),
+(6, 4, 0, 6, NULL, NULL, 390.00, 1, 0.00, 'Cash', NULL, '2025-02-22', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 390', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000006', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-22 05:24:32', '2025-02-22 05:24:32'),
+(7, 4, 0, 7, NULL, NULL, 390.00, 1, 0.00, 'Cash', NULL, '2025-02-22', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 390', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000007', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-22 06:53:28', '2025-02-22 06:53:28'),
+(8, 4, 0, 8, NULL, NULL, 370.00, 1, 0.00, 'Cash', NULL, '2025-02-22', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 370', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000008', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-22 06:53:55', '2025-02-22 06:53:55'),
+(9, 4, 0, 9, NULL, NULL, 150.00, 1, 0.00, 'Cash', NULL, '2025-02-25', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 150', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000009', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-25 01:08:46', '2025-02-25 01:08:46'),
+(10, 49, 0, 10, NULL, NULL, 390.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 390', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000010', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-25 22:43:51', '2025-02-25 22:43:51'),
+(11, 9, 0, 14, NULL, NULL, 370.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 370', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000011', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-25 23:21:26', '2025-02-25 23:21:26'),
+(12, 9, 0, 14, NULL, NULL, 370.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 370', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000011', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-25 23:21:26', '2025-02-25 23:21:26'),
+(13, 10, 0, 15, NULL, NULL, 350.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 350', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000012', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 00:27:29', '2025-02-26 00:27:29'),
+(14, 10, 0, 15, NULL, NULL, 350.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 350', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000012', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 00:27:29', '2025-02-26 00:27:29'),
+(15, 1, 0, 16, NULL, NULL, 760.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 760', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000013', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 00:31:53', '2025-02-26 00:31:53'),
+(16, 1, 0, 16, NULL, NULL, 750.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 750', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000013', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 00:31:53', '2025-02-26 00:31:53'),
+(17, 1, 0, 17, NULL, NULL, 810.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 810', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000014', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 00:33:21', '2025-02-26 00:33:21'),
+(18, 1, 0, 17, NULL, NULL, 800.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 800', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000014', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 00:33:21', '2025-02-26 00:33:21'),
+(19, 1, 0, 18, NULL, NULL, 810.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 810', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000015', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 01:29:45', '2025-02-26 01:29:45'),
+(20, 1, 0, 18, NULL, NULL, 810.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 810', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000015', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 01:29:45', '2025-02-26 01:29:45'),
+(21, 11, 0, 19, NULL, NULL, 810.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 810', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000016', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 01:39:32', '2025-02-26 01:39:32'),
+(22, 11, 0, 19, NULL, NULL, 810.00, 1, 0.00, 'Cash', NULL, '2025-02-26', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 810', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000016', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-26 01:39:32', '2025-02-26 01:39:32'),
+(23, 1, 0, 20, NULL, NULL, 770.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 770', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000017', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 00:56:24', '2025-02-27 00:56:24'),
+(24, 1, 0, 20, NULL, NULL, 770.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 770', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000017', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 00:56:24', '2025-02-27 00:56:24'),
+(25, 12, 0, 21, NULL, NULL, 250.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 250', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000018', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:00:03', '2025-02-27 01:00:03'),
+(26, 12, 0, 21, NULL, NULL, 250.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 250', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000018', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:00:03', '2025-02-27 01:00:03'),
+(27, 12, 0, 22, NULL, NULL, 470.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 470', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000019', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:01:04', '2025-02-27 01:01:04'),
+(28, 12, 0, 22, NULL, NULL, 470.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 470', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000019', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:01:04', '2025-02-27 01:01:04'),
+(29, 1, 0, 23, NULL, NULL, 420.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 420', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000020', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:02:15', '2025-02-27 01:02:15'),
+(30, 1, 0, 23, NULL, NULL, 420.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 420', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000020', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:02:15', '2025-02-27 01:02:15'),
+(31, 1, 0, 24, NULL, NULL, 380.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 380', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000021', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:03:37', '2025-02-27 01:03:37'),
+(32, 1, 0, 24, NULL, NULL, 380.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 380', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000021', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:03:37', '2025-02-27 01:03:37'),
+(33, 1, 0, 25, NULL, NULL, 730.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 730', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000022', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:19:48', '2025-02-27 01:19:48'),
+(34, 1, 0, 25, NULL, NULL, 730.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 730', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000022', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:19:48', '2025-02-27 01:19:48'),
+(35, 1, 0, 26, NULL, NULL, 620.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 620', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000023', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:21:05', '2025-02-27 01:21:05'),
+(36, 1, 0, 26, NULL, NULL, 620.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 620', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000023', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:21:05', '2025-02-27 01:21:05'),
+(37, 1, 0, 27, NULL, NULL, 1520.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 1520', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000024', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:25:28', '2025-02-27 01:25:28'),
+(38, 1, 0, 27, NULL, NULL, 1520.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1520', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000024', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:25:28', '2025-02-27 01:25:28'),
+(39, 1, 0, 28, NULL, NULL, 770.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 770', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000025', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:26:04', '2025-02-27 01:26:04'),
+(40, 1, 0, 28, NULL, NULL, 770.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 770', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000025', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 01:26:04', '2025-02-27 01:26:04'),
+(41, 10, 0, NULL, 12, NULL, 260.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payable', 'payable for purchase code: 000011 payment: 260', NULL, NULL, NULL, 'Local Purchase', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000026', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 03:06:55', '2025-02-27 03:06:55'),
+(42, 10, 0, NULL, 12, NULL, 260.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment', 'Payment for purchase code: 000011 payment: 260', NULL, NULL, NULL, 'Local Purchase', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000027', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 03:06:55', '2025-02-27 03:06:55'),
+(43, 10, 0, NULL, 13, NULL, 120.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payable', 'payable for purchase code: 000012 payment: 120', NULL, NULL, NULL, 'Local Purchase', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000028', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 03:13:12', '2025-02-27 03:13:12'),
+(44, 10, 0, NULL, 13, NULL, 120.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment', 'Payment for purchase code: 000012 payment: 120', NULL, NULL, NULL, 'Local Purchase', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000029', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 03:13:12', '2025-02-27 03:13:12'),
+(45, 10, 0, NULL, 14, NULL, 240.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payable', 'payable for purchase code: 000013 payment: 240', NULL, NULL, NULL, 'Local Purchase', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000030', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 03:19:15', '2025-02-27 03:19:15'),
+(46, 10, 0, NULL, 14, NULL, 240.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment', 'Payment for purchase code: 000013 payment: 240', NULL, NULL, NULL, 'Local Purchase', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', NULL, '000031', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 03:19:15', '2025-02-27 03:19:15'),
+(47, 1, 0, 29, NULL, NULL, 205.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 205', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000032', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:07:35', '2025-02-27 04:07:35'),
+(48, 1, 0, 29, NULL, NULL, 205.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 205', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000032', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:07:35', '2025-02-27 04:07:35'),
+(49, 1, 0, 30, NULL, NULL, 400.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 400', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000033', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:32:31', '2025-02-27 04:32:31'),
+(50, 1, 0, 30, NULL, NULL, 400.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 400', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000033', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:32:31', '2025-02-27 04:32:31'),
+(51, 1, 0, 31, NULL, NULL, 245.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 245', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000034', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:47:23', '2025-02-27 04:47:23'),
+(52, 1, 0, 31, NULL, NULL, 245.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 245', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000034', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:47:23', '2025-02-27 04:47:23'),
+(53, 1, 0, 32, NULL, NULL, 245.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 245', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000035', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:57:03', '2025-02-27 04:57:03'),
+(54, 1, 0, 32, NULL, NULL, 245.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 245', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000035', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 04:57:03', '2025-02-27 04:57:03'),
+(55, 1, 0, 33, NULL, NULL, 1132.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 1132', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000036', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:11:51', '2025-02-27 05:11:51'),
+(56, 1, 0, 33, NULL, NULL, 1132.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1132', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000036', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:11:51', '2025-02-27 05:11:51'),
+(57, 1, 0, 34, NULL, NULL, 861.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 861', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000037', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:15:56', '2025-02-27 05:15:56'),
+(58, 1, 0, 34, NULL, NULL, 861.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 861', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000037', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:15:56', '2025-02-27 05:15:56'),
+(59, 1, 0, 35, NULL, NULL, 1650.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 1650', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000038', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:30:41', '2025-02-27 05:30:41'),
+(60, 1, 0, 35, NULL, NULL, 1500.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1500', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000038', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:30:41', '2025-02-27 05:30:41'),
+(61, 1, 0, 36, NULL, NULL, 1460.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 1460', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000039', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:59:57', '2025-02-27 05:59:57'),
+(62, 1, 0, 36, NULL, NULL, 1400.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 1400', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000039', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 05:59:57', '2025-02-27 05:59:57'),
+(63, 1, 0, 37, NULL, NULL, 10790.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Party Payable', 'WalkinSale:  payment: 10790', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000040', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 06:12:24', '2025-02-27 06:12:24'),
+(64, 1, 0, 37, NULL, NULL, 10790.00, 1, 0.00, 'Cash', NULL, '2025-02-27', NULL, NULL, 'Payment Received', 'WalkinSale:  payment: 10790', NULL, NULL, NULL, 'WalkinSale', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Party', 8, '000040', NULL, NULL, 'Active', 0, 'No', NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-27 06:12:24', '2025-02-27 06:12:24');
 
 -- --------------------------------------------------------
 
@@ -4778,13 +5001,13 @@ ALTER TABLE `tbl_accounts_coas`
 -- AUTO_INCREMENT for table `tbl_accounts_vouchers`
 --
 ALTER TABLE `tbl_accounts_vouchers`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `tbl_acc_voucher_details`
 --
 ALTER TABLE `tbl_acc_voucher_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `tbl_asset_assign`
@@ -4880,13 +5103,13 @@ ALTER TABLE `tbl_building`
 -- AUTO_INCREMENT for table `tbl_crm_parties`
 --
 ALTER TABLE `tbl_crm_parties`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbl_currentstock`
 --
 ALTER TABLE `tbl_currentstock`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `tbl_employee`
@@ -4916,13 +5139,13 @@ ALTER TABLE `tbl_images`
 -- AUTO_INCREMENT for table `tbl_inventory_damage_products`
 --
 ALTER TABLE `tbl_inventory_damage_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `tbl_inventory_products`
 --
 ALTER TABLE `tbl_inventory_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `tbl_inventory_product_specification`
@@ -4952,25 +5175,25 @@ ALTER TABLE `tbl_inventory_serialize_products`
 -- AUTO_INCREMENT for table `tbl_purchases`
 --
 ALTER TABLE `tbl_purchases`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tbl_purchase_products`
 --
 ALTER TABLE `tbl_purchase_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tbl_restaurant_order`
 --
 ALTER TABLE `tbl_restaurant_order`
-  MODIFY `id` bigint(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `tbl_restaurant_order_details`
 --
 ALTER TABLE `tbl_restaurant_order_details`
-  MODIFY `id` bigint(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `tbl_room_facilities`
@@ -5036,7 +5259,7 @@ ALTER TABLE `tbl_setups_warehouses`
 -- AUTO_INCREMENT for table `tbl_voucher_payment_vouchers`
 --
 ALTER TABLE `tbl_voucher_payment_vouchers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `users`
