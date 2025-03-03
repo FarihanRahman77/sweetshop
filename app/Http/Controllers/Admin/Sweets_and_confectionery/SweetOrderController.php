@@ -90,20 +90,31 @@ class SweetOrderController extends Controller
 
     public function customerinfo(Request $request)
 	{
+        //return $request;
+        $partyType = $request->customer_type;
 		if ($request->id > 0) {
-			$partyType = $request->customer_type;
-			$customerInfo = Party::where('id', $request->id)
+			 $customerInfo = Party::where('id', $request->id)
 				->where(function ($query) use ($partyType) {
 					$query->where('party_type', $partyType)
 						->orWhere('party_type', 'Both');
 				})
-				
-				->get()->first();
+                ->first();
 		} else {
-			$customerInfo = Party::where('contact', '=', $request->partyPhoneNumber)->where('party_type', $request->customer_type)->first();
+			 $customerInfo = Party::where('contact', '=', $request->partyPhoneNumber)->where('party_type', $request->customer_type)->first();
 		}
-
-		return $customerInfo;
+       //return $customerInfo;
+        if($customerInfo){
+            $data=array(
+                'status'=>'Yes',
+                'customerInfo'=>$customerInfo
+            );
+        }else{
+            $data=array(
+                'status'=>'No',
+                'customerInfo'=>$customerInfo
+            );
+        }
+		return $data;
 	}
     
     public function addOrder(Request $request)

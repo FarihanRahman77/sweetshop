@@ -320,6 +320,7 @@
                 },
                 datatype: "json",
                 success: function(result) {
+                    alert(JSON.stringify(result));
                     if (result) {
                         $("#" + id).html(result);
                     } else {
@@ -373,14 +374,27 @@
 
         function getManageProductTable() {
            
-            // if (loadSearch == 1) {
+            // $.ajax({
+            //     url: "",
+            //     method: "GET",
+            //     contentType: false,
+            //     processData: false,
+            //     datatype: "json",
+            //     success: function(result) {
+            //         alert(JSON.stringify(result));
+            //     },
+               
+            //     error: function(response) {
+            //         alert(JSON.stringify(response));
+            //     }
+            // });
+            
                 advanceSearchTable = $('#advanceSearchProductTable').DataTable({
                     'ajax': "{{ route('viewAdvanceSearchProducts', ['page' => 'Purchase']) }}",
                     processing: true,
                     destroy: true,
                 });
-            //     loadSearch = 0;
-            // }
+         
         }
         //=========== End Product Advance Search ===========//
 
@@ -937,8 +951,8 @@
             }
             //--End Check Product & Supplier Select or Not
             //Just For Validation
-            fd.append('product', product_id); //-product_id as product_name
-            fd.append('supplier', supplier_id); //-supplier_id as supplier_name
+            fd.append('product', product_id); 
+            fd.append('supplier', supplier_id);
             //End Just For Validation
             fd.append('date', date);
             fd.append('supplier_id', supplier_id);
@@ -963,7 +977,7 @@
                 processData: false,
                 datatype: "json",
                 success: function(result) {
-                    // alert(JSON.stringify(result));
+                 alert(JSON.stringify(result));
                     let purchaseId = result.purchaseId;
                     clearSalesForm();
                     fetchCart();
@@ -993,7 +1007,7 @@
                     $('#loading').hide();
                 },
                 error: function(response) {
-                    // alert(JSON.stringify(response));
+                     alert(JSON.stringify(response));
                     Swal.fire("Error: ", "Please Check Required Field ! ", "error");
                     $('#productIdError').text(response.responseJSON.errors.product);
                     $('#supplierIdError').text(response.responseJSON.errors.supplier);
