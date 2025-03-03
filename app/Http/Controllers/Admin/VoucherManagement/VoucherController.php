@@ -389,7 +389,11 @@ class VoucherController extends Controller
 			$party = Party::find($request->party_id);
 			 if ($request->type == 'Payment Received') {
 				$party->decrement('current_due', $request->amount);
-			} else if ($request->type == 'Discount') {
+			} 
+			else if ($request->type == 'Payment') {
+				$party->increment('current_due', $request->amount);
+			}
+			else if ($request->type == 'Discount') {
 				if ($party->party_type == "Customer") {
 					$party->decrement('current_due', $request->amount);
 				} 
