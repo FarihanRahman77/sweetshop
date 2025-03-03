@@ -465,6 +465,7 @@ class PurchaseController extends Controller
 
 	public function checkOutCart(Request $request)
 	{
+		//  return $request;
 		$request->validate([
 			'supplier' => 'required',
 			'category' => 'required'
@@ -548,6 +549,7 @@ class PurchaseController extends Controller
 					->where("tbl_wareHouseId", $warehouse_id)
 					->where("deleted", 'No');
 				if ($Currentstock->first()) {
+					$Currentstock->sister_concern_id = $request->sister_concern_id;
 					$Currentstock->increment('currentStock', $quantity);
 					$Currentstock->increment('purchaseStock', $quantity);
 				} else {
@@ -556,6 +558,7 @@ class PurchaseController extends Controller
 					$Currentstock_insert->tbl_wareHouseId = $warehouse_id;
 					$Currentstock_insert->currentStock = $quantity;
 					$Currentstock_insert->purchaseStock = $quantity;
+					$Currentstock_insert->sister_concern_id = $request->sister_concern_id;
 					$Currentstock_insert->break_Quantity = 0;
 					$Currentstock_insert->broken_quantity = 0;
 					$Currentstock_insert->broken_sold = 0;

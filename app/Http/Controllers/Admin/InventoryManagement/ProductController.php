@@ -185,8 +185,10 @@ class ProductController extends Controller
 
     public function getAdvanceSearchProducts(Request $request)
     {
+
+      
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
-        $products = DB::table('tbl_inventory_products')
+         $products = DB::table('tbl_inventory_products')
             ->leftjoin('tbl_setups_brands', 'tbl_inventory_products.brand_id', '=', 'tbl_setups_brands.id')
             ->leftjoin('tbl_setups_units', 'tbl_inventory_products.unit_id', '=', 'tbl_setups_units.id')
             ->leftjoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id')
@@ -200,14 +202,15 @@ class ProductController extends Controller
             ->where('tbl_inventory_products.sister_concern_id','=',$logged_sister_concern_id)
             ->orderBy('tbl_inventory_products.id', 'DESC')
             ->get();
+
         $output = array('data' => array());
         $i = 1;
         foreach ($products as $product) {
             $productId = $product->id;
-            $specs = DB::table('tbl_inventory_product_specification')->where('deleted', 'No')->where('tbl_product_id', $productId)->get();
+            $specs = DB::table('tbl_inventory_product_specification')->where('deleted', 'No')->where('tbl_inventory_product_specification.tbl_product_id', $productId)->get();
             $productSpecs = '';
             foreach ($specs as $spec) {
-                $productSpecs .= '<tr><td><b>' . $spec->specificationName . ' : </b></td><td>' . $spec->specificationValue . '</td></tr><br>';
+                $productSpecs .= '<tr><td><b>' . $spec->specification_name . ' : </b></td><td>' . $spec->specification_value . '</td></tr><br>';
             }
             if ($request->page == "Purchase") {
                 $button = '<td>

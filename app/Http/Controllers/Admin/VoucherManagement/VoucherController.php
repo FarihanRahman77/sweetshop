@@ -63,17 +63,17 @@ class VoucherController extends Controller
 		$filter='';
 		 $tempFilterByTypeDatePartyArray = $filterByTypeDateParty;
 		$filterByTypeDatePartyArray = explode("@", $tempFilterByTypeDatePartyArray);
-		$type = $filterByTypeDatePartyArray[0]; // Sales Type
-		$filterDays = $filterByTypeDatePartyArray[1]; // saleDate
+		$type = $filterByTypeDatePartyArray[0]; 
+		$filterDays = $filterByTypeDatePartyArray[1]; 
     
-		 $filter = Carbon::now()->toDateString(); //=> "2020-03-09"
+		 $filter = Carbon::now()->toDateString(); 
 
 		if ($filterDays != "Today" &&  $filterDays != 'FilterByCustomers') {
 			$filter = Carbon::now()->subDays($filterDays)->format('Y-m-d');
 		}
 		
 		if (count($filterByTypeDatePartyArray) == 3) {
-			 $filterParty = $filterByTypeDatePartyArray[2]; // Party ID
+			 $filterParty = $filterByTypeDatePartyArray[2]; 
 			 $filter='';
 		}else{
 			$filterParty='';
@@ -388,11 +388,12 @@ class VoucherController extends Controller
 
 			$party = Party::find($request->party_id);
 			 if ($request->type == 'Payment Received') {
-				$party->increment('current_due', $request->amount);
+				$party->decrement('current_due', $request->amount);
 			} else if ($request->type == 'Discount') {
 				if ($party->party_type == "Customer") {
 					$party->decrement('current_due', $request->amount);
-				} else if ($party->party_type == "Supplier" || $party->party_type == "Both") {
+				} 
+				else if ($party->party_type == "Supplier" || $party->party_type == "Both") {
 					$party->increment('current_due', $request->amount);
 				} elseif ($party->party_type == 'Walkin_Customer') {
 					$party->decrement('current_due', $request->amount);
