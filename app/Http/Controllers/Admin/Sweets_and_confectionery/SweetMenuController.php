@@ -670,7 +670,9 @@ class SweetMenuController extends Controller
     }
 
 
-
+public function productidforbarcode(Request $request){
+    return $request;
+}
 
 
     public function fetch_menu_Cart_item_modaldata(Request $request)

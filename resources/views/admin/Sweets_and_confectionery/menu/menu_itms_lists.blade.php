@@ -105,6 +105,7 @@
                     <div class="card shadow-lg rounded">
                         <div class="card-body">
                             <div class="table-responsive">
+                                <input type="number" class="form-control mb-2" oninput="getbarcodeproductid()" id="barcodeproductid"/>
                                 <table class="table text-center">
                                     <thead>
                                         <tr>
@@ -452,6 +453,40 @@ function opencategorytab(evt, categoryId) {
 document.getElementsByClassName("tablinks")[0].click();
 </script>
 <script>
+
+
+
+
+function getbarcodeproductid(){
+
+
+    var  barcodeproduct = $('#barcodeproductid').val();
+
+
+    var menu_quantity = 1;
+         $.ajax({
+        url: "{{ route('sweetsconfectionary.menu.getproductidforbarcode') }}",
+        method: "GET",
+        data: {
+            "barcodeproduct": barcodeproduct,
+        },
+        processData: true,
+        success: function(result) {
+            alert(JSON.stringify(result));
+        },
+        error: function(response) {
+             alert(JSON.stringify(response));
+        }
+    });
+
+   }
+
+
+
+
+
+
+
 function checkremainQuantity() {
     var breakProduct_id = $("#Productid").val();
     // alert(Product_id);
