@@ -127,6 +127,7 @@ Route::group(['middleware' => ['auth']], function () {
                             Route::post('/update',      [SweetMenuController::class, 'update'])->name('update');
                             Route::post('/delete',      [SweetMenuController::class, 'delete'])->name('delete');
                             Route::get('/getRemainmenuquantity',      [SweetMenuController::class, 'getmenuRemainquantity'])->name('getRemainmenuquantity');
+                            Route::get('/getproductidforbarcode',      [SweetMenuController::class, 'productidforbarcode'])->name('getproductidforbarcode');
                         });
                 
                         
