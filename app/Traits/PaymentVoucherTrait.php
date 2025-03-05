@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 trait PaymentVoucherTrait
 {
-    public function storePartyPayable($maxCode, $party_id, $amount, $orderId,$payment_method_name, $payment_method,$voucherType, $type, $remarks)
+    public function storePartyPayable($logged_sister_concern_id,$maxCode, $party_id, $amount, $orderId,$payment_method_name, $payment_method,$voucherType, $type, $remarks)
     {
         $paymentVoucher = new PaymentVoucher();
         $paymentVoucher->voucherNo = $maxCode;
@@ -19,6 +19,7 @@ trait PaymentVoucherTrait
         $paymentVoucher->party_id = $party_id;
         $paymentVoucher->payment_method_id = $payment_method;
         $paymentVoucher->payment_method = $payment_method_name;
+        $paymentVoucher->sister_concern_id=$logged_sister_concern_id;
         $paymentVoucher->paymentDate  = date('Y-m-d');
         $paymentVoucher->discount  ='0.00';
         $paymentVoucher->type  = $type;
@@ -30,7 +31,7 @@ trait PaymentVoucherTrait
 
 
 
-    public function storePaymentReceived($maxCode, $party_id, $amount, $orderId,$payment_method_name, $payment_method,$voucherType, $type, $remarks)
+    public function storePaymentReceived($logged_sister_concern_id,$maxCode, $party_id, $amount, $orderId,$payment_method_name, $payment_method,$voucherType, $type, $remarks)
     {
         $paymentVoucher = new PaymentVoucher();
         $paymentVoucher->voucherNo = $maxCode;
@@ -39,6 +40,7 @@ trait PaymentVoucherTrait
         $paymentVoucher->party_id = $party_id;
         $paymentVoucher->payment_method_id = $payment_method;
         $paymentVoucher->payment_method = $payment_method_name;
+        $paymentVoucher->sister_concern_id=$logged_sister_concern_id;
         $paymentVoucher->paymentDate  = date('Y-m-d');
         $paymentVoucher->discount  ='0.00';
         $paymentVoucher->type  = $type;

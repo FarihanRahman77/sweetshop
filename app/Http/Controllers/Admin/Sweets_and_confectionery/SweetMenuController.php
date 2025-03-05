@@ -220,14 +220,8 @@ class SweetMenuController extends Controller
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
 
         if ($request->partyid > 0) {
-            $maxCode = Party::where('deleted', 'No')->max('code');
-            $maxCode++;
-            $maxCode = str_pad($maxCode, 6, '0', STR_PAD_LEFT);
             $Party_id = $request->partyid;
             $party = Party::find($Party_id);
-            $party -> code =  $maxCode;
-            $party->current_due += ($request->totalAmount - $request->payment);
-            $party->save();
         }else{
             $maxCode = Party::where('deleted', 'No')->max('code');
             $maxCode++;
@@ -266,6 +260,7 @@ class SweetMenuController extends Controller
             $maxCode = str_pad($maxCode, 6, '0', STR_PAD_LEFT);
             $order = new OrderModel();
             $order->code =  $maxCode;
+            $order->sister_concern_id =  $logged_sister_concern_id;
             $order->grand_discount = $request->discount;
             $order->vat = $request->vat;
             $order->ait = $request->ait;
@@ -309,6 +304,7 @@ class SweetMenuController extends Controller
                     $orderDetail->unit_total_price = $itemTotalAmount;
                 }
                 
+                $orderDetail->sister_concern_id =  $logged_sister_concern_id;
                 $orderDetail->created_by= auth()->user()->id;
                 $orderDetail->save();
 
@@ -342,23 +338,27 @@ class SweetMenuController extends Controller
 
             }
         
-                $payemntMethod=ChartOfAccounts::find($request->payment_method);
 
+
+                $party->increment('current_due', $request->totalAmount);
+
+                $payemntMethod=ChartOfAccounts::find($request->payment_method);
                 $maxCode = PaymentVoucher::where('deleted', 'No')->max('voucherNo');
                 $maxCode++;
                 $maxCode = str_pad($maxCode, 6, '000000', STR_PAD_LEFT);
-
-                $this->storePartyPayable($maxCode, $Party_id, $request->totalAmount, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Party Payable', $remarks='WalkinSale: ' . ' party payable: ' . $request->totalAmount);
+                $this->storePartyPayable( $logged_sister_concern_id, $maxCode, $Party_id, $request->totalAmount, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Party Payable', $remarks='WalkinSale: ' . ' party payable: ' . $request->totalAmount);
                 if($request->payment >0){
-                    $this->storePaymentReceived($maxCode, $Party_id, $request->payment, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Payment Received', $remarks='WalkinSale: ' . 'payment received: ' . $request->payment);
+                    $this->storePaymentReceived( $logged_sister_concern_id, $maxCode, $Party_id, $request->payment, $order_id,$payemntMethod->name, $request->payment_method,$voucherType='WalkinSale', $type='Payment Received', $remarks='WalkinSale: ' . 'payment received: ' . $request->payment);
+                    $party->decrement('current_due', $request->payment);
                 }
 
                 $voucher = new AccountsVoucher();
                 $voucher->tbl_resturantOrder_id  = $order_id;
                 $voucher->vendor_id = $Party_id;
-                $voucher->transaction_date = now();
+                $voucher->transaction_date = date('Y-m-d');
                 $voucher->amount = floatval($totalAmount);
                 $voucher->payment_method = 'Cash';
+                $voucher->sister_concern_id =  $logged_sister_concern_id;
                 $voucher->deleted = "No";
                 $voucher->status = "Active";
                 $voucher->created_by = Auth::user()->id;
@@ -370,15 +370,30 @@ class SweetMenuController extends Controller
                 $voucherDetails = new AccountsVoucherDetails();
                 $voucherDetails->tbl_acc_voucher_id = $voucherId;
                 $voucherDetails->tbl_acc_coa_id = $salesCoaId;
-                $voucherDetails->transaction_date = now();
+                $voucherDetails->transaction_date = date('Y-m-d');
                 $voucherDetails->credit = floatval($totalAmount);
-                $voucherDetails->voucher_title = 'Order amount paid ' . $totalAmount . ' Tk , Date:  '. (new \DateTime())->format('Y-m-d H:i:s');
+                $voucherDetails->voucher_title = 'Order amount  ' . $totalAmount . ' Tk , Date:  '. (new \DateTime())->format('Y-m-d H:i:s');
                 $voucherDetails->deleted = "No";
                 $voucherDetails->status = "Active";
+                $voucherDetails->sister_concern_id =  $logged_sister_concern_id;
                 $voucherDetails->created_by = Auth::user()->id;
                 $voucherDetails->created_date = date('Y-m-d h:s');
                 $voucherDetails->save();
+                if($request->payment >0){
+                    $voucherDetails = new AccountsVoucherDetails();
+                    $voucherDetails->tbl_acc_voucher_id = $voucherId;
+                    $voucherDetails->tbl_acc_coa_id = $payemntMethod->id;
+                    $voucherDetails->transaction_date = date('Y-m-d');
+                    $voucherDetails->debit = floatval($request->payment);
+                    $voucherDetails->voucher_title = 'Order amount  Paid' . $request->payment . ' Tk , Date:  '. (new \DateTime())->format('Y-m-d H:i:s');
+                    $voucherDetails->deleted = "No";
+                    $voucherDetails->status = "Active";
+                    $voucherDetails->sister_concern_id =  $logged_sister_concern_id;
+                    $voucherDetails->created_by = Auth::user()->id;
+                    $voucherDetails->created_date = date('Y-m-d h:s');
+                    $voucherDetails->save();
 
+                }
             Session::forget($cartString);
             DB::commit();
             return response()->json(['status' => 'success', 'message' => 'Order successfully placed', 'menuorder_id' => $order->id]);
