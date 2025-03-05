@@ -786,7 +786,7 @@ function placeOrder() {
             }
         },
         error: function(response) {
-             alert(JSON.stringify(response));
+            // alert(JSON.stringify(response));
             alert('Checkout error: ' + JSON.stringify(response));
         }
     });
