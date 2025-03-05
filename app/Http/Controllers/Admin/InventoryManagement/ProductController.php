@@ -88,7 +88,9 @@ public function generateproductbarcode($productId,$date,$qty){
     ->leftjoin('tbl_setups_brands', 'tbl_inventory_products.brand_id', '=', 'tbl_setups_brands.id')
     ->leftjoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id')
     ->select('tbl_inventory_products.id', 
-                'tbl_inventory_products.name',  
+                'tbl_inventory_products.name', 
+                'tbl_inventory_products.brand_id', 
+                'tbl_inventory_products.category_id', 
                 'tbl_inventory_products.code',
                 'tbl_setups_categories.name as categoryName',
                 'tbl_setups_brands.name as brandName')
@@ -104,11 +106,13 @@ public function generateproductbarcode($productId,$date,$qty){
     ->first();
     //$qty=$request->qty;
     
+    $productcategoryid = $products->category_id; 
+    $productbrandid = $products->brand_id; 
     $productInitial = strtoupper(substr($products->name, 0, 1)); 
     $categoryInitial = strtoupper(substr($products->categoryName, 0, 1)); 
     $brandInitial = strtoupper(substr($products->brandName, 0, 1));       
     $productCode = $products->code;                           
-     $combinedCode = $productInitial.$categoryInitial . $brandInitial .'-'. $productCode;   
+    $combinedCode = $productInitial.$categoryInitial . $brandInitial.'-'. $productbrandid.'-'. $productcategoryid .'-'. $productCode;
 
      $html='';
      for($i=1;$i<=$qty;$i++){
@@ -119,10 +123,17 @@ public function generateproductbarcode($productId,$date,$qty){
                 ->type(BarcodeType::CODE_128) //https://github.com/ageekdev/laravel-barcode
                 ->generate($combinedCode);
        
-        $html.='<img src="data:image/svg+xml;base64,' . base64_encode($barcode) . '" /><br><span >'.$products->name.'</span><br><br>';
-     }
+        // $html.='<img src="data:image/svg+xml;base64,' . base64_encode($barcode) . '" /><br><span class="jusify-content-center">'.$products->name.'</span><br><br>';
+        $html .= '<div style="text-align: center;">
+                        <img src="data:image/svg+xml;base64,' . base64_encode($barcode) . '" /><br>
+                        <span class="justify-content-center">'.$products->name.'</span><br><br>
+                    </div>';
+    }
     
-     return view('admin.inventoryManagement.barcode.barcodePdf',['html'=>$html]);
+    //  return view('admin.inventoryManagement.barcode.barcodePdf',['html'=>$html]);
+    $customPaper = array(0,0,283.80,567.00);
+     $pdf = PDF::loadView('admin.inventoryManagement.barcode.barcodePdf', compact('html'))->setPaper($customPaper, 'Portrait');
+     return $pdf->stream('barcode-pdf.pdf', array("Attachment" => false));
    
 }
 
