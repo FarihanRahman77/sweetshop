@@ -16,40 +16,43 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use PDF;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Session;
 
 class BillController extends Controller
 {
     
+
+
+
     public function index(){
-        return view('admin.bills.billView');
+        return view('admin.account.bills.billView');
     }
 
 
-
-
-
     public function create(){
-        $expense=ChartOfAccounts::where('name','=','Expense')->first();
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $expense=ChartOfAccounts::where('name','=','Expense')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
         $expense_id=$expense->id;
-        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->orderBy('code', 'asc')->where('parent_id','=',$expense_id )->get();
-        $suppliers=Party::where('party_type','=','Supplier')->where('deleted','=','No')->where('status','=','Active')->get();
+        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->orderBy('code', 'asc')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('parent_id','=',$expense_id )->get();
+        $suppliers=Party::where('party_type','=','Supplier')->where('deleted','=','No')->where('status','=','Active')->orderBy('id','DESC')->get();
         
-        return view('admin.bills.billCreate',['coas'=>$coas,'suppliers'=>$suppliers]);
+        return view('admin.account.bills.billCreate',['coas'=>$coas,'suppliers'=>$suppliers]);
     }
 
 
 
 
     public function getBill(){
-
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
         $bills= DB::table('tbl_acc_bills')
             ->leftjoin('parties','parties.id','=','tbl_acc_bills.tbl_crm_vendor_id')
-            ->select('tbl_acc_bills.*','parties.name')
+            ->select('tbl_acc_bills.*','parties.name','parties.contact')
             ->where('tbl_acc_bills.deleted','=','No')
             ->orderby('tbl_acc_bills.id','Desc')
             ->get();
         $output = array('data' => array());
+        $paidAmount=0;
         $i=1;
         foreach ($bills as $bill) {
         $status = "";
@@ -76,13 +79,16 @@ class BillController extends Controller
             $paymentStatus='<span class="text-success" >'.$bill->payment_status.'</span>';
         }
 
+        $paidAmount=$bill->amount-$bill->due_amount;
 
         $output['data'][] = array(
         $i++. '<input type="hidden" name="id" id="id" value="'.$bill->id.'" />',
-        $bill->name,
-        $bill->transaction_date,
+        $bill->code,
+        '<b>Name: </b>'.$bill->name.'<br><b>Mobile: </b>'.$bill->contact,
+        date("d-m-Y", strtotime($bill->transaction_date)),
         $bill->particulars,
         $bill->amount,
+        $paidAmount,
         $paymentStatus,
         $status,
         $button
@@ -97,111 +103,120 @@ class BillController extends Controller
 
 
     public function store(Request $request){
+       // return $request;
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
         $request->validate([ 
             'bill_date'             => 'required',
-            'due_date'              => 'required',
             'vendor_id'             => 'required',
             'reference'             => 'nullable',
             'particulars'           => 'nullable',
-            'address'               => 'nullable',
             'amountTotal'           => 'required'
         ]);
+          
+            $billNo = Bill::max('code');
+			$billNo++;
+			$billNo = str_pad($billNo, 6, '0', STR_PAD_LEFT);
+        DB::beginTransaction();
+        try {
+            $bill = new Bill();
+            $bill->code=$billNo;
+            $bill->transaction_date=$request->bill_date;
+            $bill->tbl_crm_vendor_id=$request->vendor_id;
+            $bill->reference=$request->reference;
+            $bill->particulars=$request->particulars;
+            $bill->amount=$request->amountTotal;
+            $bill->warehouse_id=$loggedWarehouseId;
+            $bill->due_amount=$request->amountTotal;
+            $bill->payment_status="Due";
+            $bill->deleted="No";
+            $bill->status="Active";
+            $bill->created_by=Auth::user()->id;
+            $bill->created_date=date('Y-m-d h:s');
+            $bill->save();
+            $last_id=$bill->id;
 
-        $bills = new Bill();
-        $bills->transaction_date=$request->bill_date;
-        $bills->due_date=$request->due_date;
-        $bills->tbl_crm_vendor_id=$request->vendor_id;
-        $bills->reference=$request->reference;
-        $bills->particulars=$request->particulars;
-        $bills->amount=$request->amountTotal;
-        $bills->due_amount=$request->amountTotal;
-        $bills->address=$request->address;
-        $bills->payment_status="Due";
-        $bills->deleted="No";
-        $bills->status="Active";
-        $bills->created_by=Auth::user()->id;
-        $bills->created_date=date('Y-m-d h:s');
-        $bills->save();
-        $last_id=$bills->id;
+            /* bill details */
+            for($i=0;$i < count($request->account);$i++){
+                $item_array = [
+                    'tbl_acc_bill_id'       => $last_id,
+                    'transaction_date'      => $request->bill_date,
+                    'tbl_acc_coa_id'        => $request->account[$i],
+                    'particulars'           => $request->particular[$i],
+                    'amount'                => $request->amount[$i],
+                    'deleted'               => 'No',
+                    'status'                => 'Active',
+                    'created_by'            => Auth::user()->id,
+                    'created_date'          => date('Y-m-d h:s')
+                ];
+                DB::table('tbl_acc_bill_details')->insert($item_array);
+            } 
 
-        /* bill details */
-        for($i=0;$i < count($request->account);$i++){
-            $item_array = [
-                'tbl_acc_bill_id'       => $last_id,
-                'transaction_date'      => $request->bill_date,
-                'tbl_acc_coa_id'        => $request->account[$i],
-                'particulars'           => $request->particular[$i],
-                'amount'                => $request->amount[$i],
-                'deleted'               => 'No',
-                'status'                => 'Active',
-                'created_by'            => Auth::user()->id,
-                'created_date'          => date('Y-m-d h:s')
-              ];
-              DB::table('tbl_acc_bill_details')->insert($item_array);
-        } 
+            /* voucher entry */
+            $voucher=new Voucher();
+            $voucher->vendor_id=$request->vendor_id;
+            $voucher->amount=$request->amountTotal;
+            $voucher->transaction_date=$request->bill_date;
+            $voucher->type_no=$last_id;
+            $voucher->warehouse_id=$loggedWarehouseId;
+            $voucher->type='Bill created';
+            $voucher->deleted="No";
+            $voucher->status="Active";
+            $voucher->created_by=Auth::user()->id;
+            $voucher->created_date=date('Y-m-d h:s');
+            $voucher->save();
+            $voucherId=$voucher->id;
 
-        /* voucher entry */
-        $voucher=new Voucher();
-        $voucher->vendor_id=$request->vendor_id;
-        $voucher->amount=$request->amountTotal;
-        $voucher->transaction_date=$request->bill_date;
-        $voucher->type_no=$last_id;
-        $voucher->type='Bill created';
-        $voucher->deleted="No";
-        $voucher->status="Active";
-        $voucher->created_by=Auth::user()->id;
-        $voucher->created_date=date('Y-m-d h:s');
-        $voucher->save();
-        $voucherId=$voucher->id;
+            /* voucher details entry */
+            for($j=0;$j < count($request->account);$j++){  
+                $item_array = [
+                    'tbl_acc_voucher_id'    => $voucherId,
+                    'tbl_acc_coa_id'        => $request->account[$j],
+                    'debit'                 => $request->amount[$j],
+                    'particulars'           => $request->particular[$j],
+                    'voucher_title'         => 'Bill created with ID '.$bill->code,
+                    'deleted'               => 'No',
+                    'status'                => 'Active',
+                    'created_by'            => Auth::user()->id,
+                    'created_date'          => date('Y-m-d')
+                ];
+                DB::table('tbl_acc_voucher_details')->insert($item_array);
 
-        /* voucher details entry */
-        for($j=0;$j < count($request->account);$j++){  
-            $item_array = [
-                'tbl_acc_voucher_id'    => $voucherId,
-                'tbl_acc_coa_id'        => $request->account[$j],
-                'debit'                 => $request->amount[$j],
-                'particulars'           => $request->particular[$j],
-                'voucher_title'         => 'Bill created with voucher '.$voucherId,
-                'deleted'               => 'No',
-                'status'                => 'Active',
-                'created_by'            => Auth::user()->id,
-                'created_date'          => date('Y-m-d h:s')
-            ];
-            DB::table('tbl_acc_voucher_details')->insert($item_array);
-
-            $expense=ChartOfAccounts::find($request->account[$j]);
-            $expense->increment('amount',$request->amount[$j]);
-        }
+                $expense=ChartOfAccounts::find($request->account[$j]);
+                $expense->increment('amount',$request->amount[$j]);
+            }
 
 
-        /* Payment voucher  */
-        $maxCode = PaymentVoucher::max('voucherNo');
-        $maxCode++;
-        $maxCodes=str_pad($maxCode, 6, '0', STR_PAD_LEFT);
-        $PaymentVoucher = new PaymentVoucher();
-        $PaymentVoucher->party_id = $request->vendor_id;
-        $PaymentVoucher->voucherNo =$maxCodes;
-        $PaymentVoucher->amount =$request->amountTotal;
-        $PaymentVoucher->created_by = Auth::user()->id;
-        $PaymentVoucher->paymentDate = $request->bill_date;
-        $PaymentVoucher->bill_id = $last_id;
-        $PaymentVoucher->type = "Payable";
-        $PaymentVoucher->voucherType = "Bill";
-        $PaymentVoucher->customerType = "Party";
+            /* Payment voucher  */
+            $maxCode = PaymentVoucher::max('voucherNo');
+            $maxCode++;
+            $maxCode=str_pad($maxCode, 6, '0', STR_PAD_LEFT);
+            $PaymentVoucher = new PaymentVoucher();
+            $PaymentVoucher->party_id = $request->vendor_id;
+            $PaymentVoucher->voucherNo =$maxCode;
+            $PaymentVoucher->amount =$request->amountTotal;
+            $PaymentVoucher->created_by = Auth::user()->id;
+            $PaymentVoucher->paymentDate = $request->bill_date;
+            $PaymentVoucher->bill_id = $last_id;
+            $PaymentVoucher->warehouse_id=$loggedWarehouseId;
+            $PaymentVoucher->type = "Payable";
+            $PaymentVoucher->voucherType = "Bill";
+            $PaymentVoucher->customerType = "Party";
+            $PaymentVoucher->remarks = 'Bill created for billing ID '.$bill->code;
+            $PaymentVoucher->deleted="No";
+            $PaymentVoucher->status="Active";
+            $PaymentVoucher->created_by=Auth::user()->id;
+            $PaymentVoucher->created_date=date('Y-m-d h:s');
+            $PaymentVoucher->save();
 
-        if($request->particulars){
-            $PaymentVoucher->remarks=$request->particulars;
-        }else{
-            $PaymentVoucher->remarks = "Bill created for billing";
-        }
+            $party=Party::find($request->vendor_id);
+            $party->increment('current_due',$request->amountTotal);
 
-        $PaymentVoucher->deleted="No";
-        $PaymentVoucher->status="Active";
-        $PaymentVoucher->created_by=Auth::user()->id;
-        $PaymentVoucher->created_date=date('Y-m-d h:s');
-        $PaymentVoucher->save();
-
+            DB::commit();
             return  redirect('account/bills/view')->with('message','Bill saved sucessfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Bill  rollBack ' . $e]);
+        }  
     }
 
 
@@ -225,7 +240,7 @@ class BillController extends Controller
             $payment +=$payments->amount;
         }
         $party=Party::find($bills->tbl_crm_vendor_id);
-        $pdf = PDF::loadView('admin.bills.billPdf',  ['details'=>$details,'bills'=>$bills,'party'=>$party,'payment'=>$payment]);
+        $pdf = PDF::loadView('admin.account.bills.billPdf',  ['details'=>$details,'bills'=>$bills,'party'=>$party,'payment'=>$payment]);
         return $pdf->stream('bill-report-pdf.pdf', array("Attachment" => false)); 
 
     }
@@ -242,21 +257,24 @@ class BillController extends Controller
 
 
     public function payBills(){
-        $expense=ChartOfAccounts::where('name','=','Expense')->first();
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $expense=ChartOfAccounts::where('name','=','Expense')->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
         $expense_id=$expense->id;
-        $bank=ChartOfAccounts::where('name','=','Bank')->first();
+        $bank=ChartOfAccounts::where('name','=','Bank')->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
         $bank_id=$bank->id;
-        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->orderBy('code', 'asc')->where('parent_id','=',$expense_id )->get();
+        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->orderBy('code', 'asc')->where('parent_id','=',$expense_id )->get();
         $suppliers=Party::where('party_type','=','Supplier')->where('deleted','=','No')->where('status','=','Active')->get();
         $banks=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->orderBy('code', 'asc')->where('parent_id','=',$bank_id )->where('name','!=','Cash')->get();
-        $cashId=ChartOfAccounts::where('name','=','Cash')->first();
-        return view('admin.bills.billPay',['coas'=>$coas,'suppliers'=>$suppliers,'banks'=>$banks,'cashId'=>$cashId]);
+        $cashId=ChartOfAccounts::where('slug','=','cash-bank')->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
+        $paymentMethods=ChartOfAccounts::where('parent_id','=',$cashId->id)->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->get();
+        return view('admin.account.bills.billPay',['coas'=>$coas,'suppliers'=>$suppliers,'banks'=>$banks,'paymentMethods'=>$paymentMethods]);
     }
 
 
 
 
     public function getBillData(Request $request){
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
         $bills=Bill::where('tbl_crm_vendor_id','=',$request->vendor_id)
                     ->where('payment_status','=','Due')
                     ->where('deleted','=','No')
@@ -269,13 +287,12 @@ class BillController extends Controller
             foreach($bills as $bill){
 
             $output.='<tr class="row0">
-                        <td><input type="hidden" name="billId[]" value='.$bill->id.'>'.$bill->id.'</td>
-                        <td>'.$bill->due_date.'</td>
-                        <td><input type="hidden" name="totalAmount[]" id="totalAmount" value='.$bill->amount.'>'.$bill->amount.'</td>
-                        <td><input class="form-control" type="hidden" name="dueAmount[]" id="dueAmountInput" value='.$bill->due_amount.' style="text-align:right;"><span id="dueAmount">'.$bill->due_amount.'</span></td>
-                        <td><input type="number" class="form-control" name="amount[]" id="amount"  oninput="totalBalance()" onchange="dueTotal()" style="text-align:right;" value='.$bill->due_amount.' ></td>
+                        <td class="text-center"><input type="hidden" name="billId[]" value='.$bill->id.'>'.$bill->id.'</td>
+                        <td class="text-center"><input type="hidden" name="totalAmount[]" id="totalAmount" value='.$bill->amount.'>'.$bill->amount.'</td>
+                        <td class="text-center"><input class="form-control" type="hidden" name="dueAmount[]" id="dueAmountInput" value='.$bill->due_amount.' style="text-align:right;"><span id="dueAmount">'.$bill->due_amount.'</span></td>
+                        <td class="text-center"><input type="number" class="form-control" name="amount[]" id="amount"  oninput="totalBalance()" onchange="dueTotal()" style="text-align:right;" value='.$bill->due_amount.' ></td>
                         <td>
-                            <label style="display:none;">.</label><br><br>
+                            <label style="display:none;">.</label>
                             <a href="#/" class="text-danger" onclick="remove_btn(this)"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>';
@@ -283,7 +300,7 @@ class BillController extends Controller
             }
             $tfoot .='<tr>
                         <td>#</td>
-                        <td colspan="3" style="text-align:right;">Total:</td>
+                        <td colspan="2" style="text-align:right;">Total:</td>
                         <td>
                             <input type="text" class="form-control" name="amountTotal" id="amountTotal"   style="text-align:right;" value='.$totalAmount.' readonly>
                         </td>
@@ -308,54 +325,91 @@ public function billPayStore(Request $request){
             'vendor_id'             => 'required',
             'reference'             => 'nullable',
             'payment_method'        => 'required',
-            'account_status'        => 'required',
             'transaction_id'        => 'nullable',
         ]);
 
+            $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+            $cash=ChartOfAccounts::where('slug','=','cash')
+                                ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                ->where('deleted','=','No')
+                                ->where('status','=','Active')
+                                ->first();
+            if($request->payment_method != $cash->id){
+                $request->validate([
+                    'sources' => 'required',
+                    'account_status' => 'required'
+                ]);
+                $paymentMethod=ChartOfAccounts::find($request->payment_method);
+                $source=ChartOfAccounts::find($request->sources);
+                $account=ChartOfAccounts::find($request->account_status);
+                $paymentMethodCOA=$account->id;
+            }else{
+                $paymentMethod=ChartOfAccounts::find($request->payment_method);
+                $source='';
+                $account='';
+                $paymentMethodCOA=$paymentMethod->id;
+            }
+
+
+            
+        DB::beginTransaction();
+        try {    
+            $billNo = BillPayment::max('code');
+			$billNo++;
+			$billNo = str_pad($billNo, 6, '0', STR_PAD_LEFT);
+
             $billPayments=new BillPayment();
+            $billPayments->code=$billNo;
             $billPayments->tbl_acc_vendor_id=$request->vendor_id;
             $billPayments->payment_date=$request->payment_date;
             $billPayments->reference=$request->reference;
-            $billPayments->payment_method=$request->payment_method;
-            $billPayments->account_status=$request->account_status;
+            $billPayments->payment_method=$paymentMethodCOA;
+            $billPayments->account_status=$paymentMethod->id;
+            $billPayments->warehouse_id=$loggedWarehouseId;
+            $billPayments->amount=$request->amountTotal;
+            $billPayments->status="Active";
+            $billPayments->deleted="No";
             $billPayments->save();
             $lastId=$billPayments->id;
         
+            $paymentMethod->decrement('amount',$request->amountTotal);
     
-    /* bill payment details */
-    for($i=0;$i < count($request->billId);$i++){
-        $item_array = [
-            'tbl_acc_billPayment_id' => $lastId,
-            'tbl_acc_bill_id'        => $request->billId[$i],
-            'amount'                 => $request->amount[$i],
-            'deleted'                => 'No',
-            'status'                 => 'Active',
-            'created_by'             => Auth::user()->id,
-            'created_date'           => date('Y-m-d h:s')
-          ];
-        DB::table('tbl_acc_bill_payment_details')->insert($item_array);
-        
-        if($request->amount == $request->dueAmount){
-            $bills=Bill::find($request->billId[$i]);
-            $bills->due_amount=$request->dueAmount[$i] - $request->amount[$i];
-            $bills->payment_status='Paid';
-            $bills->save();
-        }else{
-            $bills=Bill::find($request->billId[$i]);
-            $bills->due_amount=$request->dueAmount[$i] - $request->amount[$i];
-            $bills->payment_status='Due';
-            $bills->save();
+        /* bill payment details */
+        for($i=0;$i < count($request->billId);$i++){
+            $item_array = [
+                'tbl_acc_billPayment_id' => $lastId,
+                'tbl_acc_bill_id'        => $request->billId[$i],
+                'amount'                 => $request->amount[$i],
+                'deleted'                => 'No',
+                'status'                 => 'Active',
+                'created_by'             => Auth::user()->id,
+                'created_date'           => date('Y-m-d')
+            ];
+            DB::table('tbl_acc_bill_payment_details')->insert($item_array);
+            
+            if($request->amount == $request->dueAmount){
+                $bills=Bill::find($request->billId[$i]);
+                $bills->due_amount=$request->dueAmount[$i] - $request->amount[$i];
+                $bills->payment_status='Paid';
+                $bills->save();
+            }else{
+                $bills=Bill::find($request->billId[$i]);
+                $bills->due_amount=$request->dueAmount[$i] - $request->amount[$i];
+                $bills->payment_status='Due';
+                $bills->save();
+            }
         }
-    }
-
-    /* voucher  entry */
-    for($k=0;$k < count($request->amount);$k++){ 
+    
+            $party= Party::find($request->vendor_id);
+            $party->decrement('current_due', $request->amountTotal);
+    
             $vouchers=new Voucher(); 
             $vouchers->vendor_id=$request->vendor_id;
-            $vouchers->amount=$request->amount[$k];
+            $vouchers->amount=$request->amountTotal;
             $vouchers->transaction_date=date('Y-m-d h:s');
-            $vouchers->payment_method=$request->payment_method;
+            $vouchers->payment_method=$paymentMethodCOA;
             $vouchers->type_no=$lastId;
+            $vouchers->warehouse_id=$loggedWarehouseId;
             $vouchers->type='Bill paid';
             $vouchers->deleted="No";
             $vouchers->status="Active";
@@ -363,57 +417,102 @@ public function billPayStore(Request $request){
             $vouchers->created_date=date('Y-m-d h:s');
             $vouchers->save();
             $voucherId=$vouchers->id;
-    }
+   
 
-     /* voucher details entry */
-     for($j=0;$j < count($request->amount);$j++){  
-        $item_array = [
-            'tbl_acc_voucher_id'    => $voucherId,
-            'tbl_acc_coa_id'        => $request->payment_method,
-            'credit'                => $request->amount[$j],
-            'voucher_title'         => 'Bill paid with voucher '.$voucherId,
-            'deleted'               => 'No',
-            'status'                => 'Active',
-            'created_by'            => Auth::user()->id,
-            'created_date'          => date('Y-m-d h:s')
-        ];
-        DB::table('tbl_acc_voucher_details')->insert($item_array);
+            /* voucher details entry */
+            for($j=0;$j < count($request->billId);$j++){  
+                $item_array = [
+                    'tbl_acc_voucher_id'    => $voucherId,
+                    'tbl_acc_coa_id'        => $paymentMethodCOA,
+                    'credit'                => $request->amount[$j],
+                    'voucher_title'         => 'Bill paid with voucher '.$voucherId,
+                    'deleted'               => 'No',
+                    'status'                => 'Active',
+                    'created_by'            => Auth::user()->id,
+                    'created_date'          => date('Y-m-d')
+                ];
+                DB::table('tbl_acc_voucher_details')->insert($item_array);
+            }
 
-            $expense=ChartOfAccounts::find($request->account_status);
-            $expense->decrement('amount',$request->amountTotal);
-    }
+    
+    
 
-        /* Payment voucher  */
-        $maxCode = PaymentVoucher::max('voucherNo');
+            /* Payment voucher  */
+            $maxCode = PaymentVoucher::max('voucherNo');
             $maxCode++;
             $maxCodes=str_pad($maxCode, 6, '0', STR_PAD_LEFT);
-        $PaymentVoucher = new PaymentVoucher();
+            $PaymentVoucher = new PaymentVoucher();
             $PaymentVoucher->party_id = $request->vendor_id;
             $PaymentVoucher->voucherNo =$maxCodes;
             $PaymentVoucher->amount =$request->amountTotal;
-            $PaymentVoucher->payment_method = $request->payment_method;
-            $PaymentVoucher->accountNo =$request->account_status;
+            $PaymentVoucher->payment_method = $paymentMethod->name;
+            $PaymentVoucher->source = $source->name ?? '';
+            $PaymentVoucher->account = $account->name ?? '';
+            
+            $PaymentVoucher->payment_method_coa_id = $request->payment_method;
+            if($request->payment_method != $cash->id){
+                $PaymentVoucher->source_coa_id = $request->sources;
+                $PaymentVoucher->account_coa_id = $request->account_status;
+            }
+            
+            $PaymentVoucher->accountNo =$paymentMethod->id;
             $PaymentVoucher->created_by = Auth::user()->id;
             $PaymentVoucher->paymentDate = $request->payment_date;
             $PaymentVoucher->bill_id = $lastId;
+            $PaymentVoucher->warehouse_id=$loggedWarehouseId;
             $PaymentVoucher->type = "Payment";
-            $PaymentVoucher->voucherType = "Bill";
+            $PaymentVoucher->voucherType = "Bill Payment";
             $PaymentVoucher->customerType = "Party";
-            if($request->particulars){
-                $PaymentVoucher->remarks=$request->particulars;
-            }else{
-                $PaymentVoucher->remarks = "Bill paid for bill no";
-            }
+            $PaymentVoucher->remarks = "Bill paid for bill no ".$billNo;
             $PaymentVoucher->deleted="No";
             $PaymentVoucher->status="Active";
             $PaymentVoucher->created_by=Auth::user()->id;
             $PaymentVoucher->created_date=date('Y-m-d h:s');
             $PaymentVoucher->save();
 
-    return  redirect('account/bills/view')->with('message','Bill paid successfully');
+            DB::commit();
+            return  redirect('account/bills/view')->with('message','Bill paid successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Bill  rollBack ' . $e]);
+        } 
+     
 }
 
 
+
+    public function partyDue(Request $request){
+        $party=Party::find($request->vendor_id);
+        return $party;
+    }
+
+
+
+
+    public function getBillsources(Request $request){
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+            $method=ChartOfAccounts::find($request->payment_method);
+            $sources=ChartOfAccounts::where('parent_id','=',$request->payment_method)
+                                        ->where('deleted','=','No')
+                                        ->where('status','=','Active')
+                                        ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                        ->get();
+            $data='';
+            $data .='<option value=""selected >Select Source</option>';
+            foreach($sources as $source){
+                $data.='<option value="'.$source->id.'">'.$source->name.'</option>';
+            }
+            $cashAmount=0;
+            if($method->slug == 'cash'){
+                $cashAmount=$method->amount;
+            }
+            $output=array(
+                'method_slug'=>$method->slug,
+                'data'=>$data,
+                'cash_amount'=>$cashAmount
+            );
+            return $output;
+    }
 
 
 }
