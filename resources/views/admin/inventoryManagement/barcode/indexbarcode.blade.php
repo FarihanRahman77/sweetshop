@@ -157,11 +157,44 @@
          
             var ProductID = $("#productid").val();
             var Purchasedate = $("#date").val();
+<<<<<<< Updated upstream
             var qty = $("#quantity").val();
          
             window.open("{{ url('/products/productbarcodegenerate/') }}" + "/" + ProductID + "/" + Purchasedate + "/" + qty);
         
              
+=======
+            var purchaseqty = $("#quantity").val();
+            var _token = $('input[name="_token"]').val();
+
+            var fd = new FormData();
+            fd.append('ProductID', ProductID);
+            fd.append('Purchasedate', Purchasedate);
+            fd.append('purchaseqty', purchaseqty);
+            fd.append('_token', _token);
+            $.ajax({
+                url: "{{ route('products.productbarcodegenerate') }}",
+                method: "POST",
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function(result) {
+                  alert(JSON.stringify(result));
+                 
+                },
+                error: function(response) {
+                    alert(JSON.stringify(response));
+                
+                },
+                beforeSend: function() {
+                    $('#loading').show();
+                },
+                complete: function() {
+                    $('#loading').hide();
+                }
+
+            })
+>>>>>>> Stashed changes
         })
         
 
