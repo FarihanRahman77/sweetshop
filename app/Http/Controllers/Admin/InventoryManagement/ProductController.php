@@ -49,6 +49,39 @@ class ProductController extends Controller
         return view('admin.inventoryManagement.products.view-products', $data);
     }
 
+
+
+    public function indexbarcodegeneratre(){
+        $Products = Product::where('deleted', 'No')->where('status','=','Active')->get();
+        return view('admin.inventoryManagement.barcode.indexbarcode',['Products'=>$Products]);
+    }
+
+public function getpurchaseproductinfo(Request $request){
+    $productID = $request->productID;
+
+    // Fetch data using Query Builder
+    $productData = DB::table('tbl_purchase_products')
+    ->join('tbl_inventory_products', 'tbl_purchase_products.product_id', '=', 'tbl_inventory_products.id')
+    ->select(
+        'tbl_purchase_products.id',
+        'tbl_purchase_products.quantity',
+        'tbl_purchase_products.created_date',
+        'tbl_inventory_products.name'
+        
+    )
+    ->where('tbl_purchase_products.product_id', $productID)
+    ->orderBy('tbl_purchase_products.id', 'DESC')
+    ->take(5)
+    ->get();
+
+    return response()->json($productData);
+
+}
+
+public function generateproductbarcode(Request $request){
+    return $request;
+}
+
     public function slug_generate(Request $request)
     {
      

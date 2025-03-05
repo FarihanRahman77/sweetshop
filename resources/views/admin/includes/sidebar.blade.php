@@ -23,6 +23,7 @@
                                 <li class="sidebar-item menu-design"> <a class="sidebar-link waves-effect waves-dark sidebar-link"  href="{{ route('products.view') }}" aria-expanded="false"><i class="fa fa-bars"></i><span class="hide-menu">Products</span></a></li>
                            
                                 <li class="sidebar-item menu-design"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('damage.view') }}" aria-expanded="false"><i class="fa fa-bars"></i><span class="hide-menu">Damage Products</span></a></li>
+                                <li class="sidebar-item menu-design"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('products.barcodegeneratreindex') }}" aria-expanded="false"><i class="fa fa-bars"></i><span class="hide-menu">Barcode Generate</span></a></li>
                             
                                 <li class="sidebar-item menu-design d-none"> <a class="sidebar-link waves-effect waves-dark sidebar-link"  href="{{ url('warehouse/transfer/') }}" aria-expanded="false"><i class="fa fa-bars"></i><span class="hide-menu">Warehouse Transfer</span></a></li>
                             
