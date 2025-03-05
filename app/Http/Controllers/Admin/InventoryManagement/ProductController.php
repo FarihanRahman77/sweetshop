@@ -123,53 +123,8 @@ public function generateproductbarcode($productId,$date,$qty){
      }
     
      return view('admin.inventoryManagement.barcode.barcodePdf',['html'=>$html]);
-    return   response()->json($html);
+   
 }
-// public function generateproductbarcode(Request $request){
-//     //return $request;
-//     $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
-//     $productId = $request->ProductID; 
-//     $products = DB::table('tbl_inventory_products')
-//     ->leftjoin('tbl_setups_brands', 'tbl_inventory_products.brand_id', '=', 'tbl_setups_brands.id')
-//     ->leftjoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id')
-//     ->select('tbl_inventory_products.id', 
-//                 'tbl_inventory_products.name',  
-//                 'tbl_inventory_products.code',
-//                 'tbl_setups_categories.name as categoryName',
-//                 'tbl_setups_brands.name as brandName')
-//     ->where('tbl_inventory_products.deleted', 'No')
-//     ->where('tbl_inventory_products.status', 'Active')
-//     ->where('tbl_setups_brands.deleted', 'No')
-//     ->where('tbl_setups_brands.status', 'Active')
-//     ->where('tbl_setups_categories.deleted', 'No')
-//     ->where('tbl_setups_categories.status', 'Active')
-//     // ->where('tbl_inventory_products.sister_concern_id','=',$logged_sister_concern_id)
-//     ->where('tbl_inventory_products.id', '=', $productId)  
-//     ->orderBy('tbl_inventory_products.id', 'DESC')
-//     ->first();
-//     $qty=$request->qty;
-    
-//     $productInitial = strtoupper(substr($products->name, 0, 1)); 
-//     $categoryInitial = strtoupper(substr($products->categoryName, 0, 1)); 
-//     $brandInitial = strtoupper(substr($products->brandName, 0, 1));       
-//     $productCode = $products->code;                           
-//      $combinedCode = $productInitial.$categoryInitial . $brandInitial .'-'. $productCode;   
-
-//      $html='';
-//      for($i=1;$i<=$qty;$i++){
-//         $barcode = Barcode::imageType("svg")
-//                 ->foregroundColor("#000000")
-//                 ->height(30)
-//                 ->widthFactor(2)
-//                 ->type(BarcodeType::CODE_128) //https://github.com/ageekdev/laravel-barcode
-//                 ->generate($combinedCode);
-       
-//         $html.='<img src="data:image/svg+xml;base64,' . base64_encode($barcode) . '" /><br><span >'.$products->name.'</span><br><br>';
-//      }
-    
-    
-//     return   response()->json($html);
-// }
 
 
 

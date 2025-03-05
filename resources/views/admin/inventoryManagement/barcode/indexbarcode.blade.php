@@ -163,44 +163,7 @@
         
              
         })
-        //   $("#barcodegenerateform").submit(function(e) {
-        //     e.preventDefault();
-         
-        //     var ProductID = $("#productid").val();
-        //     var Purchasedate = $("#date").val();
-        //     var qty = $("#quantity").val();
-        //     var _token = $('input[name="_token"]').val();
-            
-        //     var fd = new FormData();
-        //     fd.append('ProductID', ProductID);
-        //     fd.append('Purchasedate', Purchasedate);
-        //     fd.append('qty', qty);
-        //     fd.append('_token', _token);
-        //     $.ajax({
-        //         url: "{{ route('products.productbarcodegenerate') }}",
-        //         method: "POST",
-        //         data: fd,
-        //         contentType: false,
-        //         processData: false,
-        //         success: function(result) {
-        //          // alert(JSON.stringify(result));
-        //            // $('#barcodeDiv').html(result);
-        //              window.open("{{ url('barcode/invoice/generate/') }}" + "/" + result);
         
-        //         },
-        //         error: function(response) {
-        //           //  alert(JSON.stringify(response));
-                
-        //         },
-        //         beforeSend: function() {
-        //             $('#loading').show();
-        //         },
-        //         complete: function() {
-        //             $('#loading').hide();
-        //         }
-
-        //     })
-        // })
 
         Mousetrap.bind('ctrl+shift+n', function(e) {
             e.preventDefault();
