@@ -139,6 +139,9 @@ Route::group(['middleware' => ['auth']], function () {
 			Route::post('/update', [ProductController::class, 'update'])->name('update');
 			Route::post('/delete', [ProductController::class, 'delete'])->name('delete');
 			Route::get('/getSerialNums', [ProductController::class, 'getSerialNums'])->name('getSerialNums');
+			Route::get('/barcodegeneratreindex', [ProductController::class, 'indexbarcodegeneratre'])->name('barcodegeneratreindex');
+			Route::get('/productpurchaseinfoget', [ProductController::class, 'getpurchaseproductinfo'])->name('productpurchaseinfoget');
+			Route::post('/productbarcodegenerate', [ProductController::class, 'generateproductbarcode'])->name('productbarcodegenerate');
 		});
 		Route::post('/brandAndCategoryWise', [ProductController::class, 'brandAndCategoryWise'])->name('brandAndCategoryWise');
 		Route::post('/findCurrentStock', [ProductController::class, 'findCurrentStock'])->name('findCurrentStock');
