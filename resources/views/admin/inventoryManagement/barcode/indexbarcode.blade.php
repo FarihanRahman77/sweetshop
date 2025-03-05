@@ -154,7 +154,7 @@
             var Purchasedate = $("#date").val();
             var purchaseqty = $("#quantity").val();
             var _token = $('input[name="_token"]').val();
-
+            
             var fd = new FormData();
             fd.append('ProductID', ProductID);
             fd.append('Purchasedate', Purchasedate);

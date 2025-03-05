@@ -13,6 +13,8 @@ use App\Models\inventory\DamageProduct;
 use App\Models\inventory\Productspecification;
 use App\Models\inventory\SerializeProduct;
 use App\Models\setups\Warehouse;
+use AgeekDev\Barcode\Facades\Barcode;
+use AgeekDev\Barcode\Enums\BarcodeType;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use PDF;
@@ -79,7 +81,43 @@ public function getpurchaseproductinfo(Request $request){
 }
 
 public function generateproductbarcode(Request $request){
-    return $request;
+    $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+    $productId = $request->ProductID; 
+    $products = DB::table('tbl_inventory_products')
+    ->leftjoin('tbl_setups_brands', 'tbl_inventory_products.brand_id', '=', 'tbl_setups_brands.id')
+    ->leftjoin('tbl_setups_units', 'tbl_inventory_products.unit_id', '=', 'tbl_setups_units.id')
+    ->leftjoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id')
+    ->select('tbl_inventory_products.id', 'tbl_inventory_products.status', 'tbl_inventory_products.type',
+     'tbl_inventory_products.image', 'tbl_inventory_products.name', 'tbl_inventory_products.model_no', 'tbl_inventory_products.code',
+     'tbl_inventory_products.barcode_no', 'tbl_inventory_products.opening_stock', 'tbl_inventory_products.current_stock',
+      'tbl_inventory_products.remainder_quantity', 
+     'tbl_inventory_products.purchase_price', 'tbl_inventory_products.sale_price',
+      'tbl_inventory_products.discount', 'tbl_setups_categories.name as categoryName',
+     'tbl_setups_brands.name as brandName', 'tbl_setups_units.name as unitName')
+    ->where('tbl_inventory_products.deleted', 'No')
+    ->where('tbl_inventory_products.status', 'Active')
+    ->where('tbl_setups_brands.deleted', 'No')
+    ->where('tbl_setups_brands.status', 'Active')
+    ->where('tbl_setups_categories.deleted', 'No')
+    ->where('tbl_setups_categories.status', 'Active')
+    // ->where('tbl_inventory_products.sister_concern_id','=',$logged_sister_concern_id)
+    ->where('tbl_inventory_products.id', '=', $productId)  
+    ->orderBy('tbl_inventory_products.id', 'DESC')
+    ->first();
+   
+    $categoryInitial = strtoupper(substr($products->categoryName, 0, 1)); 
+    $brandInitial = strtoupper(substr($products->brandName, 0, 1));       
+    $productCode = $products->code;                           
+    $combinedCode = $categoryInitial . $brandInitial . $productCode;   
+    
+    $barcode = Barcode::imageType("svg")
+    ->foregroundColor("#000000")
+    ->height(30)
+    ->widthFactor(2)
+    ->type(BarcodeType::CODE_128)
+    ->generate("$combinedCode");
+    
+     return   response()->json($barcode);
 }
 
     public function slug_generate(Request $request)
