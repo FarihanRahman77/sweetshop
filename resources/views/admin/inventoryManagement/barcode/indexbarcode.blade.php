@@ -32,10 +32,11 @@
                         </div>
                         <div class="col-md-3">
                             <label>Quantity</label>
-                            <input class="form-control input-sm" id="quantity" type="number" name="quantity" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';">
+                            <input class="form-control input-sm" id="quantity" type="number" name="quantity" oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '') this.value = '0';" value="0">
                             <span class="text-danger" id="quantityError"></span>
                         </div>
                         <div class="col-md-2">
+                            <label class="text-white">.</label><br>
                             <button type="submit" class="btn btn-primary btnSave mt-2" id="saveDamage">
                                 <i class="fa fa-save"></i> Generate Barcode
                             </button>
