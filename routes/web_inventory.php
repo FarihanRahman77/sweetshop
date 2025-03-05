@@ -141,7 +141,10 @@ Route::group(['middleware' => ['auth']], function () {
 			Route::get('/getSerialNums', [ProductController::class, 'getSerialNums'])->name('getSerialNums');
 			Route::get('/barcodegeneratreindex', [ProductController::class, 'indexbarcodegeneratre'])->name('barcodegeneratreindex');
 			Route::get('/productpurchaseinfoget', [ProductController::class, 'getpurchaseproductinfo'])->name('productpurchaseinfoget');
-			Route::post('/productbarcodegenerate', [ProductController::class, 'generateproductbarcode'])->name('productbarcodegenerate');
+			//Route::post('/productbarcodegenerate', [ProductController::class, 'generateproductbarcode'])->name('productbarcodegenerate');
+			Route::get('/productbarcodegenerate/{productId}/{date}/{qty}', [ProductController::class, 'generateproductbarcode'])->name('productbarcodegenerate');
+			Route::get('barcode/invoice/generate/{result}', [ProductController::class, 'generateproductbarcodePdf'])->name('productbarcodegeneratePdf');
+
 		});
 		Route::post('/brandAndCategoryWise', [ProductController::class, 'brandAndCategoryWise'])->name('brandAndCategoryWise');
 		Route::post('/findCurrentStock', [ProductController::class, 'findCurrentStock'])->name('findCurrentStock');

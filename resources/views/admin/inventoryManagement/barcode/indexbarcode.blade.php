@@ -45,6 +45,9 @@
                 </form>
 
             </div>
+            <div class="card">
+                <div id="barcodeDiv" class="text-center"></div>
+            </div>
         </section>
     </div>
        <div class="card-body">
@@ -67,6 +70,7 @@
                         <!--data listing table-->
                     </div>
                 </div>
+
 @endsection
 
 @section('javascript')
@@ -153,37 +157,50 @@
          
             var ProductID = $("#productid").val();
             var Purchasedate = $("#date").val();
-            var purchaseqty = $("#quantity").val();
-            var _token = $('input[name="_token"]').val();
-            
-            var fd = new FormData();
-            fd.append('ProductID', ProductID);
-            fd.append('Purchasedate', Purchasedate);
-            fd.append('purchaseqty', purchaseqty);
-            fd.append('_token', _token);
-            $.ajax({
-                url: "{{ route('products.productbarcodegenerate') }}",
-                method: "POST",
-                data: fd,
-                contentType: false,
-                processData: false,
-                success: function(result) {
-                  alert(JSON.stringify(result));
-                 
-                },
-                error: function(response) {
-                    alert(JSON.stringify(response));
-                
-                },
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                complete: function() {
-                    $('#loading').hide();
-                }
-
-            })
+            var qty = $("#quantity").val();
+         
+            window.open("{{ url('/products/productbarcodegenerate/') }}" + "/" + ProductID + "/" + Purchasedate + "/" + qty);
+        
+             
         })
+        //   $("#barcodegenerateform").submit(function(e) {
+        //     e.preventDefault();
+         
+        //     var ProductID = $("#productid").val();
+        //     var Purchasedate = $("#date").val();
+        //     var qty = $("#quantity").val();
+        //     var _token = $('input[name="_token"]').val();
+            
+        //     var fd = new FormData();
+        //     fd.append('ProductID', ProductID);
+        //     fd.append('Purchasedate', Purchasedate);
+        //     fd.append('qty', qty);
+        //     fd.append('_token', _token);
+        //     $.ajax({
+        //         url: "{{ route('products.productbarcodegenerate') }}",
+        //         method: "POST",
+        //         data: fd,
+        //         contentType: false,
+        //         processData: false,
+        //         success: function(result) {
+        //          // alert(JSON.stringify(result));
+        //            // $('#barcodeDiv').html(result);
+        //              window.open("{{ url('barcode/invoice/generate/') }}" + "/" + result);
+        
+        //         },
+        //         error: function(response) {
+        //           //  alert(JSON.stringify(response));
+                
+        //         },
+        //         beforeSend: function() {
+        //             $('#loading').show();
+        //         },
+        //         complete: function() {
+        //             $('#loading').hide();
+        //         }
+
+        //     })
+        // })
 
         Mousetrap.bind('ctrl+shift+n', function(e) {
             e.preventDefault();
