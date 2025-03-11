@@ -88,7 +88,9 @@ public function generateproductbarcode($productId,$date,$qty){
     ->leftjoin('tbl_setups_brands', 'tbl_inventory_products.brand_id', '=', 'tbl_setups_brands.id')
     ->leftjoin('tbl_setups_categories', 'tbl_inventory_products.category_id', '=', 'tbl_setups_categories.id')
     ->select('tbl_inventory_products.id', 
-                'tbl_inventory_products.name',  
+                'tbl_inventory_products.name', 
+                'tbl_inventory_products.brand_id', 
+                'tbl_inventory_products.category_id', 
                 'tbl_inventory_products.code',
                 'tbl_setups_categories.name as categoryName',
                 'tbl_setups_brands.name as brandName')
@@ -104,11 +106,13 @@ public function generateproductbarcode($productId,$date,$qty){
     ->first();
     //$qty=$request->qty;
     
+    $productcategoryid = $products->category_id; 
+    $productbrandid = $products->brand_id; 
     $productInitial = strtoupper(substr($products->name, 0, 1)); 
     $categoryInitial = strtoupper(substr($products->categoryName, 0, 1)); 
     $brandInitial = strtoupper(substr($products->brandName, 0, 1));       
     $productCode = $products->code;                           
-     $combinedCode = $productInitial.$categoryInitial . $brandInitial .'-'. $productCode;   
+    $combinedCode = $productInitial.$categoryInitial . $brandInitial.'-'. $productbrandid.'-'. $productcategoryid .'-'. $productCode;
 
      $html='';
      for($i=1;$i<=$qty;$i++){
@@ -119,10 +123,17 @@ public function generateproductbarcode($productId,$date,$qty){
                 ->type(BarcodeType::CODE_128) //https://github.com/ageekdev/laravel-barcode
                 ->generate($combinedCode);
        
-        $html.='<img src="data:image/svg+xml;base64,' . base64_encode($barcode) . '" /><br><span >'.$products->name.'</span><br><br>';
-     }
+        // $html.='<img src="data:image/svg+xml;base64,' . base64_encode($barcode) . '" /><br><span class="jusify-content-center">'.$products->name.'</span><br><br>';
+        $html .= '<div style="text-align: center;">
+                        <img src="data:image/svg+xml;base64,' . base64_encode($barcode) . '" /><br>
+                        <span class="justify-content-center">'.$products->name.'</span><br><br>
+                    </div>';
+    }
     
-     return view('admin.inventoryManagement.barcode.barcodePdf',['html'=>$html]);
+    //  return view('admin.inventoryManagement.barcode.barcodePdf',['html'=>$html]);
+    $customPaper = array(0,0,283.80,567.00);
+     $pdf = PDF::loadView('admin.inventoryManagement.barcode.barcodePdf', compact('html'))->setPaper($customPaper, 'Portrait');
+     return $pdf->stream('barcode-pdf.pdf', array("Attachment" => false));
    
 }
 
@@ -180,7 +191,7 @@ public function generateproductbarcode($productId,$date,$qty){
     }
     public function sisterconcernwisewarehouseedit(Request $request){
         // return $request;
-        $warehouse_id = DB::table('tbl_setups_sister_concern_to_warehouses')
+        $Warehouse_id = DB::table('tbl_setups_sister_concern_to_warehouses')
         ->leftJoin('tbl_setups_warehouses', 'tbl_setups_sister_concern_to_warehouses.warehouse_id', '=', 'tbl_setups_warehouses.id')
         ->select('tbl_setups_sister_concern_to_warehouses.warehouse_id', 'tbl_setups_warehouses.name')
         ->where('tbl_setups_sister_concern_to_warehouses.sister_concern_id', $request->editsisterconcern_id)
@@ -188,7 +199,7 @@ public function generateproductbarcode($productId,$date,$qty){
         ->where('tbl_setups_sister_concern_to_warehouses.warehouse_id','!=', '0')
         ->get();
    
-        return $warehouse_id;
+        return $Warehouse_id;
     }
 
 
@@ -436,6 +447,7 @@ public function generateproductbarcode($productId,$date,$qty){
     
     public function store(Request $request)
     {
+       // return $request;
         $discount = $request->discount;
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $request->validate([
@@ -443,7 +455,7 @@ public function generateproductbarcode($productId,$date,$qty){
             'opening_stock' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'remainder_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'category_id' => 'required',
-            'sisterconcern' => 'required',
+            'sisterconcern_id' => 'required',
             'brand_id' => 'required',
              'stock_warehouse' => 'required',
             'unit_id' => 'required',
@@ -842,7 +854,7 @@ public function generateproductbarcode($productId,$date,$qty){
             'opening_stock' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'remainder_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'category_id' => 'required',
-            'sisterconcern_id' => 'required',
+            'Sisterconcernid' => 'required',
             'brand_id' => 'required',
             'unit_id' => 'required',
             'status' => 'required',
@@ -895,7 +907,7 @@ public function generateproductbarcode($productId,$date,$qty){
         $product->purchase_price = $request->purchase_price;
         $product->sale_price = $request->sale_price;
         $product->discount = $request->discount;
-        $product->sister_concern_id = $request->sisterconcernid;
+        $product->sister_concern_id = $request->Sisterconcernid;
         $product->tbl_warehouseid = $request->stockwarewhouse;
         $product->slug = $request->Slug;
         $product->status = $request->status;

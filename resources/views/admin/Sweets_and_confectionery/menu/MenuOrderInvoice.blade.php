@@ -197,7 +197,7 @@
 </header>
 
 <main>
-    <p class="invoice-title">Order Invoice</p>
+    <p class="invoice-title">Order Invoice: {{ $orderinvoicedata[0]->restaurant_order_code }}</p>
 
     <table class="order-info">
         <tr>
@@ -293,9 +293,13 @@
             <td class="left-col"><b>Grand Total:</b></td>
             <td class="right-col">{{ number_format($grandTotal, 2) }}</td>
         </tr>
-    <tr >
+    <tr>
             <td class="left-col">Paid Amount:</td>
             <td class="right-col">{{ number_format($Paidamount, 2) }}</td>
+        </tr>
+    <tr>
+            <td class="left-col">Current Due</td>
+            <td class="right-col">{{ number_format($grandTotal-$Paidamount, 2) }}</td>
         </tr>
       
 </table>

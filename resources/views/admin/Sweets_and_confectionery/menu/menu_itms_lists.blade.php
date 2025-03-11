@@ -14,6 +14,9 @@
                 <h3>Menu Items</h3>
             </div>
             <div class="row">
+
+
+
                 <div class="card-body col-12 col-md-12 col-lg-6 col-sm-12 col-xl-8">
                     <div class=" align-items-center w-100 overflow-hidden">
                         <div class="tab  flex-nowrap overflow-auto" id="menulist">
@@ -96,6 +99,9 @@
                         @endforeach
                     </div>
                 </div>
+
+
+
                 <!-- Right Section: Menu Card -->
                 <div class="col-12 col-md-12 col-lg-6 col-sm-12 col-xl-4 mx-auto p-3">
                     <p name="menu_item_id" class="d-none" id="menu_item_id"></p>
@@ -105,7 +111,7 @@
                     <div class="card shadow-lg rounded">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <input type="number" class="form-control mb-2" oninput="getbarcodeproductid()" id="barcodeproductid"/>
+                                <input type="text" class="form-control mb-2" oninput="getbarcodeproductid()" id="barcodeproductid" placeholder="Write Barcode Here"/>
                                 <table class="table text-center">
                                     <thead>
                                         <tr>
@@ -203,6 +209,7 @@
 </div>
 
 
+
 <!-- The item Details Modal -->
 <div class="modal fade" id="menumodal" tabindex="-1" role="dialog" aria-labelledby="menumodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -253,6 +260,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 <!-- Item Cut Modal -->
@@ -354,6 +363,7 @@
 </div>
 
 
+
 @endsection
 
 @section('javascript')
@@ -366,6 +376,7 @@
     
     //getCustomerInfo(default_customer_id ,default_customer_type);
 });
+
 
 $(document).ready(function() {
     $("#main-wrapper").toggleClass("mini-sidebar");
@@ -414,6 +425,9 @@ document.getElementById('menulist').addEventListener('scroll', updateScrollButto
 window.addEventListener('resize', updateScrollButtons);
 document.addEventListener('DOMContentLoaded', updateScrollButtons);
 
+
+
+
 function checkStockAndAddToCart() {
         var stock_check = $("#menustock").text(); // Make sure #menustock is an input element, or use .text() for non-inputs
 
@@ -451,17 +465,15 @@ function opencategorytab(evt, categoryId) {
 
 // Set default tab
 document.getElementsByClassName("tablinks")[0].click();
+
 </script>
 <script>
 
 
 
-
-function getbarcodeproductid(){
-
+  function getbarcodeproductid(){
 
     var  barcodeproduct = $('#barcodeproductid').val();
-
 
     var menu_quantity = 1;
          $.ajax({
@@ -472,14 +484,17 @@ function getbarcodeproductid(){
         },
         processData: true,
         success: function(result) {
-            alert(JSON.stringify(result));
+            //  alert(JSON.stringify(result));
+             var BarcodeProductID = result.id;
+            //  alert(BarcodeProductID);
+             addmenuitemtocard(BarcodeProductID) ;
         },
         error: function(response) {
              alert(JSON.stringify(response));
         }
     });
 
-   }
+    }
 
 
 
@@ -759,7 +774,7 @@ function placeOrder() {
         contentType: false,
         processData: false,
         success: function(result) {
-            // alert(JSON.stringify(result));
+            alert(JSON.stringify(result));
             let menuorderId = result.menuorder_id;
             fetch_menu_Cart_item();
             
@@ -786,7 +801,7 @@ function placeOrder() {
             }
         },
         error: function(response) {
-            // alert(JSON.stringify(response));
+          alert(JSON.stringify(response));
             alert('Checkout error: ' + JSON.stringify(response));
         }
     });
@@ -1004,7 +1019,7 @@ function updatemenuCart(menu_id, userId) {
 
 
 
-              function reset() {
+   function reset() {
                     $("#customerName").val("");
                     $("#partyPhoneNumber").val("");
                     $("#totalAmount").val("0");

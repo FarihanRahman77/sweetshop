@@ -100,7 +100,11 @@
                                 <select class="form-control input-sm" id="sisterconcern" name="sisterconcern" onchange="sisterConcernToWarehouse()">
                                     <option value="" > Select sisterconcern </option>
                                     @foreach ($sisterconcern as $sisterconcer)
-                                        <option  value="{{ $sisterconcer->id }}" @if($sisterconcer->id == $logged_sister_concern_id) selected @endif>{{ $sisterconcer->name }}</option>
+                                        @if($sisterconcer->id == $logged_sister_concern_id)
+                                            <option  value="{{ $sisterconcer->id }}"  selected>{{ $sisterconcer->name }} </option>
+                                        @else
+                                            <option  value="{{ $sisterconcer->id }}">{{ $sisterconcer->name }} </option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 <span class="text-danger" id="sisterconcerError"></span>
@@ -110,7 +114,7 @@
                                 <select class="form-control input-sm" id="stock_warehouse" name="stock_warehouse">
                                     <option value="" selected> Select Warehouse </option>
                                     @foreach ($warehouses as $warehouse)
-                                        <option value="{{ $warehouse->id }}" >{{ $warehouse->name }}
+                                        <option value="{{ $warehouse->id }}" >{{ $warehouse->name}}
                                         </option>
                                     @endforeach
                                 </select>
@@ -522,7 +526,8 @@
                             @endif
                             <div class=" form-group col-md-3">
                                 <label> Select Sisterconcern <span class="text-danger"> * </span></label>
-                                <select class="form-control input-sm" id="editsisterconcern" name="sisterconcern" onchange="editsisterConcernToWarehouse()">
+                                <!-- <select class="form-control input-sm" id="editsisterconcern" name="sisterconcern" onchange="editsisterConcernToWarehouse()"> -->
+                                <select class="form-control input-sm" id="editsisterconcern" name="sisterconcern" >
                                     <option value="" > Select sisterconcern </option>
                                     @foreach ($sisterconcern as $sisterconcer)
                                         <option  value="{{ $sisterconcer->id }}" >{{ $sisterconcer->name }}</option>
@@ -825,7 +830,7 @@
                         // alert(JSON.stringify(result));
                         let viewWarehouse = '<option value="" selected>Select Warehouse</option>';
                         for (warehouse of result) {
-                            viewWarehouse += '<option value="' + warehouse.id + '" >' + warehouse
+                            viewWarehouse += '<option value="' + warehouse.warehouse_id + '" >' + warehouse
                                 .name + '</option>';
                         }
                         $("#stock_warehouse").html(viewWarehouse);
@@ -842,6 +847,8 @@
                     }
                 })
             }
+
+            
             function editsisterConcernToWarehouse (){
             // alert(id);
             var editsisterconcern_id = $("#editsisterconcern").val();
@@ -857,13 +864,13 @@
                     contentType: false,
                     processData: false,
                     success: function(result) {
-                        //  alert(JSON.stringify(result));
+                         alert(JSON.stringify(result));
                         let viewWarehouse = '<option value="" selected>Select Warehouse</option>';
                         for (warehouse of result) {
-                            viewWarehouse += '<option value="' + warehouse.id + '" >' + warehouse
+                            viewWarehouse += '<option value="' + warehouse.warehouse_id + '" >' + warehouse
                                 .name + '</option>';
                         }
-                        $("#editstock_warehouse").html(viewWarehouse);
+                        // $("#editstock_warehouse").html(viewWarehouse);
                     },
                     error: function(response) {
                     //   alert(JSON.stringify(response));
@@ -1413,7 +1420,7 @@
                 contentType: false,
                 processData: false,
                 success: function(result) {
-                //    alert(JSON.stringify(result));
+                    //alert(JSON.stringify(result));
                     if (result['success']) {
                         $("#modal").modal('hide');
                         Swal.fire("Product saved!", result.success, "success");
@@ -1654,7 +1661,6 @@
                     $("#editBarcode").val(result[0].barcode_no);
                     $("#editBrand").val(result[0].brand_id).trigger("change");
                     $("#editCategory").val(result[0].category_id).trigger("change");
-                    
                     $("#editUnit").val(result[0].unit_id).trigger("change");
                     $("#editslug").val(result[0].slug);
                     $("#editModelNo").val(result[0].model_no);
@@ -1853,7 +1859,7 @@
             var category_id = $("#editCategory").val();
             var brand_id = $("#editBrand").val();
             var unit_id = $("#editUnit").val();
-            var sisterconcernid = $("#editsisterconcern").val();
+            var Sisterconcernid = $("#editsisterconcern").val();
             var stockwarewhouse = $("#editstock_warehouse").val();
             var discount = $("#editdiscount").val();
             var Slug = $("#editslug").val();
@@ -1927,7 +1933,7 @@
             fd.append('purchase_price', purchase_price);
             fd.append('sale_price', sale_price);
             fd.append('discount', discount);
-            fd.append('sisterconcernid', sisterconcernid);
+            fd.append('Sisterconcernid', Sisterconcernid);
             fd.append('stockwarewhouse', stockwarewhouse);
             fd.append('Slug', Slug);
             fd.append('type', type);
