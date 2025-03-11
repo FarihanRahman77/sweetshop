@@ -26,11 +26,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use PDF;
 
+use App\Traits\CommonTrait;
+
 use function PHPSTORM_META\type;
 
 class VoucherController extends Controller
 {
-
+	use CommonTrait;
 	public function index($type)
 	{
 
@@ -218,7 +220,7 @@ class VoucherController extends Controller
         );
     }
     return $output;
-}
+    }
 
 
 	public function loadWorkOrder(Request $request)
@@ -230,7 +232,6 @@ class VoucherController extends Controller
 		}
 		return $data;
 	}
-
 
 
 	public function loadParties(Request $request)
@@ -262,6 +263,7 @@ class VoucherController extends Controller
 		}
 		return $data;
 	}
+
 
 	public function loadPartyDue(Request $request)
 	{
@@ -303,6 +305,7 @@ class VoucherController extends Controller
 		return $rooom;
 	}
 
+
 	public function getGetPartyWiseBill(Request $request){
 		// return $request;
 		$restaurentbill = [];
@@ -335,9 +338,10 @@ class VoucherController extends Controller
 		return $data;
 	}
 
+
 	public function store(Request $request)
 	{
-		
+		$logged_sister_concern_id = Session::get('companySettings')[0]['id'];
 		$request->validate([
 			'amount' => 'required|max:13|regex:/^([a-zA-Z0-9_ "\.\-\s\,\;\:\/\&\$\%\(\)]+\s)*[a-zA-Z0-9_ "\.\-\s\,\;\:\/\&\$\%\(\)]+$/u',
 			'type' => 'required',
@@ -372,6 +376,7 @@ class VoucherController extends Controller
 			//$PaymentVoucher->resturant_order_id = $orderId;
 			$PaymentVoucher->voucherNo = $maxCode;
 			$PaymentVoucher->amount = $request->amount;
+			$PaymentVoucher->sister_concern_id = $logged_sister_concern_id;
 			$PaymentVoucher->entryBy = auth()->user()->id;
 			$PaymentVoucher->payment_method = $request->payment_method;
 			$PaymentVoucher->paymentDate = $request->paymentDate;
@@ -432,12 +437,13 @@ class VoucherController extends Controller
 					$configId = ChartOfAccounts::where('slug', '=', 'discount-received')->first();
 				}
 			} */
-
+		
 			$voucher = new AccountsVoucher();
 			$voucher->vendor_id = $request->party_id;
 			$voucher->transaction_date = $request->paymentDate;
 			$voucher->amount = floatval($request->amount);
 			$voucher->payment_method = $request->payment_method;
+			$voucher->sister_concern_id = $logged_sister_concern_id;
 			$voucher->particulars = $request->remarks;
 			$voucher->deleted = "No";
 			$voucher->status = "Active";
@@ -449,6 +455,7 @@ class VoucherController extends Controller
 			$voucherDetails = new AccountsVoucherDetails();
 			$voucherDetails->tbl_acc_voucher_id = $voucherId;
 			$voucherDetails->tbl_acc_coa_id = $configId;
+			$voucherDetails->sister_concern_id = $logged_sister_concern_id;
 			$voucherDetails->transaction_date = $request->paymentDate;
 			//$voucherDetails->payment_voucher_id = $PaymentVoucher->id;
 
@@ -568,9 +575,14 @@ class VoucherController extends Controller
 		return $pdf->stream('payment-received-pdf.pdf', array("Attachment" => false));
 	}
 
+
 	public function getSupplierDue(Request $request)
 	{
-		$due = Party::find($request->partyId);
-		return $due;
+		$partyId = $request->partyId;
+		$due = $this->partydue($partyId);
+		return response()->json(['due' => $due]); 
 	}
+
+
+
 }

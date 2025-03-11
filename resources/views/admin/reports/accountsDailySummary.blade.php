@@ -9,6 +9,8 @@
                 <!-- Small boxes (Stat box) -->
                 <!-- Main row -->
                 <div id="msg_error"></div>
+
+                
                 <form id="saleProducts" method="POST">
                     <div class="row">
                         <!-- Left col -->
@@ -171,7 +173,7 @@
                 contentType: false,
                 processData: false,
                 success: function(result) {
-                   // alert(JSON.stringify(result));
+                   alert(JSON.stringify(result));
                     $("#manageReportTable").html(result[0]);
                     $("#manageBankTable").html(result[3]);
                     $("#manageMobileBankingTable").html(result[4]);
@@ -196,7 +198,7 @@
                     $('#loading').hide();
                 },
                 error: function(response) {
-                   // alert(JSON.stringify(response));
+                   alert(JSON.stringify(response));
                     $("#msg_error").html(JSON.stringify(response));
                 }
             });
@@ -243,7 +245,7 @@
                         contentType: false,
                         processData: false,
                         success: function(result) {
-                           // alert(JSON.stringify(response));
+                            alert(JSON.stringify(result));
                             Swal.fire("saved!", result.success, "success");
                         },
                         error: function(response) {

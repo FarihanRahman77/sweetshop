@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Accounts\AccountController;
 use App\Http\Controllers\Admin\Journal\JournalController;
-use App\Http\Controllers\Admin\Expense\ExpenseController;
+use App\Http\Controllers\Admin\Accounts\Expense\ExpenseController;
 use App\Http\Controllers\Admin\Setup\AccountSettingController; 
 use App\Http\Controllers\Admin\Accounts\BillController; 
 use App\Http\Controllers\Admin\Accounts\BankController; 
@@ -64,7 +64,12 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('expense/get/Amount/', [ExpenseController::class, 'getAmount'])->name('getAmount');
 	Route::post('expense/store/', [ExpenseController::class, 'store'])->name('expenseStore');
 	Route::get('expense/details/{id}', [ExpenseController::class, 'seeDetails'])->name('expense/details');
-	
+	Route::get('expenses/report/view', [ExpenseController::class, 'reportView'])->name('expensesReportView');
+	Route::get('expenses/report/generate', [ExpenseController::class, 'expenseReportGenerate'])->name('expenseReportGenerate');
+	Route::get('expense/report/Pdf/{data}', [ExpenseController::class, 'generateExpensePdf'])->name('generatePdf');
+    
+            
+
 	
 
 

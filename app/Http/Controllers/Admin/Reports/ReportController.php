@@ -297,22 +297,22 @@ class ReportController extends Controller
 
     public function accountsSummaryGenerate(Request $request)
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $stockValueData = $this->getReportCalculation($request->date_from, $request->date_to); // OpeningStockValue, ClosingStockValue, NetPurchaseValue....
 
 
-        $sales = ChartOfAccounts::where('name', '=', 'Sales')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $sales = ChartOfAccounts::where('name', '=', 'Sales')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         $salesId = $sales->id;
-        $allsales = ChartOfAccounts::where('parent_id', '=', $salesId)->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->get();
+        $allsales = ChartOfAccounts::where('parent_id', '=', $salesId)->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->get();
 
-        $expense = ChartOfAccounts::where('name', '=', 'Expense')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $expense = ChartOfAccounts::where('name', '=', 'Expense')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         $expenseId = $expense->id;
 
-        $allExpense = ChartOfAccounts::where('parent_id', '=', $expenseId)->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->get();
+        $allExpense = ChartOfAccounts::where('parent_id', '=', $expenseId)->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->get();
 
-        $purchase = ChartOfAccounts::where('name', '=', 'Purchases')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $purchase = ChartOfAccounts::where('name', '=', 'Purchases')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         $purchaseId = $purchase->id;
-        $allpurchases = ChartOfAccounts::where('parent_id', '=', $purchaseId)->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->get();
+        $allpurchases = ChartOfAccounts::where('parent_id', '=', $purchaseId)->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->get();
 
         // Sale Section
         $totalSales = 0;
@@ -323,7 +323,7 @@ class ReportController extends Controller
                 ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
                 ->whereBetween('tbl_accounts_vouchers.transaction_date', [$request->date_from, $request->date_to])
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $sale->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -355,26 +355,26 @@ class ReportController extends Controller
                             ->where('voucherType','=','Applicant Order')
                             ->whereBetween('paymentDate', [$request->date_from, $request->date_to])
                             ->where('deleted','=','No')
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->sum('amount');
         $totalApplicantAmountReturn = PaymentVoucher::where('type','=','Payment Adjustment')
                             ->where('voucherType','=','Applicant Order Return')
                             ->whereBetween('paymentDate', [$request->date_from, $request->date_to])
                             ->where('deleted','=','No')
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->sum('amount');
 
         $totalVendorAmount = PaymentVoucher::where('type','=','Payable')
                             ->where('voucherType','=','Vendor Order')
                             ->whereBetween('paymentDate', [$request->date_from, $request->date_to])
                             ->where('deleted','=','No')
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->sum('amount');
         $totalVendorReturnAmount = PaymentVoucher::where('type','=','Adjustment')
                             ->where('voucherType','=','Vendor Order Return')
                             ->whereBetween('paymentDate', [$request->date_from, $request->date_to])
                             ->where('deleted','=','No')
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->sum('amount');
 
         $totalPurchaseReturnAmount = Purchase_Return::whereBetween('purchase_return_date', [$request->date_from, $request->date_to])
@@ -394,7 +394,7 @@ class ReportController extends Controller
                 ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date', 'tbl_accounts_vouchers.type')
                 ->whereBetween('tbl_accounts_vouchers.transaction_date', [$request->date_from, $request->date_to])
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $expense->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -415,7 +415,7 @@ class ReportController extends Controller
         }
 
         $allPaidBills=DB::table('tbl_accounts_vouchers')->whereBetween('transaction_date', [$request->date_from, $request->date_to])
-                        ->where('tbl_accounts_vouchers.warehouse_id', '=',$loggedWarehouseId)
+                        ->where('tbl_accounts_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
                         ->where('type','=','Bill created')
                         ->where('deleted', '=', 'No')
                         ->where('status', '=', 'Active')
@@ -497,13 +497,15 @@ class ReportController extends Controller
             $spId = $product->id;
 
             //========== Opening Balance
-            $openingBalance = DB::table('purchase_products')
+            $openingBalance = DB::table('tbl_purchase_products')
                 ->select(DB::raw('SUM(quantity) as stockInQuantity, 0 as stockOutQuantity'))
-                ->join('purchases', 'purchase_products.purchase_id', '=', 'purchases.id')
-                ->where('purchase_products.product_id', $spId)
-                ->where('purchases.date', '<', $sDate)
-                ->where('purchases.deleted', 'No')
-                ->where('purchase_products.deleted', 'No')
+                ->join('tbl_purchases', 'tbl_purchase_products.purchase_id', '=', 'tbl_purchases.id')
+                ->where('tbl_purchase_products
+.product_id', $spId)
+                ->where('tbl_purchases.date', '<', $sDate)
+                ->where('tbl_purchases.deleted', 'No')
+                ->where('tbl_purchase_products
+.deleted', 'No')
                 ->unionAll(function ($query) use ($spId, $sDate) {
                     $query->select(DB::raw('0 as stockInQuantity, SUM(return_qty) as stockOutQuantity'))
                         ->from('purchase_product_returns')
@@ -544,13 +546,17 @@ class ReportController extends Controller
             // End Opening Balance
 
             // Start Closing Balance
-            $closingStock = DB::table('purchase_products')
+            $closingStock = DB::table('tbl_purchase_products
+')
                 ->select(DB::raw('SUM(quantity) as stockInQuantity, 0 as stockOutQuantity'))
-                ->join('purchases', 'purchase_products.purchase_id', '=', 'purchases.id')
-                ->where('purchase_products.product_id', $spId)
-                ->where('purchases.date', '<=', $eDate)
-                ->where('purchases.deleted', 'No')
-                ->where('purchase_products.deleted', 'No')
+                ->join('tbl_purchases', 'tbl_purchase_products
+.purchase_id', '=', 'tbl_purchases.id')
+                ->where('tbl_purchase_products
+.product_id', $spId)
+                ->where('tbl_purchases.date', '<=', $eDate)
+                ->where('tbl_purchases.deleted', 'No')
+                ->where('tbl_purchase_products
+.deleted', 'No')
                 ->unionAll(function ($query) use ($spId, $eDate) {
                     $query->select(DB::raw('0 as stockInQuantity, SUM(return_qty) as stockOutQuantity'))
                         ->from('purchase_product_returns')
@@ -593,14 +599,19 @@ class ReportController extends Controller
 
             // Last Purchase Price Within a Date (sDate-eDate)
             $closingPurchaseAmount = 0;
-            $closingPurchaseAmount = DB::table('purchase_products')
-                ->join('purchases', 'purchase_products.purchase_id', '=', 'purchases.id')
-                ->where('purchases.deleted', 'No')
-                ->where('purchase_products.deleted', 'No')
-                ->where('purchases.date', '<=', $eDate)
-                ->where('purchase_products.product_id', $spId)
-                ->orderBy('purchases.date', 'desc')
-                ->value('purchase_products.unit_price');
+            $closingPurchaseAmount = DB::table('tbl_purchase_products
+')
+                ->join('tbl_purchases', 'tbl_purchase_products
+.purchase_id', '=', 'tbl_purchases.id')
+                ->where('tbl_purchases.deleted', 'No')
+                ->where('tbl_purchase_products
+.deleted', 'No')
+                ->where('tbl_purchases.date', '<=', $eDate)
+                ->where('tbl_purchase_products
+.product_id', $spId)
+                ->orderBy('tbl_purchases.date', 'desc')
+                ->value('tbl_purchase_products
+.unit_price');
 
             if (!$closingPurchaseAmount) {
                 if ($product->purchase_price != 0 && $product->purchase_price != '') {
@@ -612,12 +623,16 @@ class ReportController extends Controller
             // End
 
             // Purchase Stock Within a Date (sDate-eDate)
-            /*$purchaseStock += DB::table('purchase_products')
-                ->join('purchases', 'purchase_products.purchase_id', '=', 'purchases.id')
+            /*$purchaseStock += DB::table('tbl_purchase_products
+')
+                ->join('purchases', 'tbl_purchase_products
+.purchase_id', '=', 'purchases.id')
                 ->where('purchases.deleted', 'No')
-                ->where('purchase_products.deleted', 'No')
+                ->where('tbl_purchase_products
+.deleted', 'No')
                 ->whereBetween('purchases.date', [$sDate, $eDate])
-                ->where('purchase_products.product_id', $spId)
+                ->where('tbl_purchase_products
+.product_id', $spId)
                 ->sum('quantity');
             // End
 
@@ -668,9 +683,9 @@ class ReportController extends Controller
 
     public function generateSalesDetailsAccountsPdf($date_from, $date_to)
     {
-    $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-    $applicantSale = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->first();
-    $applicantSaleReturn = ChartOfAccounts::where('slug', '=', 'sales-ruturn')->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->first();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+    $applicantSale = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->first();
+    $applicantSaleReturn = ChartOfAccounts::where('slug', '=', 'sales-ruturn')->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->first();
   
     $sales = DB::table('tbl_acc_voucher_details')
             ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
@@ -680,7 +695,7 @@ class ReportController extends Controller
             ->whereNotNull('credit')
             ->whereBetween('tbl_accounts_vouchers.transaction_date', [$date_from, $date_to])
             ->where('tbl_acc_voucher_details.tbl_acc_coa_id','=', $applicantSale->id)
-            ->where('tbl_acc_voucher_details.warehouse_id','=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id','=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted','=','No')
             ->where('tbl_accounts_vouchers.status','=','Active')
             ->where('tbl_acc_voucher_details.deleted','=','No')
@@ -715,8 +730,8 @@ class ReportController extends Controller
 
 
     public function generateSaleReturnDetailsAccountsPdf($date_from, $date_to){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $applicationReturnCoa = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->first();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $applicationReturnCoa = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->first();
         $saleOrderReturns = DB::table('tbl_acc_voucher_details')
             ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
             ->join('sale_order_returns', 'tbl_accounts_vouchers.sale_order_return_id', '=', 'sale_order_returns.id')
@@ -735,7 +750,7 @@ class ReportController extends Controller
             ->whereNotNull('debit')
             ->whereBetween('tbl_accounts_vouchers.transaction_date', [$date_from, $date_to])
             ->where('tbl_acc_voucher_details.tbl_acc_coa_id','=', $applicationReturnCoa->id)
-            ->where('tbl_acc_voucher_details.warehouse_id','=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id','=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted','=','No')
             ->where('tbl_accounts_vouchers.status','=','Active')
             ->where('tbl_acc_voucher_details.deleted','=','No')
@@ -760,8 +775,8 @@ class ReportController extends Controller
 
     public function generatePurchaseDetailsAccountsPdf($date_from, $date_to)
     {
-    $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-    $purchaseCoa = ChartOfAccounts::where('slug', '=', 'purchase-vendor-service')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+    $purchaseCoa = ChartOfAccounts::where('slug', '=', 'purchase-vendor-service')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
     
     $purchases = DB::table('tbl_acc_voucher_details')
                         ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
@@ -770,7 +785,7 @@ class ReportController extends Controller
                         ->whereNotNull('debit')
                         ->whereBetween('tbl_accounts_vouchers.transaction_date', [$date_from, $date_to])
                         ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $purchaseCoa->id)
-                        ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                        ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                         ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                         ->where('tbl_accounts_vouchers.status', '=', 'Active')
                         ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -788,8 +803,8 @@ class ReportController extends Controller
     
     
     public function generatePurchaseReturnDetailsAccountsPdf($date_from, $date_to){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $purchaseCoa = ChartOfAccounts::where('slug', '=', 'purchase-vendor-service')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $purchaseCoa = ChartOfAccounts::where('slug', '=', 'purchase-vendor-service')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         $vendorOrderReturns = DB::table('tbl_acc_voucher_details')
             ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
             ->join('sale_order_returns', 'tbl_accounts_vouchers.sale_order_return_id', '=', 'sale_order_returns.id')
@@ -808,7 +823,7 @@ class ReportController extends Controller
             ->whereNotNull('credit')
             ->whereBetween('tbl_accounts_vouchers.transaction_date', [$date_from, $date_to])
             ->where('tbl_acc_voucher_details.tbl_acc_coa_id','=', $purchaseCoa->id)
-            ->where('tbl_acc_voucher_details.warehouse_id','=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id','=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted','=','No')
             ->where('tbl_accounts_vouchers.status','=','Active')
             ->where('tbl_acc_voucher_details.deleted','=','No')
@@ -825,14 +840,14 @@ class ReportController extends Controller
     public function generateExpenseDetailsAccountsPdf($date_from, $date_to, $expenseId)
     {
         $expenseName = ChartOfAccounts::where('id', $expenseId)->value('name');
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $expenseData = DB::table('tbl_acc_expense_details')
             ->join('tbl_acc_expenses', 'tbl_acc_expenses.id', '=', 'tbl_acc_expense_details.tbl_acc_expense_id')
             ->leftjoin('our_teams', 'tbl_acc_expenses.tbl_crm_vendor_id', '=', 'our_teams.id')
             ->select('tbl_acc_expense_details.amount','tbl_acc_expenses.expense_no', 'tbl_acc_expenses.transaction_date', 'tbl_acc_expense_details.particulars', 'our_teams.member_name')
             ->whereBetween('tbl_acc_expenses.transaction_date', [$date_from, $date_to])
             ->where('tbl_acc_expense_details.tbl_acc_coa_id', '=', $expenseId)
-            ->where('tbl_acc_expense_details.warehouse_id', '=',$loggedWarehouseId)
+            ->where('tbl_acc_expense_details.sister_concern_id', '=',$logged_sister_concern_id)
             ->where('tbl_acc_expenses.deleted', '=', 'No')
             ->where('tbl_acc_expenses.status', '=', 'Active')
             ->where('tbl_acc_expense_details.deleted', '=', 'No')
@@ -852,8 +867,8 @@ class ReportController extends Controller
     }
     public function generateOpenigClosingStockDetailsPdf($date_from, $date_to, $stockType = '')
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $products = DB::table('products')
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $products = DB::table('tbl_inventory_products')
             ->select('id', 'name', 'purchase_price', 'sale_price', 'opening_stock')
             ->where('deleted', 'No')
             ->whereNotIn('type', ['service'])
@@ -875,7 +890,7 @@ class ReportController extends Controller
     }
     public function closingBalanceStore(Request $request)
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $lastTwoChar = substr(($request->date_to), -2);
         $time = strtotime($request->date_to);
         $month = date("F", $time);
@@ -888,7 +903,7 @@ class ReportController extends Controller
             $checkPreviousMonthYear->from_date = $request->date_from;
             $checkPreviousMonthYear->to_date = $request->date_to;
             $checkPreviousMonthYear->month_year = $monthYear;
-            $checkPreviousMonthYear->warehouse_id = $loggedWarehouseId;
+            $checkPreviousMonthYear->sister_concern_id = $logged_sister_concern_id;
             $checkPreviousMonthYear->previous_month_closing = $request->previousMonthClosing;
             $checkPreviousMonthYear->opening_balance = $request->presentClosingBalance;
             $checkPreviousMonthYear->present_month_closing = $request->presentClosingBalance;
@@ -899,7 +914,7 @@ class ReportController extends Controller
             $closing = new MonthlyReport();
             $closing->from_date = $request->date_from;
             $closing->to_date = $request->date_to;
-            $closing->warehouse_id = $loggedWarehouseId;
+            $closing->sister_concern_id = $logged_sister_concern_id;
             $closing->previous_month_closing = $request->previousMonthClosing;
             $closing->opening_balance = $request->presentClosingBalance;
             $closing->present_month_closing = $request->presentClosingBalance;
@@ -916,7 +931,7 @@ class ReportController extends Controller
 
     public function generateAccountsSummaryPdf($date_from, $date_to)
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $time = strtotime($date_from);
         $month = date("F", $time);
         $year = date("Y", $time);
@@ -947,7 +962,7 @@ class ReportController extends Controller
             ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
             ->where('tbl_accounts_vouchers.transaction_date', '>=', $backDateFrom)
             ->where('tbl_accounts_vouchers.transaction_date', '<=', $date_from)
-            ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted', '=', 'No')
             ->where('tbl_accounts_vouchers.status', '=', 'Active')
             ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -963,7 +978,7 @@ class ReportController extends Controller
             ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
             ->where('tbl_accounts_vouchers.transaction_date', '>=', $backDateFrom)
             ->where('tbl_accounts_vouchers.transaction_date', '<=', $date_from)
-            ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted', '=', 'No')
             ->where('tbl_accounts_vouchers.status', '=', 'Active')
             ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1003,7 +1018,7 @@ class ReportController extends Controller
                 ->where('tbl_accounts_vouchers.transaction_date', '>=', $date_from)
                 ->where('tbl_accounts_vouchers.transaction_date', '<=', $date_to)
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $income->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1032,7 +1047,7 @@ class ReportController extends Controller
                 ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
                 ->whereBetween('tbl_accounts_vouchers.transaction_date', [$date_from, $date_to])
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $sale->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1089,7 +1104,7 @@ class ReportController extends Controller
                 ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date', 'tbl_accounts_vouchers.type')
                 ->whereBetween('tbl_accounts_vouchers.transaction_date', [$date_from, $date_to])
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $purchase->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1134,7 +1149,7 @@ class ReportController extends Controller
                 ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date', 'tbl_accounts_vouchers.type')
                 ->whereBetween('tbl_accounts_vouchers.transaction_date', [$date_from, $date_to])
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $expense->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1212,8 +1227,8 @@ class ReportController extends Controller
 
 
         // Start Voucher Section
-        $voucherSummary = DB::table('payment_vouchers')
-            ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
+        $voucherSummary = DB::table('tbl_voucher_payment_vouchers')
+            ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
             ->whereBetween('paymentDate', [$date_from, $date_to])
             ->where('deleted', 'No')
             ->where('status', 'Active')
@@ -1224,8 +1239,8 @@ class ReportController extends Controller
             ->whereNull('sales_return_id')
             ->whereNull('expense_id')
             ->select(
-                DB::raw('SUM(CASE WHEN type="Payment Received" THEN payment_vouchers.amount END) totalVoucherRcvAmount'),
-                DB::raw('SUM(CASE WHEN type="Payment" THEN payment_vouchers.amount END) totalVoucherPaymentAmount')
+                DB::raw('SUM(CASE WHEN type="Payment Received" THEN tbl_voucher_payment_vouchers.amount END) totalVoucherRcvAmount'),
+                DB::raw('SUM(CASE WHEN type="Payment" THEN tbl_voucher_payment_vouchers.amount END) totalVoucherPaymentAmount')
             )->first();
         $table .= '<tr>
                     <td>
@@ -1288,22 +1303,22 @@ class ReportController extends Controller
 
     public function dailyAccountsLedger()
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $lastDailyReport = DailyReport::where('deleted', 'No')
                             ->where('status', 'Active')
-                            ->where('warehouse_id','=',$loggedWarehouseId)
+                            ->where('sister_concern_id','=',$logged_sister_concern_id)
                             ->get()
                             ->last();
         if ($lastDailyReport != '') {
             $date = $lastDailyReport->date;
 
-            $checkTransaction = DB::table('payment_vouchers')
-                ->join('daily_reports', 'payment_vouchers.paymentDate', '!=', 'daily_reports.date')
-                ->select('payment_vouchers.paymentDate')
-                ->where('payment_vouchers.deleted', 'No')
-                ->where('payment_vouchers.paymentDate', '>', $date)
-                ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                ->where('payment_vouchers.status', 'Active')
+            $checkTransaction = DB::table('tbl_voucher_payment_vouchers')
+                ->join('daily_reports', 'tbl_voucher_payment_vouchers.paymentDate', '!=', 'daily_reports.date')
+                ->select('tbl_voucher_payment_vouchers.paymentDate')
+                ->where('tbl_voucher_payment_vouchers.deleted', 'No')
+                ->where('tbl_voucher_payment_vouchers.paymentDate', '>', $date)
+                ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                ->where('tbl_voucher_payment_vouchers.status', 'Active')
                 ->distinct()
                 ->get();
 
@@ -1330,32 +1345,32 @@ class ReportController extends Controller
 
     public function getDailyReport(Request $request)
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
 
         $date = $request->date;
 
         $minusDaysFromDate =  date_create($date)->modify('-1 days')->format('Y-m-d');
 
-        $openingData = DailyReport::where('deleted', 'No')->where('date', '<', $date)->where('warehouse_id','=',$loggedWarehouseId)->orderBy('date', 'DESC')->first();
+        $openingData = DailyReport::where('deleted', 'No')->where('date', '<', $date)->where('sister_concern_id','=',$logged_sister_concern_id)->orderBy('date', 'DESC')->first();
         if ($openingData != null) {
-            $lastDailyReport = DailyReport::where('deleted', 'No')->where('date', '<', $date)->where('warehouse_id','=',$loggedWarehouseId)->orderBy('date', 'DESC')->first();
+            $lastDailyReport = DailyReport::where('deleted', 'No')->where('date', '<', $date)->where('sister_concern_id','=',$logged_sister_concern_id)->orderBy('date', 'DESC')->first();
         } else {
             $lastDailyReport = 0;
         }
        
         //-----today payment, expense , payment received-------//
-        $todayReport = DB::table('payment_vouchers')
-                    ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
-                    ->leftjoin('tbl_booking', 'payment_vouchers.order_sale_id', '=', 'tbl_booking.id')
-                    ->select('payment_vouchers.*', 'tbl_booking.grand_total', 'purchases.total_amount')
-                    ->where('payment_vouchers.deleted', 'No')
-                    ->where('payment_vouchers.paymentDate', $date)
-                    ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                    ->where('payment_vouchers.status', 'Active')
-                    ->where('payment_vouchers.payment_method', 'Cash')
+        $todayReport = DB::table('tbl_voucher_payment_vouchers')
+                    ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
+                    ->leftjoin('tbl_booking', 'tbl_voucher_payment_vouchers.order_sale_id', '=', 'tbl_booking.id')
+                    ->select('tbl_voucher_payment_vouchers.*', 'tbl_booking.grand_total', 'tbl_purchases.total_amount')
+                    ->where('tbl_voucher_payment_vouchers.deleted', 'No')
+                    ->where('tbl_voucher_payment_vouchers.paymentDate', $date)
+                    ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                    ->where('tbl_voucher_payment_vouchers.status', 'Active')
+                    ->where('tbl_voucher_payment_vouchers.payment_method', 'Cash')
                     ->where(function ($query) {
-                        $query->where('payment_vouchers.type', 'Payment')
-                            ->orWhere('payment_vouchers.type', 'Payment Received');
+                        $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
+                            ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
                     })
                     ->get();
 
@@ -1392,7 +1407,7 @@ class ReportController extends Controller
 
         //cash to bank
         $cashToBanks=Voucher::where('transaction_date','=', $date)
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->where('type', '=', 'cashTobank')
                             ->where('deleted', '=', 'No')
                             ->where('status', '=', 'Active')
@@ -1403,7 +1418,7 @@ class ReportController extends Controller
         }
         //bank to cash
         $bankTocashes=Voucher::where('transaction_date','=', $date)
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->where('type', '=','bankTocash')
                             ->where('deleted', '=', 'No')
                             ->where('status', '=', 'Active')
@@ -1414,7 +1429,7 @@ class ReportController extends Controller
         }
         //cash to mobile banking
         $cashTomobile_bankings=Voucher::where('transaction_date','=', $date)
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->where('type', '=', 'cashTomobile-banking')
                             ->where('deleted', '=', 'No')
                             ->where('status', '=', 'Active')
@@ -1425,7 +1440,7 @@ class ReportController extends Controller
         }
         //mobile banking to cash
         $mobile_bankingToCashes=Voucher::where('transaction_date','=', $date)
-                            ->where('warehouse_id', '=',$loggedWarehouseId)
+                            ->where('sister_concern_id', '=',$logged_sister_concern_id)
                             ->where('type', '=', 'mobile-bankingTocash')
                             ->where('deleted', '=', 'No')
                             ->where('status', '=', 'Active')
@@ -1480,21 +1495,21 @@ class ReportController extends Controller
 
 
 
-        $todayOtherMethodsReports = DB::table('payment_vouchers')
-                    ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
-                    ->leftjoin('tbl_booking', 'payment_vouchers.order_sale_id', '=', 'tbl_booking.id')
-                    ->select('payment_vouchers.*', 'tbl_booking.grand_total', 'purchases.total_amount')
-                    ->where('payment_vouchers.deleted', 'No')
-                    ->where('payment_vouchers.paymentDate', $date)
-                    ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                    ->where('payment_vouchers.status', 'Active')
+        $todayOtherMethodsReports = DB::table('tbl_voucher_payment_vouchers')
+                    ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
+                    ->leftjoin('tbl_booking', 'tbl_voucher_payment_vouchers.order_sale_id', '=', 'tbl_booking.id')
+                    ->select('tbl_voucher_payment_vouchers.*', 'tbl_booking.grand_total', 'tbl_purchases.total_amount')
+                    ->where('tbl_voucher_payment_vouchers.deleted', 'No')
+                    ->where('tbl_voucher_payment_vouchers.paymentDate', $date)
+                    ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                    ->where('tbl_voucher_payment_vouchers.status', 'Active')
                     ->where(function ($query) {
-                        $query->where('payment_vouchers.type', 'Payment')
-                            ->orWhere('payment_vouchers.type', 'Payment Received');
+                        $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
+                            ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
                     })
                     ->where(function ($query) {
-                        $query->where('payment_vouchers.payment_method', 'Bank')
-                            ->orWhere('payment_vouchers.payment_method', 'Mobile Banking');
+                        $query->where('tbl_voucher_payment_vouchers.payment_method', 'Bank')
+                            ->orWhere('tbl_voucher_payment_vouchers.payment_method', 'Mobile Banking');
                     })
                     ->get();
 
@@ -1563,14 +1578,15 @@ class ReportController extends Controller
 
     public function saveTodayReport(Request $request)
     {
+
        DB::beginTransaction();
        try {
-          $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
           $date = $request->date;
           $dailyReport = DailyReport::where('date', $date)
                                     ->where('deleted', 'No')
                                     ->where('status', 'Active')
-                                    ->where('warehouse_id','=',$loggedWarehouseId)
+                                    ->where('sister_concern_id','=',$logged_sister_concern_id)
                                     ->get()
                                     ->last();
           if ($dailyReport){
@@ -1582,7 +1598,7 @@ class ReportController extends Controller
                 $dailyReport->previous_closing = $request->openingBalance; //(previous) openingBalance as (today) previous_closing
                 $dailyReport->today_closing = $request->totalAmount; // today credit
                 $dailyReport->opening_balance = $request->closingAmount;
-                $dailyReport->warehouse_id = $loggedWarehouseId;
+                $dailyReport->sister_concern_id = $logged_sister_concern_id;
                 $dailyReport->created_at = Carbon::now();
                 $dailyReport->created_by = auth()->user()->id;
                 $dailyReport->save();
@@ -1593,7 +1609,7 @@ class ReportController extends Controller
              $dailyReport->previous_closing = $request->openingBalance; //(previous) openingBalance as (today) previous_closing
              $dailyReport->today_closing = $request->totalAmount; // today credit
              $dailyReport->opening_balance = $request->closingAmount;
-             $dailyReport->warehouse_id = $loggedWarehouseId;
+             $dailyReport->sister_concern_id = $logged_sister_concern_id;
              $dailyReport->status = "Active";
              $dailyReport->deleted = "No";
              $dailyReport->created_at = Carbon::now();
@@ -1616,8 +1632,7 @@ class ReportController extends Controller
     public function generateDailySummaryReport(Request $request)
     {
 
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $time = strtotime($request->date_from);
         $month = date("m", $time);
         $year = date("Y", $time);
@@ -1626,30 +1641,30 @@ class ReportController extends Controller
         $date =  $year . '-' . $month . '-' . $day;
 
 
-        $income = ChartOfAccounts::where('name', '=', 'Income')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $income = ChartOfAccounts::where('name', '=', 'Income')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         $incomeId = $income->id;
-        $allIncomes = ChartOfAccounts::where('parent_id', '=', $incomeId)->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->get();
+        $allIncomes = ChartOfAccounts::where('parent_id', '=', $incomeId)->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->get();
 
-        $sales = ChartOfAccounts::where('name', '=', 'Sales')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $sales = ChartOfAccounts::where('name', '=', 'Sales')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         $salesId = $sales->id;
-        $allsales = ChartOfAccounts::where('parent_id', '=', $salesId)->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->get();
+        $allsales = ChartOfAccounts::where('parent_id', '=', $salesId)->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->get();
 
-        $expense = ChartOfAccounts::where('name', '=', 'Expense')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $expense = ChartOfAccounts::where('name', '=', 'Expense')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         $expenseId = $expense->id;
 
-        $allExpense = ChartOfAccounts::where('parent_id', '=', $expenseId)->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->get();
+        $allExpense = ChartOfAccounts::where('parent_id', '=', $expenseId)->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->get();
 
-        $purchase = ChartOfAccounts::where('name', '=', 'Purchases')->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $purchase = ChartOfAccounts::where('name', '=', 'Purchases')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
         // jjj
 
         $purchaseId = $purchase->id;
-        $allpurchases = ChartOfAccounts::where('parent_id', '=', $purchaseId)->where('deleted', 'No')->where('warehouse_id','=',$loggedWarehouseId)->get();
+        $allpurchases = ChartOfAccounts::where('parent_id', '=', $purchaseId)->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->get();
 
 
         $backDate = DailyReport::where('date', '<', $date)
             ->where('deleted', '=', 'No')
             ->where('status', '=', 'Active')
-            ->where('warehouse_id','=',$loggedWarehouseId)
+            ->where('sister_concern_id','=',$logged_sister_concern_id)
             ->orderBy('date', 'desc')
             ->first();
         if ($backDate != null) {
@@ -1663,7 +1678,7 @@ class ReportController extends Controller
             ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
             ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
             ->where('tbl_accounts_vouchers.transaction_date', '=', $backDateFrom)
-            ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted', '=', 'No')
             ->where('tbl_accounts_vouchers.status', '=', 'Active')
             ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1679,7 +1694,7 @@ class ReportController extends Controller
             ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
             ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
             ->where('tbl_accounts_vouchers.transaction_date', '=', $backDateFrom)
-            ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted', '=', 'No')
             ->where('tbl_accounts_vouchers.status', '=', 'Active')
             ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1691,7 +1706,7 @@ class ReportController extends Controller
         }
 
         /* start from here */
-        $openings = DailyReport::where('date', '=', $backDateFrom)->where('deleted', '=', 'No')->where('warehouse_id','=',$loggedWarehouseId)->where('status', '=', 'Active')->first();
+        $openings = DailyReport::where('date', '=', $backDateFrom)->where('deleted', '=', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->where('status', '=', 'Active')->first();
 
         if ($openings != null) {
             $openingbalance = $openings->opening_balance;
@@ -1721,7 +1736,7 @@ class ReportController extends Controller
                 ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
                 ->where('tbl_accounts_vouchers.transaction_date', '=', $request->date_from)
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $income->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1750,7 +1765,7 @@ class ReportController extends Controller
                 ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
                 ->where('tbl_accounts_vouchers.transaction_date', '=', $request->date_from)
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $sale->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1781,7 +1796,7 @@ class ReportController extends Controller
         $billpayments = DB::table('tbl_accounts_vouchers')
             ->where('type', '=', 'Bill paid')
             ->where('tbl_accounts_vouchers.transaction_date', '=', $request->date_from)
-            ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+            ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted', '=', 'No')
             ->where('tbl_accounts_vouchers.status', '=', 'Active')
             ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1802,7 +1817,7 @@ class ReportController extends Controller
                 ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date', 'tbl_accounts_vouchers.type')
                 ->where('tbl_accounts_vouchers.transaction_date', '=', $request->date_from)
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $purchase->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1827,7 +1842,7 @@ class ReportController extends Controller
                 ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date', 'tbl_accounts_vouchers.type')
                 ->where('tbl_accounts_vouchers.transaction_date', '=', $request->date_from)
                 ->where('tbl_acc_voucher_details.tbl_acc_coa_id', '=', $expense->id)
-                ->where('tbl_acc_voucher_details.warehouse_id', '=',$loggedWarehouseId)
+                ->where('tbl_acc_voucher_details.sister_concern_id', '=',$logged_sister_concern_id)
                 ->where('tbl_accounts_vouchers.deleted', '=', 'No')
                 ->where('tbl_accounts_vouchers.status', '=', 'Active')
                 ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -1962,10 +1977,12 @@ class ReportController extends Controller
 
     public function closingDayBalanceStore(Request $request)
     {
-
+           
+         
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $date = $request->date_from;
         $checkPreviousDate = '';
-        $checkPreviousDate = DailyReport::where('date', '=', $date)->where('warehouse_id','=',$loggedWarehouseId)->first();
+        $checkPreviousDate = DailyReport::where('date', '=', $date)->where('sister_concern_id','=',$logged_sister_concern_id)->first();
 
         if ($checkPreviousDate != null) {
             $checkPreviousDate->date = $date;
@@ -1994,7 +2011,7 @@ class ReportController extends Controller
 
     public function generateDailyAccountsSummaryPdf($date)
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $time = strtotime($date);
         $month = date("m", $time);
         $year = date("Y", $time);
@@ -2020,7 +2037,7 @@ class ReportController extends Controller
         $backDate = DailyReport::where('date', '<', $date)
             ->where('deleted', '=', 'No')
             ->where('status', '=', 'Active')
-            ->where('warehouse_id','=',$loggedWarehouseId)
+            ->where('sister_concern_id','=',$logged_sister_concern_id)
             ->orderBy('date', 'desc')
             ->first();
         if ($backDate != null) {
@@ -2044,7 +2061,7 @@ class ReportController extends Controller
             ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
             ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
             ->where('tbl_accounts_vouchers.transaction_date', '=', $backDateFrom)
-            ->where('tbl_accounts_vouchers.warehouse_id', '=', $loggedWarehouseId)
+            ->where('tbl_accounts_vouchers.sister_concern_id', '=', $logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted', '=', 'No')
             ->where('tbl_accounts_vouchers.status', '=', 'Active')
             ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -2058,7 +2075,7 @@ class ReportController extends Controller
             ->join('tbl_accounts_vouchers', 'tbl_acc_voucher_details.tbl_acc_voucher_id', '=', 'tbl_accounts_vouchers.id')
             ->select('tbl_acc_voucher_details.*', 'tbl_accounts_vouchers.transaction_date')
             ->where('tbl_accounts_vouchers.transaction_date', '=', $backDateFrom)
-            ->where('tbl_accounts_vouchers.warehouse_id', '=', $loggedWarehouseId)
+            ->where('tbl_accounts_vouchers.sister_concern_id', '=', $logged_sister_concern_id)
             ->where('tbl_accounts_vouchers.deleted', '=', 'No')
             ->where('tbl_accounts_vouchers.status', '=', 'Active')
             ->where('tbl_acc_voucher_details.deleted', '=', 'No')
@@ -2818,13 +2835,13 @@ class ReportController extends Controller
 
 
     public function generateTotalBillAmountDetailsPdf($date_from,$date_to){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $bills= DB::table('tbl_acc_bill_details')
             ->join('tbl_acc_bills','tbl_acc_bills.id','=','tbl_acc_bill_details.tbl_acc_bill_id')
             ->leftjoin('parties','parties.id','=','tbl_acc_bills.tbl_crm_vendor_id')
             ->select('tbl_acc_bill_details.*','parties.name','tbl_acc_bills.code')
             ->where('tbl_acc_bills.deleted','=','No')
-            ->where('tbl_acc_bills.warehouse_id','=',$loggedWarehouseId)
+            ->where('tbl_acc_bills.sister_concern_id','=',$logged_sister_concern_id)
             ->where('tbl_acc_bill_details.deleted','=','No')
             ->where('tbl_acc_bill_details.deleted','=','No')
             ->where('tbl_acc_bills.transaction_date', '>=', $date_from)
@@ -2838,9 +2855,9 @@ class ReportController extends Controller
  
 
     public function bankLedger(){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $transaction_method =ChartOfAccounts::where('slug','=','cash-bank')->where('warehouse_id','LIKE', '%'.$loggedWarehouseId.'%')->where('deleted','=','No')->where('status','=','Active')->first();
-        $methods =ChartOfAccounts::where('parent_id','=',$transaction_method->id)->where('warehouse_id','LIKE', '%'.$loggedWarehouseId.'%')->where('deleted','=','No')->where('status','=','Active')->get();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $transaction_method =ChartOfAccounts::where('slug','=','cash-bank')->where('sister_concern_id','LIKE', '%'.$logged_sister_concern_id.'%')->where('deleted','=','No')->where('status','=','Active')->first();
+        $methods =ChartOfAccounts::where('parent_id','=',$transaction_method->id)->where('sister_concern_id','LIKE', '%'.$logged_sister_concern_id.'%')->where('deleted','=','No')->where('status','=','Active')->get();
         return view('admin.reports.bankLedger', ['methods'=>$methods]);
     }
 
@@ -2857,7 +2874,7 @@ class ReportController extends Controller
                 'date_to' => 'required',
             ]);
         
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+            $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         
         $coa=ChartOfAccounts::find($request->payment_method);
         
@@ -2880,29 +2897,29 @@ class ReportController extends Controller
             $fromDate=$request->date_from;
         }
 
-        $vouchers = DB::table('payment_vouchers')
-                ->select('payment_vouchers.*')
-                ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                ->whereBetween('payment_vouchers.paymentDate', [$fromDate, $request->date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
+        $vouchers = DB::table('tbl_voucher_payment_vouchers')
+                ->select('tbl_voucher_payment_vouchers.*')
+                ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$fromDate, $request->date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
                 ->where(function ($query) {
-                        $query->where('payment_vouchers.type', 'Payment')
-                            ->orWhere('payment_vouchers.type', 'Payment Received');
+                        $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
+                            ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
                     });
                 $paymentMethodId=0;
                 $sourceId=0;
                 $accountId=0;
                 if($coa->slug == 'cash'){
                     $paymentMethodId=$request->payment_method;
-                    $vouchers->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
                 }else{
                     $paymentMethodId=$request->payment_method;
                     $sourceId=$request->source;
                     $accountId=$request->accounts;
-                    $vouchers->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
-                            ->where('payment_vouchers.source_coa_id', '=',  $sourceId)
-                            ->where('payment_vouchers.account_coa_id', '=',  $accountId);
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                            ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
+                            ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                 }
          $vouchers = $vouchers->orderBy('paymentDate','ASC')->get();
         
@@ -2912,57 +2929,57 @@ class ReportController extends Controller
         }else{
             $coaOpening=ChartOfAccounts::find($accountId);
         }
-        $openingDebit = DB::table('payment_vouchers')
-                        ->select('payment_vouchers.*')
-                        ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                        ->where('payment_vouchers.paymentDate', '>=', $fromDate)
-                        ->where('payment_vouchers.paymentDate', '<', $request->date_from)
-                        ->where('payment_vouchers.deleted', '=', 'No')
-                        ->where('payment_vouchers.status', '=', 'Active')
-                        ->where('payment_vouchers.type', 'Payment Received');
+        $openingDebit = DB::table('tbl_voucher_payment_vouchers')
+                        ->select('tbl_voucher_payment_vouchers.*')
+                        ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '>=', $fromDate)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '<', $request->date_from)
+                        ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                        ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                        ->where('tbl_voucher_payment_vouchers.type', 'Payment Received');
                         $paymentMethodId=0;
                         $sourceId=0;
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$request->payment_method;
-                            $openingDebit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$request->payment_method;
                             $sourceId=$request->source;
                             $accountId=$request->accounts;
-                            $openingDebit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
-                                    ->where('payment_vouchers.source_coa_id', '=',  $sourceId)
-                                    ->where('payment_vouchers.account_coa_id', '=',  $accountId);
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                                    ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
+                                    ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }   
         
-        $openingDebit = $openingDebit->sum('payment_vouchers.amount') + $coaOpening->opening_balance;
+        $openingDebit = $openingDebit->sum('tbl_voucher_payment_vouchers.amount') + $coaOpening->opening_balance;
         
         
     
-        $openingCredit = DB::table('payment_vouchers')
-                        ->select('payment_vouchers.*')
-                        ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                        ->where('payment_vouchers.paymentDate', '>=', $fromDate)
-                        ->where('payment_vouchers.paymentDate', '<', $request->date_from)
-                        ->where('payment_vouchers.deleted', '=', 'No')
-                        ->where('payment_vouchers.status', '=', 'Active')
-                        ->where('payment_vouchers.type', 'Payment');
+        $openingCredit = DB::table('tbl_voucher_payment_vouchers')
+                        ->select('tbl_voucher_payment_vouchers.*')
+                        ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '>=', $fromDate)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '<', $request->date_from)
+                        ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                        ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                        ->where('tbl_voucher_payment_vouchers.type', 'Payment');
                         $paymentMethodId=0;
                         $sourceId=0;
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$request->payment_method;
-                            $openingCredit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$request->payment_method;
                             $sourceId=$request->source;
                             $accountId=$request->accounts;
-                            $openingCredit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
-                                    ->where('payment_vouchers.source_coa_id', '=',  $sourceId)
-                                    ->where('payment_vouchers.account_coa_id', '=',  $accountId);
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                                    ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
+                                    ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }     
                         
-        $openingCredit=$openingCredit->sum('payment_vouchers.amount');
+        $openingCredit=$openingCredit->sum('tbl_voucher_payment_vouchers.amount');
         
         
         
@@ -3077,7 +3094,7 @@ class ReportController extends Controller
 
 
     public function generateBankLedgerPdf($payment_method, $source,$accounts,$date_from, $date_to){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         if($payment_method > 0){
             
             $coa=ChartOfAccounts::find($payment_method);
@@ -3106,7 +3123,7 @@ class ReportController extends Controller
                                                     ->where('parent_id','=',$payment_method)
                                                     ->where('deleted', '=', 'No')
                                                     ->where('status', '=', 'Active')
-                                                    ->where('warehouse_id','LIKE', '%'.$loggedWarehouseId.'%')
+                                                    ->where('sister_concern_id','LIKE', '%'.$logged_sister_concern_id.'%')
                                                     ->first();
                         if($sourceCoa){                            
                             if($accounts > 0){
@@ -3114,7 +3131,7 @@ class ReportController extends Controller
                                                 ->where('parent_id','=',$sourceCoa->id)
                                                 ->where('deleted', '=', 'No')
                                                 ->where('status', '=', 'Active')
-                                                ->where('warehouse_id','LIKE', '%'.$loggedWarehouseId.'%')
+                                                ->where('sister_concern_id','LIKE', '%'.$logged_sister_concern_id.'%')
                                                 ->first();
                                 if($accountCoa){
                                     $paymentMethodId=$accountCoa->id;
@@ -3137,29 +3154,29 @@ class ReportController extends Controller
             
        
         
-            $vouchers = DB::table('payment_vouchers')
-                ->select('payment_vouchers.*')
-                ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                ->whereBetween('payment_vouchers.paymentDate', [$fromDate, $date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
+            $vouchers = DB::table('tbl_voucher_payment_vouchers')
+                ->select('tbl_voucher_payment_vouchers.*')
+                ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$fromDate, $date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
                 ->where(function ($query) {
-                        $query->where('payment_vouchers.type', 'Payment')
-                            ->orWhere('payment_vouchers.type', 'Payment Received');
+                        $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
+                            ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
                     });
                 $paymentMethodId=0;
                 $sourceId=0;
                 $accountId=0;
                 if($coa->slug == 'cash'){
                     $paymentMethodId=$payment_method;
-                    $vouchers->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
                 }else{
                     $paymentMethodId=$payment_method;
                     $sourceId=$source;
                     $accountId=$accounts;
-                    $vouchers->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
-                            ->where('payment_vouchers.source_coa_id', '=',  $sourceId)
-                            ->where('payment_vouchers.account_coa_id', '=',  $accountId);
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                            ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
+                            ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                 }
             $vouchers = $vouchers->orderBy('paymentDate','ASC')->get();
 
@@ -3169,57 +3186,57 @@ class ReportController extends Controller
         }else{
             $coaOpening=ChartOfAccounts::find($accountId);
         } 
-        $openingDebit = DB::table('payment_vouchers')
-                        ->select('payment_vouchers.*')
-                        ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                        ->where('payment_vouchers.paymentDate', '>=', $fromDate)
-                        ->where('payment_vouchers.paymentDate', '<', $date_from)
-                        ->where('payment_vouchers.deleted', '=', 'No')
-                        ->where('payment_vouchers.status', '=', 'Active')
-                        ->where('payment_vouchers.type', 'Payment Received');
+        $openingDebit = DB::table('tbl_voucher_payment_vouchers')
+                        ->select('tbl_voucher_payment_vouchers.*')
+                        ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '>=', $fromDate)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '<', $date_from)
+                        ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                        ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                        ->where('tbl_voucher_payment_vouchers.type', 'Payment Received');
                         $paymentMethodId=0;
                         $sourceId=0;
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$payment_method;
-                            $openingDebit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$payment_method;
                             $sourceId=$source;
                             $accountId=$accounts;
-                            $openingDebit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
-                                    ->where('payment_vouchers.source_coa_id', '=',  $sourceId)
-                                    ->where('payment_vouchers.account_coa_id', '=',  $accountId);
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                                    ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
+                                    ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }   
         
-        $openingDebit = $openingDebit->sum('payment_vouchers.amount') + $coaOpening->opening_balance;
+        $openingDebit = $openingDebit->sum('tbl_voucher_payment_vouchers.amount') + $coaOpening->opening_balance;
         
         
     
-        $openingCredit = DB::table('payment_vouchers')
-                        ->select('payment_vouchers.*')
-                        ->where('payment_vouchers.warehouse_id', '=',$loggedWarehouseId)
-                        ->where('payment_vouchers.paymentDate', '>=', $fromDate)
-                        ->where('payment_vouchers.paymentDate', '<', $date_from)
-                        ->where('payment_vouchers.deleted', '=', 'No')
-                        ->where('payment_vouchers.status', '=', 'Active')
-                        ->where('payment_vouchers.type', 'Payment');
+        $openingCredit = DB::table('tbl_voucher_payment_vouchers')
+                        ->select('tbl_voucher_payment_vouchers.*')
+                        ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=',$logged_sister_concern_id)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '>=', $fromDate)
+                        ->where('tbl_voucher_payment_vouchers.paymentDate', '<', $date_from)
+                        ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                        ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                        ->where('tbl_voucher_payment_vouchers.type', 'Payment');
                         $paymentMethodId=0;
                         $sourceId=0;
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$payment_method;
-                            $openingCredit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$payment_method;
                             $sourceId=$source;
                             $accountId=$accounts;
-                            $openingCredit->where('payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
-                                    ->where('payment_vouchers.source_coa_id', '=',  $sourceId)
-                                    ->where('payment_vouchers.account_coa_id', '=',  $accountId);
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                                    ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
+                                    ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }  
                         
-        $openingCredit=$openingCredit->sum('payment_vouchers.amount');
+        $openingCredit=$openingCredit->sum('tbl_voucher_payment_vouchers.amount');
         
         
         
@@ -3276,43 +3293,43 @@ class ReportController extends Controller
         $partyDueData = [];
 
         foreach ($parties as $party) {
-            $discount = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', 'Discount')
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
-            $adjustment = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $adjustmentStr)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
-            $payableOrReceiveableAmount = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $payableOrReceiveable)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
+            $discount = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', 'Discount')
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
+            $adjustment = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $adjustmentStr)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
+            $payableOrReceiveableAmount = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $payableOrReceiveable)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
     
-            $paymentOrReceivedAmount = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $paymentOrReceived)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
+            $paymentOrReceivedAmount = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $paymentOrReceived)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
                 
-            $paymentOrReceivedAmountReverse = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $paymentOrReceivedReverse)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
+            $paymentOrReceivedAmountReverse = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $paymentOrReceivedReverse)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
                 
             if ($request->party_type == 'Applicant') {
                 $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
@@ -3399,7 +3416,7 @@ class ReportController extends Controller
 
 
     public function generatePartyDuePdf($party_type,$date_from,$date_to){
-        $loggedWarehouseId = Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $parties = Party::where('party_type', '=', $party_type)
                         ->where('deleted', '=', 'No')
                         ->get();
@@ -3419,43 +3436,43 @@ class ReportController extends Controller
         $partyDueData = [];
 
         foreach ($parties as $party) {
-            $discount = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$date_from, $date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', 'Discount')
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
-            $adjustment = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$date_from, $date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $adjustmentStr)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
-            $payableOrReceiveableAmount = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$date_from, $date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $payableOrReceiveable)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
+            $discount = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$date_from, $date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', 'Discount')
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
+            $adjustment = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$date_from, $date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $adjustmentStr)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
+            $payableOrReceiveableAmount = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$date_from, $date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $payableOrReceiveable)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
     
-            $paymentOrReceivedAmount = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$date_from, $date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $paymentOrReceived)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
+            $paymentOrReceivedAmount = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$date_from, $date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $paymentOrReceived)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
                 
-            $paymentOrReceivedAmountReverse = DB::table('payment_vouchers')
-                ->whereBetween('payment_vouchers.paymentDate', [$date_from, $date_to])
-                ->where('payment_vouchers.deleted', '=', 'No')
-                ->where('payment_vouchers.status', '=', 'Active')
-                ->where('payment_vouchers.type', '=', $paymentOrReceivedReverse)
-                ->where('payment_vouchers.party_id', '=', $party->id)
-                ->sum('payment_vouchers.amount');
+            $paymentOrReceivedAmountReverse = DB::table('tbl_voucher_payment_vouchers')
+                ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$date_from, $date_to])
+                ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
+                ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
+                ->where('tbl_voucher_payment_vouchers.type', '=', $paymentOrReceivedReverse)
+                ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
+                ->sum('tbl_voucher_payment_vouchers.amount');
                 
             if ($party_type == 'Applicant') {
                 $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
@@ -3499,9 +3516,9 @@ class ReportController extends Controller
     }
     
     public function generateOrderWiseProfit(Request $request){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $applicantSale = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->first();
-        $applicantSaleReturn = ChartOfAccounts::where('slug', '=', 'sales-ruturn')->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->first();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $applicantSale = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->first();
+        $applicantSaleReturn = ChartOfAccounts::where('slug', '=', 'sales-ruturn')->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->first();
         
             if($request->applicant_id == 'all'){
                 $sales = DB::table('sale_order_products')
@@ -3511,7 +3528,7 @@ class ReportController extends Controller
                     ->select('sale_order_products.id','sale_order_products.approximate_vendor_payable_amount','sale_order_products.subtotal', 'tbl_booking.date', 'parties.name','parties.contact','parties.code as partyCode','tbl_booking.sale_no','tbl_booking.id as saleId','parties.party_type','products.name as productName','products.code as productCode')
                     ->where('parties.party_type', '=','Applicant')
                     ->whereBetween('tbl_booking.date', [$request->date_from, $request->date_to])
-                    ->where('tbl_booking.warehouse','=',$loggedWarehouseId)
+                    // ->where('tbl_booking.warehouse','=',$loggedWarehouseId)
                     ->where('tbl_booking.deleted','=','No')
                     ->where('tbl_booking.status','=','Active')
                     ->where('sale_order_products.deleted','=','No')
@@ -3528,7 +3545,7 @@ class ReportController extends Controller
                     ->where('parties.party_type', '=','Applicant')
                     ->where('tbl_booking.customer_id', '=',$request->applicant_id)
                     ->whereBetween('tbl_booking.date', [$request->date_from, $request->date_to])
-                    ->where('tbl_booking.warehouse','=',$loggedWarehouseId)
+                    // ->where('tbl_booking.warehouse','=',$loggedWarehouseId)
                     ->where('tbl_booking.deleted','=','No')
                     ->where('tbl_booking.status','=','Active')
                     ->where('sale_order_products.deleted','=','No')
@@ -3607,10 +3624,10 @@ class ReportController extends Controller
     }
 
     public function generateOrderWiseProfitPdf($applicant_id,$date_from,$date_to,$type){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $warehouse=DB::table('tbl_warehouse')->where('id',$loggedWarehouseId)->first();
-        $applicantSale = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->first();
-        $applicantSaleReturn = ChartOfAccounts::where('slug', '=', 'sales-ruturn')->where('warehouse_id','=',$loggedWarehouseId)->where('deleted', 'No')->first();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        // $warehouse=DB::table('tbl_warehouse')->where('id',$loggedWarehouseId)->first();
+        $applicantSale = ChartOfAccounts::where('slug', '=', 'sale-applicant-service')->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->first();
+        $applicantSaleReturn = ChartOfAccounts::where('slug', '=', 'sales-ruturn')->where('sister_concern_id','=',$logged_sister_concern_id)->where('deleted', 'No')->first();
       
          if($applicant_id == 'all'){
                 $sales = DB::table('sale_order_products')
@@ -3620,7 +3637,7 @@ class ReportController extends Controller
                     ->select('sale_order_products.id','sale_order_products.approximate_vendor_payable_amount','sale_order_products.subtotal', 'tbl_booking.date', 'parties.name','parties.contact','parties.code as partyCode','tbl_booking.sale_no','tbl_booking.id as saleId','parties.party_type','products.name as productName','products.code as productCode')
                     ->where('parties.party_type', '=','Applicant')
                     ->whereBetween('tbl_booking.date', [$date_from, $date_to])
-                    ->where('tbl_booking.warehouse','=',$loggedWarehouseId)
+                    ->where('tbl_booking.sister_concern_id','=',$logged_sister_concern_id)
                     ->where('tbl_booking.deleted','=','No')
                     ->where('tbl_booking.status','=','Active')
                     ->where('sale_order_products.deleted','=','No')
@@ -3637,7 +3654,7 @@ class ReportController extends Controller
                     ->where('parties.party_type', '=','Applicant')
                     ->where('tbl_booking.customer_id', '=',$applicant_id)
                     ->whereBetween('tbl_booking.date', [$date_from, $date_to])
-                    ->where('tbl_booking.warehouse','=',$loggedWarehouseId)
+                    ->where('tbl_booking.sister_concern_id','=',$logged_sister_concern_id)
                     ->where('tbl_booking.deleted','=','No')
                     ->where('tbl_booking.status','=','Active')
                     ->where('sale_order_products.deleted','=','No')
@@ -3712,8 +3729,8 @@ class ReportController extends Controller
                                                                     'date_from' => $date_from,
                                                                     'date_to' => $date_to,
                                                                     'html'=>$html,
-                                                                    'type'=>$type,
-                                                                    'warehouse'=>$warehouse
+                                                                    'type'=>$type
+                                                                    // 'warehouse'=>$warehouse
                                                                 ])->setPaper("legal","landscape");
             $pdf->output();
             $dom_pdf = $pdf->getDomPDF();

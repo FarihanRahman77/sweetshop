@@ -59,7 +59,7 @@
                                     <td width="5%" class="text-center">SL#</td>
                                     <td width="10%"  class="text-center">Product</td>
                                     <td width="10%"  class="text-center"> Purchase Date</td>
-                                    <td width="12%"  class="text-center">Quantity</td>
+                                    <td width="12%"  class="text-center">Barcode Quantity</td>
                                 </tr>
                             </thead >
 
@@ -157,11 +157,18 @@
          
             var ProductID = $("#productid").val();
             var Purchasedate = $("#date").val();
+
             var qty = $("#quantity").val();
+            if(qty>0){
+                window.open("{{ url('/products/productbarcodegenerate/') }}" + "/" + ProductID + "/" + Purchasedate + "/" + qty);
+            }
+                else{
+                    Swal.fire("Error: ", "Please put Barcode Quantity!", "error");
+                }
          
-            window.open("{{ url('/products/productbarcodegenerate/') }}" + "/" + ProductID + "/" + Purchasedate + "/" + qty);
         
              
+
         })
         
 

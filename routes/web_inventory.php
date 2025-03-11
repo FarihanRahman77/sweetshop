@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\PurchaseManagement\PurchaseController;
 use App\Http\Controllers\Admin\PurchaseManagement\PurchaseReturnController;
 use App\Http\Controllers\Admin\Inventory\SaleController;
 use App\Http\Controllers\Admin\Inventory\SaleReturnController;
-use App\Http\Controllers\Admin\Inventory\ReportController;
+use App\Http\Controllers\Admin\Reports\ReportController;
 use App\Http\Controllers\Admin\Inventory\InventoryReportController;
 use App\Http\Controllers\Admin\Inventory\SaleServiceController;
 use App\Http\Controllers\Admin\Inventory\TransportController;
@@ -286,14 +286,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/product-report/{id}/{from}/{to}', [InventoryReportController::class, 'generateProductReport']);
 	});
 
-    Route::get('expenses/report/view', [ExpenseController::class, 'reportView'])->name('expensesReportView');
-	Route::get('expenses/report/generate', [ExpenseController::class, 'expenseReportGenerate'])->name('expenseReportGenerate');
-	Route::get('expense/report/Pdf/{data}', [ExpenseController::class, 'generateExpensePdf'])->name('generatePdf');
-    
-            
-
-
-
+   
 
 
 	
