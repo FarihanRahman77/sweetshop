@@ -191,7 +191,7 @@ public function generateproductbarcode($productId,$date,$qty){
     }
     public function sisterconcernwisewarehouseedit(Request $request){
         // return $request;
-        $warehouse_id = DB::table('tbl_setups_sister_concern_to_warehouses')
+        $Warehouse_id = DB::table('tbl_setups_sister_concern_to_warehouses')
         ->leftJoin('tbl_setups_warehouses', 'tbl_setups_sister_concern_to_warehouses.warehouse_id', '=', 'tbl_setups_warehouses.id')
         ->select('tbl_setups_sister_concern_to_warehouses.warehouse_id', 'tbl_setups_warehouses.name')
         ->where('tbl_setups_sister_concern_to_warehouses.sister_concern_id', $request->editsisterconcern_id)
@@ -199,7 +199,7 @@ public function generateproductbarcode($productId,$date,$qty){
         ->where('tbl_setups_sister_concern_to_warehouses.warehouse_id','!=', '0')
         ->get();
    
-        return $warehouse_id;
+        return $Warehouse_id;
     }
 
 
@@ -447,6 +447,7 @@ public function generateproductbarcode($productId,$date,$qty){
     
     public function store(Request $request)
     {
+       // return $request;
         $discount = $request->discount;
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $request->validate([
@@ -454,7 +455,7 @@ public function generateproductbarcode($productId,$date,$qty){
             'opening_stock' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'remainder_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'category_id' => 'required',
-            'sisterconcern' => 'required',
+            'sisterconcern_id' => 'required',
             'brand_id' => 'required',
              'stock_warehouse' => 'required',
             'unit_id' => 'required',
@@ -853,7 +854,7 @@ public function generateproductbarcode($productId,$date,$qty){
             'opening_stock' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'remainder_quantity' => 'required|max:7|regex:/^\d+(\.\d{1,2})?$/',
             'category_id' => 'required',
-            'sisterconcern_id' => 'required',
+            'Sisterconcernid' => 'required',
             'brand_id' => 'required',
             'unit_id' => 'required',
             'status' => 'required',
@@ -906,7 +907,7 @@ public function generateproductbarcode($productId,$date,$qty){
         $product->purchase_price = $request->purchase_price;
         $product->sale_price = $request->sale_price;
         $product->discount = $request->discount;
-        $product->sister_concern_id = $request->sisterconcernid;
+        $product->sister_concern_id = $request->Sisterconcernid;
         $product->tbl_warehouseid = $request->stockwarewhouse;
         $product->slug = $request->Slug;
         $product->status = $request->status;

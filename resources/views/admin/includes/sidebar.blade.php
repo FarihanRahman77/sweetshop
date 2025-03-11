@@ -162,7 +162,7 @@
                       
                         <li class="sidebar-item menu-design"><a href="{{ route('dailyAccountsLedger') }}" class="sidebar-link"> <i class="fa fa-bars"></i><span class="hide-menu">Daily  Ledger </span></a></li>
                        
-                        <li class="sidebar-item menu-design"><a href="{{ route('expensesReportView') }}" class="sidebar-link"><i class="fa fa-bars"></i><span class="hide-menu"> Daily Ledger Report Expence</span></a></li>
+                        <li class="sidebar-item menu-design"><a href="{{ route('expensesReportView') }}" class="sidebar-link"><i class="fa fa-bars"></i><span class="hide-menu"> Daily Ledger Report </span></a></li>
                     
                         <li class="sidebar-item menu-design d-none"><a href="{{ route('dailyServiceLedgerReport') }}" class="sidebar-link"><i class="fa fa-bars"></i><span class="hide-menu">Daily Service Report</span></a></li>
 

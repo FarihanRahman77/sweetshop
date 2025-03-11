@@ -246,8 +246,6 @@ $(document).ready(function() {
 
 
 
-
-
 function loadFilterDatatable(filterBy = '') {
 
     const type = $("#type").val();
@@ -560,35 +558,32 @@ function loadDue() {
 $("#party_id").change(function() {
     var partyId = $("#party_id").val();
     if (partyId != "") {
-        var _token = $('input[name="_token"]').val();
-        var fd = new FormData();
-        fd.append('id', partyId);
-        fd.append('_token', _token);
         $.ajax({
-            url: "{{ url('purchase/supplierDue') }}",
-            method: "POST",
-            data: fd,
-            contentType: false,
-            processData: false,
+            url: "{{ route('getSupplierDue') }}", 
+            method: "GET",
+            data: {
+                "partyId": partyId
+            },
             datatype: "json",
             success: function(result) {
-                $("#currentDue").text(result);
+                // alert(JSON.stringify(result)); 
+                $("#currentDue").text(result.due); 
             },
             beforeSend: function() {
-                $('#loading').show();
+                $('#loading').show(); 
             },
             complete: function() {
-                $('#loading').hide();
+                $('#loading').hide(); 
             },
             error: function(response) {
-                $("#barcodeError").text("No such product available in your system");
-                //alert(JSON.stringify(response));
+                alert(JSON.stringify(response)); 
             }
-        })
+        });
     } else {
-        $("#currentDue").text("");
+        $("#currentDue").text(""); 
     }
-})
+});
+
 
 $('#modal').on('shown.bs.modal', function() {
     $('#name').focus();

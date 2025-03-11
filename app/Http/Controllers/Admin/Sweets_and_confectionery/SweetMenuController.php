@@ -65,6 +65,7 @@ class SweetMenuController extends Controller
     }
 
 
+
     public function getMenu()
     {
         $products = DB::table('tbl_inventory_products')
@@ -128,6 +129,7 @@ class SweetMenuController extends Controller
         }
         return $output;
     }
+
 
 
     public function getmenucarddetails(Request $request)
@@ -404,6 +406,8 @@ class SweetMenuController extends Controller
         }
     }
 
+
+
     public function getMenu_itms_list()
     {
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
@@ -592,6 +596,9 @@ class SweetMenuController extends Controller
     // }   
 
 
+
+
+
     public function fetch_menu_Cart_item()
     {
         $userId = auth()->user()->id;
@@ -685,9 +692,29 @@ class SweetMenuController extends Controller
     }
 
 
-public function productidforbarcode(Request $request){
-    return $request;
-}
+    public function productidforbarcode(Request $request){
+
+        
+
+    $code = $request->input('barcodeproduct'); // e.g., 'PCR-1-4-000002'
+
+    // Explode the string by hyphens
+    $parts = explode('-', $code);
+
+    // Get the last part, which contains the number (e.g., '000002')
+    $lastPart = end($parts);
+
+    // If you want to ensure it's the last 6 digits
+    $lastSixDigits = substr($lastPart, -6);
+    $ProductID = Product::where("code", $lastSixDigits)
+    ->where("deleted", 'No')
+    ->first();
+
+    return $ProductID;
+
+
+        
+    }
 
 
     public function fetch_menu_Cart_item_modaldata(Request $request)
