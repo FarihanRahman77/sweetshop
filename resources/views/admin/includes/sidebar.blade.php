@@ -174,7 +174,7 @@
                       
                         <li class="sidebar-item menu-design"><a href="{{ route('accountsLedgerDatewise') }}" class="sidebar-link">  <i class="fa fa-bars"></i> <span class="hide-menu"> Income & Expenditure</span> </a></li>
 
-                        <li class="sidebar-item menu-design"><a href="{{ route('applicantWiseProfit','Real') }}" class="sidebar-link">  <i class="fa fa-bars"></i> <span class="hide-menu">Profit and Loss Report</span> </a></li>
+                        <li class="sidebar-item menu-design"><a href="{{ route('applicantWiseProfit','Real') }}" class="sidebar-link">  <i class="fa fa-bars"></i>  <span class="hide-menu">Profit and Loss Report</span> </a></li>
                     </ul>
                 </li>
 
