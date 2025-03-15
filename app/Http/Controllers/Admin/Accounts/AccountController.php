@@ -15,22 +15,23 @@ class AccountController extends Controller
 
     public function index()
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $coas = ChartOfAccounts::where('deleted', '=', 'No')->where('status', '=', 'Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->orderBy('code', 'asc')->get();
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $coas = ChartOfAccounts::where('deleted', '=', 'No')->where('status', '=', 'Active')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->orderBy('code', 'asc')->get();
         $warehouses=Warehouse::where('deleted', 'No')->where('status','=','Active')->get();
-        return view('admin.account.chartOfAccount', ['coas' => $coas,'warehouses'=>$warehouses]);
+        $sisterconcern = DB::table('tbl_settings_company_settings')->where('deleted', 'No')->where('status', 'Active') ->get();
+        return view('admin.account.chartOfAccount', ['coas' => $coas,'warehouses'=>$warehouses,'sisterconcern'=>$sisterconcern]);
     }
 
 
 
     public function getCOA()
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $coas = ChartOfAccounts::leftjoin('tbl_warehouse','tbl_warehouse.id','=','tbl_acc_coas.warehouse_id')
-                                ->select('tbl_acc_coas.*','tbl_warehouse.wareHouseName')
-                                ->where('tbl_acc_coas.deleted', '=', 'No')
-                                ->where('tbl_acc_coas.warehouse_id','like',"%$loggedWarehouseId%")
-                                ->orderBy('tbl_acc_coas.code', 'asc')
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $coas = ChartOfAccounts::leftjoin('tbl_setups_warehouses','tbl_setups_warehouses.id','=','tbl_accounts_coas.warehouse_id')
+                                ->select('tbl_accounts_coas.*','tbl_setups_warehouses.name as wareHouseName')
+                                ->where('tbl_accounts_coas.deleted', '=', 'No')
+                                ->where('tbl_accounts_coas.sister_concern_id','like',"%$logged_sister_concern_id%")
+                                ->orderBy('tbl_accounts_coas.code', 'asc')
                                 ->get();
         $output = array('data' => array());
         $i = 1;
@@ -55,8 +56,9 @@ class AccountController extends Controller
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                             <i class="fas fa-cog"></i>  <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid gray;" role="menu">
-                                <li class="action '.$editDisplay.'"><a href="#/" onclick="editCOA(' . $coa->id . ')" class="btn"><i class="fas fa-edit"></i> Edit </a></li>
-                                <li class="action '.$deleteDisplay.'"><a href="#/" class="btn" onclick="confirmDelete(' . $coa->id . ')"><i class="fas fa-trash"></i> Delete </a></li>
+                               
+                                <li class="action"><a href="#/" onclick="editCOA(' . $coa->id . ')" class="btn"><i class="fas fa-edit"></i> Edit </a></li>
+                                <li class="action"><a href="#/" class="btn" onclick="confirmDelete(' . $coa->id . ')"><i class="fas fa-trash"></i> Delete </a></li>
                                 
                             </ul>
                         </div>';
@@ -115,29 +117,34 @@ class AccountController extends Controller
 
     public function store(Request $request)
     {
+
+
+        $sisterConcern = explode(",", $request->sisterconcern_id);
+        // return $request;
         $request->validate([
             'name' => 'required|max:255|regex:/^([a-zA-Z0-9_ "\.\-\s\,\;\:\/\&\$\%\(\)]+\s)*[a-zA-Z0-9_ "\.\-\s\,\;\:\/\&\$\%\(\)]+$/u',
             'slug' => 'required',
             'code' => 'numeric|required',
             'parent_id' => 'numeric|required',
-            'warehouse_id' => 'numeric|required'
+            // 'sisterconcern_id' => 'numeric|required'
         ]);
         DB::beginTransaction();
 		try {
+            $sisterConcernString = implode(",", $sisterConcern);
         $coas = new ChartOfAccounts();
         $coas->name = $request->name;
         $coas->slug = $request->slug;
         $coas->code = $request->code;
         $coas->parent_id = $request->parent_id;
-        $coas->warehouse_id = $request->warehouse_id;
+        $coas->sister_concern_id = $sisterConcernString;
 
         if ($request->parent_id == "0" || $request->parent_id == 'null') {
             $assetCode = '';
-            $assets = DB::table('tbl_acc_coas')
+            $assets = DB::table('tbl_accounts_coas')
                 ->select(DB::raw('IFNULL(MAX(substr(our_code, 1,1)),0)+1 as code'))
                 ->WHERE('parent_id', '0')
                 ->WHERE('deleted', 'No')
-                ->where('warehouse_id','=',$request->warehouse_id)
+                ->where('sister_concern_id','=',$request->sisterconcern_id)
                 ->get();
            
             foreach ($assets as $asset) {
@@ -161,7 +168,7 @@ class AccountController extends Controller
             $assets = ChartOfAccounts::where('deleted', '=', 'No')
                 ->where('status', '=', 'Active')
                 ->where('parent_id', '=', $request->parent_id)
-                ->where('warehouse_id','=',$request->warehouse_id)
+                ->where('sister_concern_id','=',$request->sisterconcern_id)
                 ->max('our_code');
 
             if ($assets == null) {
@@ -220,8 +227,8 @@ class AccountController extends Controller
             'name' => 'required|max:255|regex:/^([a-zA-Z0-9_ "\.\-\s\,\;\:\/\&\$\%\(\)]+\s)*[a-zA-Z0-9_ "\.\-\s\,\;\:\/\&\$\%\(\)]+$/u',
             'slug' => 'required',
             'code' => 'numeric|required',
-            'parent_id' => 'numeric|required',
-            'warehouse_id' => 'numeric|required'
+            'parent_id' => 'numeric|required'
+            // 'warehouse_id' => 'numeric|required'
         ]);
 
         $coas = ChartOfAccounts::find($request->id);
@@ -229,13 +236,13 @@ class AccountController extends Controller
         $coas->slug = $request->slug;
         $coas->code = $request->code;
         $coas->parent_id = $request->parent_id;
-        $coas->warehouse_id = $request->warehouse_id;
+        $coas->sister_concern_id = $request->sisterConcern;
         if ($request->status) {
             $coas->status = $request->status;
         }
         $coas->last_updated_by = Auth::user()->id;
         $coas->save();
-        return response()->json(['success' => $request->name . ' saved successfully']);
+        return response()->json(['success' => $request->name . ' Updated successfully']);
     }
 
 

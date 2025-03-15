@@ -43,11 +43,11 @@
                         
                         {{-- Sale --}}
                        
-                        <li class="d-none sidebar-item"><a href="javascript:void(0)"
+                        <li class=" sidebar-item d-none"><a href="javascript:void(0)"
                                 class="sidebar-link has-arrow waves-effect waves-dark" aria-expanded="false"><i class="fa fa-shopping-bag"></i><span class="hide-menu"> Sale Management</span></a>
                             <ul aria-expanded="false" class="collapse  first-level">
                                
-                                <li class="sidebar-item menu-design"><a href="{{ route('sale.service.SaleOrders') }} " class="sidebar-link"><i class="fa fa-bars"></i></i><span class="hide-menu"> Service Orders </span></a></li>
+                                <li class="sidebar-item menu-design d-none"><a href="{{ route('sale.service.SaleOrders') }} " class="sidebar-link"><i class="fa fa-bars"></i></i><span class="hide-menu"> Service Orders </span></a></li>
                                 
                                 <li class="sidebar-item menu-design"><a href="{{ route('sale.sales', ['type' => 'walkin_sale']) }} " class="sidebar-link"><i class="fa fa-bars"></i></i><span class="hide-menu"> WI Sale </span></a></li>
                                 <li class="sidebar-item menu-design"><a href="{{ route('sale.return.list', ['type' => 'walkin_sale']) }}"class="sidebar-link"><i class="fa fa-bars"></i><span class="hide-menu">Sale Return </span></a></li>
@@ -94,7 +94,8 @@
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"> <i class="fa fa-birthday-cake"></i><span class="hide-menu"> Menu Order </span<></a>
                         <ul aria-expanded="false" class="collapse  first-level">
                         <li class="sidebar-item menu-design"><a href="{{url('sweetsconfectionary/order/list')}}" class="sidebar-link"><i class="fas fa-bars"></i><span class="hide-menu"> Walkin Sale</span></a></li>
-                        </ul>
+                        <li class="sidebar-item menu-design"><a href="{{ route('sale.return.list', ['type' => 'walkin_sale']) }}"class="sidebar-link"><i class="fa fa-bars"></i><span class="hide-menu">Sale Return </span></a></li>
+                    </ul>
                   </li>
 
                               <!-- Sweets and confectionery route end -->

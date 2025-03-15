@@ -141,7 +141,6 @@
                         //     }
                         // }
                         
-
                         table = $('#manageorderTable').DataTable({
                                 'ajax': "{{ url('sweetsconfectionary/order/getlist') }}/" + filterByTypeDateParty,
                                         processing: true,
@@ -193,6 +192,10 @@
             });
         }
 
+        function saleReturn(id) {
+            window.location.href = "{{ url('sale/sale-return') }}" + "/" + id;
+
+        }
 
 
         function printorderBill(id) {

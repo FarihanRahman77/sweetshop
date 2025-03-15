@@ -134,6 +134,10 @@ Route::get('account/closing/balance/store', [ReportController::class,'closingBal
 Route::get('account/summary/pdf/{date_from}/{date_to}', [ReportController::class,'generateAccountsSummaryPdf']);
 Route::get('account/daily/ledger/summary', [ReportController::class,'dailyAccountsLedger'])->name('dailyAccountsLedger');
 Route::post('account/daily/ledger/summary/generate', [ReportController::class,'generateDailySummaryReport'])->name('generateDailySummaryReport');
+Route::get('/reports/getVoucherTypeAndId/', [ReportController::class, 'getVoucherTypeAndId'])->name('getVoucherTypeAndId');
+Route::post('account/generate/party/due/report', [ReportController::class,'generatePartyDueReport'])->name('generatePartyDueReport');
+Route::get('account/party/due/pdf/{party_type}/{date_from}/{date_to}', [ReportController::class,'generatePartyDuePdf']);
+Route::get('account/bills/payment/get/sources', [BillController::class,'getBillsources'])->name('getBillsources');
 
 Route::get('account/salesDetails/pdf/{date_from}/{date_to}', [ReportController::class, 'generateSalesDetailsAccountsPdf']);
 Route::get('account/purchaseDetails/pdf/{date_from}/{date_to}', [ReportController::class, 'generatePurchaseDetailsAccountsPdf']);

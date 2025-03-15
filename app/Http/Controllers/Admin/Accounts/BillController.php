@@ -490,12 +490,12 @@ public function billPayStore(Request $request){
 
 
     public function getBillsources(Request $request){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
             $method=ChartOfAccounts::find($request->payment_method);
             $sources=ChartOfAccounts::where('parent_id','=',$request->payment_method)
                                         ->where('deleted','=','No')
                                         ->where('status','=','Active')
-                                        ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                        ->where('sister_concern_id','like',"%$logged_sister_concern_id%")
                                         ->get();
             $data='';
             $data .='<option value=""selected >Select Source</option>';

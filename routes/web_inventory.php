@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\InventoryManagement\ProductController;
 use App\Http\Controllers\Admin\PurchaseManagement\PurchaseController;
 use App\Http\Controllers\Admin\PurchaseManagement\PurchaseReturnController;
 use App\Http\Controllers\Admin\Inventory\SaleController;
-use App\Http\Controllers\Admin\Inventory\SaleReturnController;
+use App\Http\Controllers\Inventory\SaleReturnController;
 use App\Http\Controllers\Admin\Reports\ReportController;
 use App\Http\Controllers\Admin\Inventory\InventoryReportController;
 use App\Http\Controllers\Admin\Inventory\SaleServiceController;
