@@ -1014,6 +1014,7 @@ public function getorderlist(Request $request, $filterByTypeDateParty) {
                                 <ul class="dropdown-menu dropdown-menu-right" style="border: 1px solid gray;" role="menu">
                                
                                  <li class="action"><a class="btn" onclick="confirmDelete(' . $order['order_id'] . ')"><i class="fas fa-trash-alt"></i> Delete</a></li>
+                                 <li class="action"  onclick="saleReturn(' . $order['order_id'] . ')"  ><a  class="btn" ><i class="fas fa-undo-alt"></i>  Return Sale </a></li>
                                  <li class="action"><a class="btn" onclick="printorderBill(' . $order['order_id']  . ')"><i class="fas fa-file-pdf"></i> Invoice</a></li>
                                 </ul>
                             </div>
