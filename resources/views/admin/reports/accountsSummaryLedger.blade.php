@@ -85,7 +85,7 @@
                 processData: false,
                 datatype: "json",
                 success: function(result) {
-                    //alert(JSON.stringify(result));
+                   alert(JSON.stringify(result));
                     var incomeAndExpenditureData = '';
                     var expenseData = '';
                     var txtColor = 'text-success';
@@ -187,7 +187,7 @@
 
                 },
                 error: function(error) {
-                  //  alert(JSON.stringify(error));
+                  alert(JSON.stringify(error));
                 },
                 beforeSend: function() {
                     $('#loading').show();

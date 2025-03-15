@@ -23,6 +23,8 @@ Admin COA List
                                 <td width="5%" class="text-center">Sl</td>
                                 <td width="30%" class="text-center">Name</td>
                                 <td width="30%" class="text-center">Code</td>
+                                <td width="30%" class="text-center">Amount</td>
+                                <td width="30%" class="text-center">Warehouse</td>
                                 <td width="12%" class="text-center">Status</td>
                                 <td width="8%" class="text-center">Action</td>
                             </tr>
@@ -82,8 +84,17 @@ Admin COA List
                                     <input type="text" class="form-control" id="slug" name="slug" placeholder="Slug" readonly>
                                     <span class="text-danger" id="slugError">{{ $errors->has('slug') ? $errors->first('slug') : '' }}</span>
                                 </div>
-
+                            <div class="form-group">
+                                <label class="col-form-label">Select Sisterconcern</label>
+                                <select class="form-control input-sm" id="sisterConcern" name="sisterConcern[]" multiple>
+                                    @foreach ($sisterconcern as $sisterconcer)
+                                        <option value="{{ $sisterconcer->id }}">{{ $sisterconcer->name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger" id="sisterconcernError"></span>
                             </div>
+                            </div>
+                           
                             <div class="modal-footer">
                                 <button type="button" class="btn  btn-secondary mr-auto" data-dismiss="modal">
                                     x Close
@@ -156,7 +167,15 @@ Admin COA List
                                     <input type="text" class="form-control" id="editSlug" name="slug" placeholder="Slug" readonly>
                                     <span class="text-danger" id="editSlugError">{{ $errors->has('slug') ? $errors->first('slug') : '' }}</span>
                                 </div>
-
+                                <div class="form-group">
+                                        <label for="editSisterConcern">Select Sister Concern <span class="text-danger">*</span></label>
+                                        <select class="form-control input-sm" id="editSisterConcern" name="editSisterConcern" multiple>
+                                            @foreach ($sisterconcern as $sisterConcer)
+                                                <option value="{{ $sisterConcer->id }}">{{ $sisterConcer->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger" id="editSisterConcernError"></span>
+                                    </div>
                                 <div class="form-group">
                                     <label class="col-form-label">Code</label>
                                     <input type="text" class="form-control" id="editCode" name="code" placeholder="Code">
@@ -222,6 +241,21 @@ Admin COA List
     }
 
     $(document).ready(function() {
+        $("#sisterConcern").select2({
+                    placeholder: "Select sisterConcern",
+                    dropdownParent: $("#modal"),
+                    allowClear: true,
+                    width: '100%'
+                });
+
+        $("#editSisterConcern").select2({
+                    placeholder: "Select sisterConcern",
+                    dropdownParent: $("#editModal"),
+                    allowClear: true,
+                    width: '100%'
+                });
+
+
         table = $('#manageCoaTable').DataTable({
             'ajax': "{{route('getCOA')}}",
             processing: true,
@@ -230,14 +264,12 @@ Admin COA List
 
 
 
-
-
-
     function reset() {
         $("#name").val("");
         $("#code").val("");
         $("#slug").val("");
         $("#parent_id").val("");
+        $("#sisterConcern").val("");
         clearMessages();
     }
 
@@ -257,6 +289,7 @@ Admin COA List
         var slug = $("#slug").val();
         var code = $("#code").val();
         var parent_id = $("#parent_id").val();
+        var sisterconcern_id = $("#sisterConcern").val();
         var _token = $('input[name="_token"]').val();
 
         var fd = new FormData();
@@ -264,6 +297,7 @@ Admin COA List
         fd.append('slug', slug);
         fd.append('code', code);
         fd.append('parent_id', parent_id);
+        fd.append('sisterconcern_id', sisterconcern_id);
         fd.append('_token', _token);
         $.ajax({
             url: "{{route('coaStore')}}",
@@ -273,13 +307,15 @@ Admin COA List
             processData: false,
             datatype: "json",
             success: function(result) {
-                 alert(JSON.stringify(result));
+            //   alert(JSON.stringify(result));
                 $("#modal").modal('hide');
+               
                 Swal.fire("Saved!", result.success, "success");
+                reset();
                 table.ajax.reload(null, false);
             },
             error: function(response) {
-                alert(JSON.stringify(response));
+                //  alert(JSON.stringify(response));
                 $('#nameError').text(response.responseJSON.errors.name);
                 $('#slugError').text(response.responseJSON.errors.slug);
                 $('#codeError').text(response.responseJSON.errors.code);
@@ -308,19 +344,20 @@ Admin COA List
             },
             datatype: "json",
             success: function(result) {
-                //alert(JSON.stringify(result));
+            //    alert(JSON.stringify(result));
                 $("#editModal").modal('show');
                 $("#editName").val(result.name);
                 $("#editCode").val(result.code);
+                $("#editStatus").val(result.status);
                 $("#editSlug").val(result.slug);
                 $("#editParent_id").val(result.parent_id);
                 $("#editId").val(result.id);
-                $("#editStatus").val(result.status);
-                if (result.status != "") {
-                    $("#editStatus").val(result.status);
-                } else {
-                    $("#editStatus").val("Inactive");
-                }
+                if (result.sister_concern_id) {
+                        var sisterConcerns = result.sister_concern_id.split(",");
+                        $("#editSisterConcern").val(sisterConcerns).trigger('change');
+                    }
+              
+
             },
             beforeSend: function() {
                 $('#loading').show();
@@ -329,7 +366,7 @@ Admin COA List
                 $('#loading').hide();
             },
             error: function(response) {
-                //alert(JSON.stringify(response));
+               alert(JSON.stringify(response));
             }
         });
     }
@@ -350,6 +387,7 @@ Admin COA List
         var code = $("#editCode").val();
         var slug = $("#editSlug").val();
         var parent_id = $("#editParent_id").val();
+        var sisterConcern = $('#editSisterConcern').val();
         var status = $("#editStatus").val();
         var _token = $('input[name="_token"]').val();
         var id = $("#editId").val();
@@ -358,6 +396,7 @@ Admin COA List
         fd.append('slug', slug);
         fd.append('code', code);
         fd.append('parent_id', parent_id);
+        fd.append('sisterConcern', sisterConcern);
         fd.append('status', status);
         fd.append('id', id);
         fd.append('_token', _token);
@@ -368,13 +407,13 @@ Admin COA List
             contentType: false,
             processData: false,
             success: function(result) {
-                //alert(JSON.stringify(result));
+                // alert(JSON.stringify(result));
                 $("#editModal").modal('hide');
                 Swal.fire("Updated COA!", result.success, "success");
                 table.ajax.reload(null, false);
             },
             error: function(response) {
-                //alert(JSON.stringify(response));
+                // alert(JSON.stringify(response));
                 $('#editNameError').text(response.responseJSON.errors.name);
                 $('#editCodeError').text(response.responseJSON.errors.code);
                 $('#editSlugError').text(response.responseJSON.errors.slug);

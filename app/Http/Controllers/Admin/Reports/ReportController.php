@@ -298,7 +298,7 @@ class ReportController extends Controller
     public function accountsSummaryGenerate(Request $request)
     {
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
-        $stockValueData = $this->getReportCalculation($request->date_from, $request->date_to); // OpeningStockValue, ClosingStockValue, NetPurchaseValue....
+        $stockValueData = $this->getReportCalculation($request->date_from, $request->date_to); 
 
 
         $sales = ChartOfAccounts::where('name', '=', 'Sales')->where('deleted', 'No')->where('sister_concern_id','=',$logged_sister_concern_id)->first();
@@ -473,14 +473,14 @@ class ReportController extends Controller
     
     public function getReportCalculation($from, $to)
     {
-        ///=============== New =========================///
+     
         $sDate = $from;
         $eDate = $to;
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $products = DB::table('products')
+         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $products = DB::table('tbl_inventory_products')
             ->select('id', 'name', 'purchase_price', 'sale_price', 'opening_stock')
             ->where('deleted', 'No')
-            ->whereNotIn('type', ['service'])
+            // ->whereNotIn('type', ['service'])
             ->where('status', 'Active')
             ->get();
 
@@ -2912,12 +2912,12 @@ class ReportController extends Controller
                 $accountId=0;
                 if($coa->slug == 'cash'){
                     $paymentMethodId=$request->payment_method;
-                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId);
                 }else{
                     $paymentMethodId=$request->payment_method;
                     $sourceId=$request->source;
                     $accountId=$request->accounts;
-                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId)
                             ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
                             ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                 }
@@ -2942,12 +2942,12 @@ class ReportController extends Controller
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$request->payment_method;
-                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$request->payment_method;
                             $sourceId=$request->source;
                             $accountId=$request->accounts;
-                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId)
                                     ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
                                     ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }   
@@ -2969,12 +2969,12 @@ class ReportController extends Controller
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$request->payment_method;
-                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$request->payment_method;
                             $sourceId=$request->source;
                             $accountId=$request->accounts;
-                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId)
                                     ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
                                     ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }     
@@ -3169,12 +3169,12 @@ class ReportController extends Controller
                 $accountId=0;
                 if($coa->slug == 'cash'){
                     $paymentMethodId=$payment_method;
-                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId);
                 }else{
                     $paymentMethodId=$payment_method;
                     $sourceId=$source;
                     $accountId=$accounts;
-                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                    $vouchers->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId)
                             ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
                             ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                 }
@@ -3199,12 +3199,12 @@ class ReportController extends Controller
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$payment_method;
-                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$payment_method;
                             $sourceId=$source;
                             $accountId=$accounts;
-                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                            $openingDebit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId)
                                     ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
                                     ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }   
@@ -3226,12 +3226,12 @@ class ReportController extends Controller
                         $accountId=0;
                         if($coa->slug == 'cash'){
                             $paymentMethodId=$payment_method;
-                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId);
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId);
                         }else{
                             $paymentMethodId=$payment_method;
                             $sourceId=$source;
                             $accountId=$accounts;
-                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_coa_id', '=',  $paymentMethodId)
+                            $openingCredit->where('tbl_voucher_payment_vouchers.payment_method_id', '=',  $paymentMethodId)
                                     ->where('tbl_voucher_payment_vouchers.source_coa_id', '=',  $sourceId)
                                     ->where('tbl_voucher_payment_vouchers.account_coa_id', '=',  $accountId);
                         }  
@@ -3274,21 +3274,24 @@ class ReportController extends Controller
 
     
     public function generatePartyDueReport(Request $request){
+        // return $request;
         $parties = Party::where('party_type', '=', $request->party_type)
                         ->where('deleted', '=', 'No')
+                        ->where('status', '=', 'Active')
                         ->get();
-        
-        if ($request->party_type == 'Applicant') {
+  
+        if ($request->party_type == 'Walkin_Customer') {
             $payableOrReceiveable = 'Party Payable';
             $paymentOrReceived = 'Payment Received';
              $paymentOrReceivedReverse = 'Payment';
             $adjustmentStr = 'Payment Adjustment';
-        } elseif ($request->party_type == 'Vendor' || $request->party_type == 'Supplier') {
-            $payableOrReceiveable = 'Payable';
-            $paymentOrReceived = 'Payment';
-             $paymentOrReceivedReverse = 'Payment Received';
-            $adjustmentStr = 'Adjustment';
         }
+        //  elseif ($request->party_type == 'Vendor') {
+        //     $payableOrReceiveable = 'Payable';
+        //     $paymentOrReceived = 'Payment';
+        //      $paymentOrReceivedReverse = 'Payment Received';
+        //     $adjustmentStr = 'Adjustment';
+        // }
 
         $partyDueData = [];
 
@@ -3307,7 +3310,7 @@ class ReportController extends Controller
                 ->where('tbl_voucher_payment_vouchers.type', '=', $adjustmentStr)
                 ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
                 ->sum('tbl_voucher_payment_vouchers.amount');
-            $payableOrReceiveableAmount = DB::table('tbl_voucher_payment_vouchers')
+           $payableOrReceiveableAmount = DB::table('tbl_voucher_payment_vouchers')
                 ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
                 ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
                 ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
@@ -3315,7 +3318,7 @@ class ReportController extends Controller
                 ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
                 ->sum('tbl_voucher_payment_vouchers.amount');
     
-            $paymentOrReceivedAmount = DB::table('tbl_voucher_payment_vouchers')
+                  $paymentOrReceivedAmount = DB::table('tbl_voucher_payment_vouchers')
                 ->whereBetween('tbl_voucher_payment_vouchers.paymentDate', [$request->date_from, $request->date_to])
                 ->where('tbl_voucher_payment_vouchers.deleted', '=', 'No')
                 ->where('tbl_voucher_payment_vouchers.status', '=', 'Active')
@@ -3331,15 +3334,16 @@ class ReportController extends Controller
                 ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
                 ->sum('tbl_voucher_payment_vouchers.amount');
                 
-            if ($request->party_type == 'Applicant') {
+            if ($request->party_type == 'Walkin_Customer') {
                 $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
                 $paymentOrReceivedAmount=$paymentOrReceivedAmount ;
                 $due = $payableOrReceiveableAmount - $paymentOrReceivedAmount - $adjustment-$discount;
-            } elseif ($request->party_type == 'Vendor' || $request->party_type == 'Supplier') {
-                $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
-                $paymentOrReceivedAmount=$paymentOrReceivedAmount;
-                $due = $payableOrReceiveableAmount - $paymentOrReceivedAmount  - $adjustment- $discount;
-            }
+            } 
+            // elseif ($request->party_type == 'Vendor' || $request->party_type == 'Supplier') {
+            //     $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
+            //     $paymentOrReceivedAmount=$paymentOrReceivedAmount;
+            //     $due = $payableOrReceiveableAmount - $paymentOrReceivedAmount  - $adjustment- $discount;
+            // }
             
             
              if ($due != 0) {
@@ -3421,17 +3425,18 @@ class ReportController extends Controller
                         ->where('deleted', '=', 'No')
                         ->get();
         
-        if ($party_type == 'Applicant') {
+        if ($party_type == 'Walkin_Customer') {
             $payableOrReceiveable = 'Party Payable';
             $paymentOrReceived = 'Payment Received';
              $paymentOrReceivedReverse = 'Payment';
             $adjustmentStr = 'Payment Adjustment';
-        } elseif ($party_type == 'Vendor' || $party_type == 'Supplier') {
-            $payableOrReceiveable = 'Payable';
-            $paymentOrReceived = 'Payment';
-             $paymentOrReceivedReverse = 'Payment Received';
-            $adjustmentStr = 'Adjustment';
-        }
+        } 
+        // elseif ($party_type == 'Vendor' || $party_type == 'Supplier') {
+        //     $payableOrReceiveable = 'Payable';
+        //     $paymentOrReceived = 'Payment';
+        //      $paymentOrReceivedReverse = 'Payment Received';
+        //     $adjustmentStr = 'Adjustment';
+        // }
         
         $partyDueData = [];
 
@@ -3474,15 +3479,16 @@ class ReportController extends Controller
                 ->where('tbl_voucher_payment_vouchers.party_id', '=', $party->id)
                 ->sum('tbl_voucher_payment_vouchers.amount');
                 
-            if ($party_type == 'Applicant') {
+            if ($party_type == 'Walkin_Customer') {
                 $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
                 $paymentOrReceivedAmount=$paymentOrReceivedAmount ;
                 $due = $payableOrReceiveableAmount - $paymentOrReceivedAmount - $adjustment-$discount;
-            } elseif ($party_type == 'Vendor' || $party_type == 'Supplier') {
-                $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
-                $paymentOrReceivedAmount=$paymentOrReceivedAmount;
-                $due = $payableOrReceiveableAmount - $paymentOrReceivedAmount  - $adjustment -$discount;
             }
+            //  elseif ($party_type == 'Vendor' || $party_type == 'Supplier') {
+            //     $payableOrReceiveableAmount=$payableOrReceiveableAmount+$paymentOrReceivedAmountReverse ;
+            //     $paymentOrReceivedAmount=$paymentOrReceivedAmount;
+            //     $due = $payableOrReceiveableAmount - $paymentOrReceivedAmount  - $adjustment -$discount;
+            // }
             
             
             if ($due != 0) {

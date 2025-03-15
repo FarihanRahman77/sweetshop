@@ -20,9 +20,9 @@
                             <label class="form-label">Party Type: </label>
                             <select type="date" class="form-control" name="party_type" id="party_type">
                                 <option value=""selected>Choose Party Type</option>
-                                <option value="Applicant">Applicant</option>
-                                <option value="Vendor">Vendor</option>
-                                <option value="Supplier">Supplier</option>
+                                <option value="Walkin_Customer">Walkin Customer</option>
+                                <!-- <option value="Vendor">Vendor</option>
+                                <option value="Supplier">Supplier</option> -->
                             </select>
                             <span class="text-danger" id="party_typeError"></span>
                         </div>
@@ -74,10 +74,10 @@
                 processData: false,
                 datatype:"json",
                 success:function(result){
-                   // alert(JSON.stringify(result));
+                   alert(JSON.stringify(result));
                     $('#dueTable').html(result);
                 },error:function(response) {
-                    //alert(JSON.stringify(response));
+                    alert(JSON.stringify(response));
                 },beforeSend: function (){
                     $('#loading').show();
                 },complete: function () {
@@ -96,6 +96,7 @@
             var party_type=$('#party_type').val();
             var date_from=$('#date_from').val();
             var date_to=$('#date_to').val();
+          
             window.open("{{url('account/party/due/pdf/')}}"+"/"+party_type+"/"+date_from+"/"+date_to);
         }
 
