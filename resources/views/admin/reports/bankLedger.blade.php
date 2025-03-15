@@ -7,7 +7,7 @@
 @section('content')
     <div class="container-fluid">
         <section class="content box-border">
-            <div class="card">
+            <div class="card">          
                 <div class="card-header">
                     <h3>Bank Ledger</h3>
                     <h3 class="text-center text-danger">{{ Session::get('message') }}</h3>
@@ -192,12 +192,12 @@
                 processData: false,
                 datatype:"json",
                 success:function(result){
-                   // alert(JSON.stringify(result));
+                // alert(JSON.stringify(result));
                     $('#manageVoucherTable').html(result.table)
                     $('#manageVoucherTotal').html(result.total)
                     $('#getVoucherButton').html(result.button) 
                 },error:function(response) {
-                    //alert(JSON.stringify(response));
+                    // alert(JSON.stringify(response));
                     $('#payment_methodError').text(response.responseJSON.errors.payment_method);
                     $('#sourceError').text(response.responseJSON.errors.source);
                     $('#accountsError').text(response.responseJSON.errors.accounts);

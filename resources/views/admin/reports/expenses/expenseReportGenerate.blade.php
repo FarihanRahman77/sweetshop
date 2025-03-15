@@ -43,9 +43,9 @@
                                             <td colspan="7" class="text-center"><b>Cash Report</b></td>
                                         </tr>
                                         <tr>
-                                            <td width="3%">SL</td>
+                                            <td width="3%">SL</td>         
                                             <td width="25%">Particulars</td>
-                                            <td width="25%">Remarks</td>
+                                            <!-- <td width="25%">Remarks</td> -->
                                             <td width="5%">Voucher</td>
                                             <td width="15%">Cash In</td>
                                             <td width="15%">Cash Out</td>
