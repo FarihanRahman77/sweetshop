@@ -1,6 +1,6 @@
 @extends('admin.master')
 @section('title')
-    Admin Journal List
+    Admin Bill List
 @endsection
 
 
@@ -9,22 +9,28 @@
         <section class="content box-border">
             <div class="card">
                 <div class="card-header">
-                    <h3>Journal List
+                    <h3>Bill List
+                            <button type="button" class="btn  btn-primary" onclick="paybill()"><i class="fab fa-amazon-pay"></i>
+                                Pay bills</button>
                             <button type="button" class="btn  btn-primary float-right" onclick="create()"><i class="fa fa-plus-circle"></i>
-                                Add Journal</button>
+                                Add bills</button>
                     </h3>
                     <h3 class="text-center text-success">{{ Session::get('message') }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover dataTable no-footer" id="manageJournalTable" width="100%">
+                        <table class="table table-bordered table-hover dataTable no-footer" id="manageBillTable" width="100%">
                             <thead>
                                 <tr class="bg-light">
                                     <td width="5%" class="text-center">Sl</td>
-                                    <td width="30%" class="text-center">Transaction Date</td>
-                                    <td width="30%" class="text-center">Reference</td>
-                                    <td width="20%" class="text-center">Particulars</td>
-                                    <td width="10%" class="text-center">Status</td>
+                                    <td width="10%" class="text-center">Bill ID</td>
+                                    <td width="20%" class="text-center">Vendor</td>
+                                    <td width="10%" class="text-center">Date</td>
+                                    <td width="20%" class="text-center">Remarks</td>
+                                    <td width="10%" class="text-center">Amount</td>
+                                    <td width="10%" class="text-center">Paid</td>
+                                    <td width="5%" class="text-center">Payment Status</td>
+                                    <td width="5%" class="text-center">Status</td>
                                     <td width="5%" class="text-center">Action</td>
                                 </tr>
                             </thead>
@@ -33,7 +39,7 @@
                     </div>
                 </div><!-- Card Content end -->
 
-               
+                
 
                  <!-- edit modal -->
                 <div class="card-body btn-page">
@@ -72,9 +78,7 @@
                                         <label class="col-form-label">Parent</label>
                                         <select type="text" class="form-control" id="editParent_id" name="parent_id">
                                             <option value="0">Select Parent</option>
-                                            @foreach($coas as $coa)
-                                            <option value="{{$coa->id}}">{{$coa->name}}</option>
-                                            @endforeach
+                                           
                                         </select>
                                         <span
                                             class="text-danger" id="editParent_idError">{{ $errors->has('parent_id') ? $errors->first('parent_id') : '' }}</span>
@@ -106,149 +110,30 @@
 
 
 @section('javascript')
+
     <script>
-         function create() {
-            window.location.href = "{{ route('addJournal')}}";
+         
+        function create(){
+            window.location.href = "{{ route('addBills')}}";
+        }
+    
+        function paybill(){
+            window.location.href = "{{ route('payBills')}}";
+        }
+    
+        function seeBills(id){
+            window.open("{{url('account/bill/details')}}"+"/"+id);
         }
 
-        $(document).ready(function() {
-            table = $('#manageJournalTable').DataTable({
-                'ajax': "{{route('getJournalData')}}",
+        $(document).ready(function(){
+            table = $('#manageBillTable').DataTable({
+                'ajax': "{{route('getBill')}}",
                 processing:true,
             });
         });
 
 
 
-
-
-
-
-        function journalDetails(id){
-            window.open("{{url('journal/details')}}"+"/"+id);
-        }
-
-
-
-
-
-
-        function editCOA(id){
-        $.ajax({
-            url:"{{route('editCOA')}}",
-            method:"GET",
-            data:{"id":id},
-            datatype:"json",
-            success:function(result){
-                $("#editModal").modal('show');
-                $("#editName").val(result.name);
-                $("#editCode").val(result.code);
-                $("#editSlug").val(result.slug);
-                $("#editParent_id").val(result.parent_id);
-                $("#editId").val(result.id);
-                $("#editStatus").val(result.status);  
-                if(result.status != ""){
-					$("#editStatus").val(result.status);
-                }else{
-					$("#editStatus").val("Inactive");
-                }
-            }, beforeSend: function () {
-                  $('#loading').show();
-            },complete: function () {
-                  $('#loading').hide();
-            }
-        });
-    }
-
-
-
-
-
-
-    function updateCoa(){
-
-        var id = $("#editId").val();
-        var name = $("#editName").val();
-        var code = $("#editCode").val();
-        var slug = $("#editSlug").val();
-        var parent_id = $("#editParent_id").val();
-        var status  =$("#editStatus").val();
-        var _token = $('input[name="_token"]').val();
-        var id = $("#editId").val();
-
-        var fd = new FormData();
-            fd.append('name',name);
-            fd.append('slug',slug);
-            fd.append('code',code);
-            fd.append('parent_id',parent_id);
-            fd.append('status',status);
-            fd.append('id',id);
-            fd.append('_token',_token);
-            
-        $.ajax({
-            url:"{{route('coaUpdate')}}",
-            method:"POST",
-            data:fd,
-            contentType: false,
-            processData: false,
-            success:function(result){
-                //alert(JSON.stringify(result));
-                $("#editModal").modal('hide');
-                Swal.fire("Updated COA!",result.success,"success");
-                table.ajax.reload(null, false);
-            }, error: function(response) {
-                //alert(JSON.stringify(response));
-                $('#editNameError').text(response.responseJSON.errors.name);
-                $('#editCodeError').text(response.responseJSON.errors.code);
-                $('#editSlugError').text(response.responseJSON.errors.slug);
-                $('#editParent_idError').text(response.responseJSON.errors.parent_id);
-                $('#editStatusError').text(response.responseJSON.errors.status);
-            }, beforeSend: function () {
-                $('#loading').show();
-            },complete: function () {
-                $('#loading').hide();
-            }
-        })
-    }
-
-
-
-
-
-
-
-    function confirmDelete(id){
-        Swal.fire({
-            title: "Are you sure ?",
-            text: "You will not be able to recover this imaginary file!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete Group!",
-            closeOnConfirm: false
-        }).then((result) => {
-        if (result.isConfirmed) {
-            var _token = $('meta[name="csrf-token"]').attr('content');
-            $.ajax({
-                url:"{{route('coaDelete')}}",
-                method: "POST",
-                data: {"id":id, "_token":_token},
-                success: function (result) {
-                    Swal.fire("Done!",result.success,"success");
-                    table.ajax.reload(null, false);
-                }, beforeSend: function () {
-                    $('#loading').show();
-                },complete: function () {
-                    $('#loading').hide();
-                }
-            });
-        }else{
-          Swal.fire("Cancelled", "Your imaginary Group is safe :)", "error");
-        }
-      })
-    }
-
-
-
     </script>
+
 @endsection

@@ -54,13 +54,13 @@ class VoucherController extends Controller
         }
 		$data['parties'] = Party::where('deleted', '=', 'No')/* ->where('party_type','Customer') */->get();
 		$data['suppliers']  = Party::where('deleted', '=', 'No')/* ->where('party_type','Supplier') */->get();
-
+		$data['transaction_method'] =ChartOfAccounts::where('slug','=','cash-bank')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first();
+        $data['methods'] =ChartOfAccounts::where('parent_id','=',$transaction_method->id)->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->get();
 		return view('admin.voucherManagement.voucher.view-voucher', $data);
 	}
 
 	public function getVoucher(Request $request, $filterByTypeDateParty)
-	{                  
-		
+	{        
 		$filterParty=0;
 		$filter='';
 		 $tempFilterByTypeDatePartyArray = $filterByTypeDateParty;

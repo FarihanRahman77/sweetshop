@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Setup\AccountSettingController;
 use App\Http\Controllers\Admin\Accounts\BillController; 
 use App\Http\Controllers\Admin\Accounts\BankController; 
 use App\Http\Controllers\Admin\Accounts\TransactionController; 
+use App\Http\Controllers\Admin\Accounts\TdsVdsController; 
 use App\Http\Controllers\Admin\Reports\ReportController; 
 
 
@@ -15,15 +16,12 @@ use App\Http\Controllers\Admin\Reports\ReportController;
 
 
 
-
-
-
 Route::group(['middleware' => ['auth']], function () {
-
 	/* helpers for voucher insert  */
 	Route::get('/helpers/function',function(){
 		return enterVoucher();
 	 });
+
 
 
 	/* Account settings */
@@ -34,14 +32,12 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('chart/Of/Accounts/view', [AccountController::class, 'index'])->name('chartOfAccounts');
 	Route::post('chart/Of/Accounts/store', [AccountController::class, 'store'])->name('coaStore');
 	Route::get('chart/Of/Accounts/get', [AccountController::class, 'getCOA'])->name('getCOA');
+	Route::get('chart/Of/Accounts/get/Coa/Code', [AccountController::class, 'getCoaCode'])->name('getCoaCode');
 	Route::get('chart/Of/Accounts/edit', [AccountController::class, 'edit'])->name('editCOA');
 	Route::Post('chart/Of/Accounts/update', [AccountController::class, 'update'])->name('coaUpdate');
 	Route::Post('chart/Of/Accounts/delete', [AccountController::class, 'delete'])->name('coaDelete');
 	Route::get('chart/Of/Accounts/get/Code/Range', [AccountController::class, 'getCodeRange'])->name('getCodeRange');
 	
-
-
-
 
 	/* Journal */ 
 	Route::get('journal/view', [JournalController::class, 'index'])->name('journalView');
@@ -64,19 +60,8 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('expense/get/Amount/', [ExpenseController::class, 'getAmount'])->name('getAmount');
 	Route::post('expense/store/', [ExpenseController::class, 'store'])->name('expenseStore');
 	Route::get('expense/details/{id}', [ExpenseController::class, 'seeDetails'])->name('expense/details');
-	Route::get('expenses/report/view', [ExpenseController::class, 'reportView'])->name('expensesReportView');
-	Route::get('expenses/report/generate', [ExpenseController::class, 'expenseReportGenerate'])->name('expenseReportGenerate');
-	Route::get('expense/report/Pdf/{data}', [ExpenseController::class, 'generateExpensePdf'])->name('generatePdf');
-    
-            
-
+	Route::get('expense/delete/', [ExpenseController::class, 'delete'])->name('deleteExpense');
 	
-
-
-
-	
-
-
 
 
 	/* Bill start */
@@ -86,15 +71,12 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('account/bill/get/bills', [BillController::class,'getBill'])->name('getBill');
 	Route::post('bill/store/', [BillController::class, 'store'])->name('billStore');
 	
+	Route::get('account/bills/partyDue', [BillController::class,'partyDue'])->name('bill.partyDue');
 	Route::get('account/bills/payment', [BillController::class,'payBills'])->name('payBills');
 	Route::get('account/bills/payment/get/BillData', [BillController::class,'getBillData'])->name('getBillData');
+	Route::get('account/bills/payment/get/sources', [BillController::class,'getBillsources'])->name('getBillsources');
 	Route::post('bill/pay/store/', [BillController::class, 'billPayStore'])->name('billPayStore');
 	/* bill end */
-
-
-
-
-
 
 
 
@@ -125,22 +107,26 @@ Route::get('account/transactions/transfer/to/ac/no', [TransactionController::cla
 
 /* report start */
 Route::get('account/reports/vouchers', [ReportController::class,'index'])->name('partyLedger');
-Route::get('account/reports/partyDues', [ReportController::class,'partyDues'])->name('partyDues');
 Route::post('account/generate/vouchers', [ReportController::class,'generateVoucher'])->name('generateVoucher');
 Route::get('account/vouchers/pdf/{vendor_id}/{date_from}/{date_to}', [ReportController::class,'generatePdf']);
+
+//party dues
+Route::get('account/reports/partyDues', [ReportController::class,'partyDues'])->name('partyDues');
+Route::post('account/generate/party/due/report', [ReportController::class,'generatePartyDueReport'])->name('generatePartyDueReport');
+Route::get('account/party/due/pdf/{party_type}/{date_from}/{date_to}', [ReportController::class,'generatePartyDuePdf']);
+
 Route::get('account/vouchers/datewise/summary', [ReportController::class,'accountsSummaryView'])->name('accountsLedgerDatewise');
 Route::post('account/vouchers/datewise/summary/generate', [ReportController::class,'accountsSummaryGenerate'])->name('generateSummaryReport');
 Route::get('account/closing/balance/store', [ReportController::class,'closingBalanceStore'])->name('closingBalanceStore');
 Route::get('account/summary/pdf/{date_from}/{date_to}', [ReportController::class,'generateAccountsSummaryPdf']);
+Route::get('account/Bill/Amount/pdf/{date_from}/{date_to}', [ReportController::class,'generateTotalBillAmountDetailsPdf']);
 Route::get('account/daily/ledger/summary', [ReportController::class,'dailyAccountsLedger'])->name('dailyAccountsLedger');
 Route::post('account/daily/ledger/summary/generate', [ReportController::class,'generateDailySummaryReport'])->name('generateDailySummaryReport');
-Route::get('/reports/getVoucherTypeAndId/', [ReportController::class, 'getVoucherTypeAndId'])->name('getVoucherTypeAndId');
-Route::post('account/generate/party/due/report', [ReportController::class,'generatePartyDueReport'])->name('generatePartyDueReport');
-Route::get('account/party/due/pdf/{party_type}/{date_from}/{date_to}', [ReportController::class,'generatePartyDuePdf']);
-Route::get('account/bills/payment/get/sources', [BillController::class,'getBillsources'])->name('getBillsources');
 
 Route::get('account/salesDetails/pdf/{date_from}/{date_to}', [ReportController::class, 'generateSalesDetailsAccountsPdf']);
+Route::get('account/sale/Return/Details/pdf/{date_from}/{date_to}', [ReportController::class, 'generateSaleReturnDetailsAccountsPdf']);
 Route::get('account/purchaseDetails/pdf/{date_from}/{date_to}', [ReportController::class, 'generatePurchaseDetailsAccountsPdf']);
+Route::get('account/purchase/return/Details/pdf/{date_from}/{date_to}', [ReportController::class, 'generatePurchaseReturnDetailsAccountsPdf']);
 Route::get('account/expenseDetails/pdf/{date_from}/{date_to}/{expenseId}', [ReportController::class, 'generateExpenseDetailsAccountsPdf']);
 Route::get('account/openingClosingStockDetails/pdf/{date_from}/{date_to}/{stockType}', [ReportController::class, 'generateOpenigClosingStockDetailsPdf']);
 Route::get('account/daily/closing/balance/store', [ReportController::class,'closingDayBalanceStore'])->name('closingDayBalanceStore');
@@ -150,19 +136,28 @@ Route::get('service/salesummary/pdf/{date_from}/{date_to}', [ReportController::c
 Route::get('daily/service/report/ServiceLedger', [ReportController::class,'dailyServiceLedgerReport'])->name('dailyServiceLedgerReport');
 
 Route::post('daily/service/report/generate', [ReportController::class,'generateDailyServiceReport'])->name('generateDailyServiceReport');
-Route::get('/reports/bankLedger/', [ReportController::class, 'bankLedger'])->name('bankLedger');
-Route::post('/reports/generateBankLedger/', [ReportController::class, 'generateBankLedger'])->name('generateBankLedger');
-Route::get('account/Bank/Ledger/pdf/{payment_method}/{source}/{accounts}/{date_from}/{date_to}', [ReportController::class,'generateBankLedgerPdf']);
 
 Route::get('service/daily/report/pdf/{date_from}', [ReportController::class,'ServiceLedgerReportPdf'])->name('ServiceLedgerReportPdf');
 Route::post('/get-daily-report', [ReportController::class, 'getDailyReport'])->name('getDailyReport');
 Route::post('/saveTodayReport', [ReportController::class, 'saveTodayReport'])->name('saveTodayReport');
+
+
+Route::get('/reports/orderReports/{type}', [ReportController::class, 'orderReportsIndex'])->name('orderReports');
+Route::post('/reports/get/Reports/Party/Order',[ReportController::class, 'getReportsPartyOrder'])->name('getReportsPartyOrder');
+Route::get('/reports/getVoucherTypeAndId/', [ReportController::class, 'getVoucherTypeAndId'])->name('getVoucherTypeAndId');
+
+Route::get('/reports/bankLedger/', [ReportController::class, 'bankLedger'])->name('bankLedger');
+Route::post('/reports/generateBankLedger/', [ReportController::class, 'generateBankLedger'])->name('generateBankLedger');
+Route::get('account/Bank/Ledger/pdf/{payment_method}/{source}/{accounts}/{date_from}/{date_to}', [ReportController::class,'generateBankLedgerPdf']);
+
 //order wise profit
 Route::get('applicantWiseProfit/{type}', [ReportController::class,'applicantWiseProfit'])->name('applicantWiseProfit');
 Route::post('generateOrderWiseProfit/', [ReportController::class,'generateOrderWiseProfit'])->name('generateOrderWiseProfit');
 Route::get('generateOrderWiseProfit/pdf/{applicant_id}/{date_from}/{date_to}/{type}', [ReportController::class,'generateOrderWiseProfitPdf']);
 
-
+Route::get('expenses/report/view', [ExpenseController::class, 'reportView'])->name('expensesReportView');
+Route::get('expenses/report/generate', [ExpenseController::class, 'expenseReportGenerate'])->name('expenseReportGenerate');
+Route::get('expense/report/Pdf/{data}', [ExpenseController::class, 'generateExpensePdf'])->name('generatePdf');
 
 /* reports end */
 
@@ -173,6 +168,18 @@ Route::get('/serviceSaleSUmmaryReport', [ReportController::class, 'serviceSaleSu
 Route::get('service/salesummary/pdf/{id}', [ReportController::class, 'serviceSaleSummaryPdf']);
 Route::post('/generate/Sale/Summary/Report', [ReportController::class, 'generateSaleSummaryReport'])->name('generateSaleSummaryReport');
 /* reports end */
+
+
+
+//tds vds
+Route::get('/tdsVdsView', [TdsVdsController::class, 'index'])->name('tdsVdsView');
+Route::get('/tdsVds/getData', [TdsVdsController::class, 'getData'])->name('tdsVds.getData');
+Route::get('/tdsVdsCreate', [TdsVdsController::class, 'tdsVdsCreate'])->name('tdsVdsCreate');
+Route::post('/tdsVdsStore', [TdsVdsController::class, 'store'])->name('tdsVdsStore');
+Route::get('/tdsVdsEdit', [TdsVdsController::class, 'edit'])->name('tdsVdsEdit');
+Route::post('/tdsVdsUpdate', [TdsVdsController::class, 'update'])->name('tdsVdsUpdate');
+Route::post('/tdsVds/delete', [TdsVdsController::class, 'delete'])->name('tdsVds.delete');
+
 
 
 
