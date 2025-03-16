@@ -140,6 +140,17 @@
                         //         filterByTypeDateParty = days + "@"; 
                         //     }
                         // }
+
+                          
+
+
+                        
+
+
+
+
+
+
                         
                         table = $('#manageorderTable').DataTable({
                                 'ajax': "{{ url('sweetsconfectionary/order/getlist') }}/" + filterByTypeDateParty,
