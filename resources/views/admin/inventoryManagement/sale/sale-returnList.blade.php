@@ -139,10 +139,11 @@
 			if (result.isConfirmed) {
 				var _token = $('meta[name="csrf-token"]').attr('content');
 				$.ajax({
-					// url:"{{route('sale.deleteSaleReturn')}}",
+					 url:"{{route('sale.deleteSaleReturn')}}",
 					method: "POST",
 					data: {"id":id, "_token":_token},
 					success: function (result) {
+                        alert(JSON.stringify(result));
 							Swal.fire("Deleted!",result.success,"success");
 							table.ajax.reload(null, false);
 					}, error: function(response) {
