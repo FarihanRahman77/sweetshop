@@ -25,7 +25,7 @@
                     <div class="col-md-4 ">
                       <div class="form-group">
                         <label for="customerId"> Customer Name</label>
-                        <input type="hidden" readonly name="customerId" id="customerId" value="{{$customer->customer_id}}">
+                        <input type="hidden" readonly name="customerId" id="customerId" value="{{$customer->id}}">
                         <input type="hidden" name="discount" id="discount" value="{{$sale->grand_discount}}">
                         <input type="text" readonly class="form-control" name="customerName" id="customerName" aria-describedby="emailHelp" value="{{$customer->name}}">
                       </div>
@@ -80,10 +80,10 @@
                             @endphp
                             @foreach($saleProducts as $saleProduct)
                             <tr>
-                                <td scope="row" id="">{{++$i}}</td>
-                                <input type="hidden" id="itemCode{{$saleProduct->id}}" value="{{$saleProduct->product_id}}">
+                                <td scope="row" id="">{{++$i}}
+                                <input type="hidden" id="itemCode{{$saleProduct->id}}" value="{{$saleProduct->product_id}}"></td>
                                 <td> {{$saleProduct->name.' - ' .$saleProduct->productname}}</td>
-                                <td id="unitPrice{{$saleProduct->id}}">{{$saleProduct->sale_price}}</td>
+                                <td id="unitPrice{{$saleProduct->id}}">{{$saleProduct->product_broken_type == 'Yes' ? $saleProduct->sub_unit_price : $saleProduct->sale_price}}</td>
                                 <td id="quantity{{$saleProduct->id}}">{{$saleProduct->menu_quantity}}</td>
                                 <td id="returnedQty_{{$saleProduct->id}}">{{$returnedQtyArray[$i-1]}}</td>
                                 <td>
@@ -133,7 +133,7 @@
                     <a href="#/" class="btn btn-primary btn-md" onclick="saleReturn()" aria-pressed="true"><i class="fas fa-save"></i> Return Sale</a>
                 </div>
                 <div>
-                    <a href="{{ url('sale') }}" class="btn btn-dark btn-md" role="button" aria-pressed="true"><i class="fas fa-undo"></i> Back </a>
+                    <a href="{{ route('sale.return.list', ['type' => 'walkin_sale']) }}" class="btn btn-dark btn-md" role="button" aria-pressed="true"><i class="fas fa-undo"></i> Back </a>
                 </div>
         </div>
         </div>
@@ -285,6 +285,7 @@
       processData: false,
       datatype: "json",
       success: function(result) {
+        alert(JSON.stringify(result));
          Swal.fire({
             title: "Saved !",
             text: result.success,
@@ -295,7 +296,7 @@
             confirmButtonText: 'OK'
         }).then((btnresult) => {
             if (btnresult.isConfirmed) {
-                window.location.href = "{{url('sale/sale-returnList/')}}"+"/"+result.type;
+                window.location.href = "{{ route('sale.return.list', ['type' => 'walkin_sale']) }}";
             }
         }); //--end redirect after click OK--//
       },
@@ -306,10 +307,11 @@
         $('#loading').hide();
       },
       error: function(response) {
+        alert(JSON.stringify(response));
           if (response.responseJSON.errors.warehouse) {
                         $('#warehouseError').text("Please Select Warehouse");
                     }
-        //alert(JSON.stringify(response));
+       
       }
     })
   }

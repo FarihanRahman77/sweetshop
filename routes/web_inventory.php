@@ -275,6 +275,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::get('/invoice/{id}', [ProductController::class, 'createPDF']);
 	});
 	
+
 	///-------- End Inventory Module Web page links ---------------///
 
 
