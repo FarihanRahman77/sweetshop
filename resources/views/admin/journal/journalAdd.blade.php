@@ -174,7 +174,6 @@
 
 @section('javascript')
     <script>
-        
         $(".ddl_account").each(function() {
             select2Class($(this));
         });
