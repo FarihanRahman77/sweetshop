@@ -368,8 +368,7 @@ class ExpenseController extends Controller
 
     public function reportView()
     {
-        $sisterconcerns = DB::table('tbl_settings_company_settings')->where('deleted', 'No')->where('status', 'Active') ->get();
-        return view('admin.reports.expenses.expenseReportGenerate',['sisterconcerns'=>$sisterconcerns]);
+        return view('admin.reports.expenses.expenseReportGenerate');
     }
 
 
@@ -378,24 +377,24 @@ class ExpenseController extends Controller
     
     public function expenseReportGenerate(Request $request)
     {
-        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
-        // $request->validate([
-        //     'dateFrom' => 'required',
-        // ]);
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $request->validate([
+            'dateFrom' => 'required',
+        ]);
 
-        $expenses = DB::table('tbl_voucher_payment_vouchers')
-            ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
-            ->leftjoin('tbl_restaurant_order', 'tbl_voucher_payment_vouchers.resturant_order_id', '=', 'tbl_restaurant_order.id')
-            ->leftjoin('tbl_crm_parties', 'tbl_voucher_payment_vouchers.party_id', '=', 'tbl_crm_parties.id')
-            ->select('tbl_voucher_payment_vouchers.*', 'tbl_restaurant_order.grand_total', 'tbl_restaurant_order.paid_amount', 'tbl_purchases.total_amount', 'tbl_crm_parties.name', 'tbl_crm_parties.address')
-            ->where('tbl_voucher_payment_vouchers.deleted', 'No')
-            ->where('tbl_voucher_payment_vouchers.paymentDate', '=', $request->dateFrom)
-            ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=', $logged_sister_concern_id)
-            ->where('tbl_voucher_payment_vouchers.status', 'Active')
-            ->where('tbl_voucher_payment_vouchers.payment_method', 'Cash')
+        $expenses = DB::table('payment_vouchers')
+            ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
+            ->leftjoin('sales', 'payment_vouchers.sales_id', '=', 'sales.id')
+            ->leftjoin('parties', 'payment_vouchers.party_id', '=', 'parties.id')
+            ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
+            ->where('payment_vouchers.deleted', 'No')
+            ->where('payment_vouchers.paymentDate', '=', $request->dateFrom)
+            ->where('payment_vouchers.warehouse_id', '=', $loggedWarehouseId)
+            ->where('payment_vouchers.status', 'Active')
+            ->where('payment_vouchers.payment_method', 'Cash')
             ->where(function ($query) {
-                $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
-                    ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
+                $query->where('payment_vouchers.type', 'Payment')
+                    ->orWhere('payment_vouchers.type', 'Payment Received');
                     //->orWhere('payment_vouchers.type', 'Party Payable');
             })
             ->get();
@@ -414,8 +413,8 @@ class ExpenseController extends Controller
 
             if($report->voucherType == 'Expense'){
                 $expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id', $report->expense_id)
                             ->get();
@@ -428,8 +427,8 @@ class ExpenseController extends Controller
             }elseif($report->voucherType == 'Bill Payment'){
                  $bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
-                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
+                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $report->bill_id)
@@ -443,15 +442,14 @@ class ExpenseController extends Controller
                 if($billId){
                     $seeDetails='billDetails('.$billId.')';
                 }
-            }
-            elseif($report->voucherType == 'WalkinSale'){
-                $orderDetails=DB::table('tbl_restaurant_order_details')
-                                ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
-                                ->select('tbl_restaurant_order_details.*','tbl_inventory_products.name as product_name')
-                                ->where('tbl_restaurant_order_details.deleted','=','No')
-                                ->where('tbl_inventory_products.deleted','=','No')
-                                ->where('tbl_inventory_products.status','=','Active')
-                                ->where('tbl_restaurant_order_details.order_id','=',$report->order_sale_id)
+            }elseif($report->voucherType == 'Applicant Order' || $report->voucherType == 'Vendor Order'){
+                $orderDetails=DB::table('sale_order_products')
+                                ->leftJoin('products', 'sale_order_products.product_id', '=', 'products.id')
+                                ->select('sale_order_products.*','products.name as product_name')
+                                ->where('sale_order_products.deleted','=','No')
+                                ->where('products.deleted','=','No')
+                                ->where('products.status','=','Active')
+                                ->where('sale_order_products.tbl_sale_orders_id','=',$report->order_sale_id)
                                 ->get();
                 $c=1;
                 $reportDetails='';
@@ -470,7 +468,7 @@ class ExpenseController extends Controller
                 $info .= '<tr>
                             <td class="text-center">' . $i++ . '</td>' .
                             '<td class="text-left"><a href="#"  onclick="'.$seeDetails.'">'. $report->remarks . '<br>' . $report->name . ' | ' . $report->address . '</a></td>' .
-                            // '<td class="text-center">' . $reportDetails . '</td>' .
+                            '<td class="text-center">' . $reportDetails . '</td>' .
                             '<td class="text-center">' . $report->voucherNo . '</td>' .
                             '<td></td>' .
                             '<td class="text-right">' . $report->amount . '</td>' .
@@ -482,7 +480,7 @@ class ExpenseController extends Controller
                 $info .= '<tr>
                             <td class="text-center">' . $i++ . '</td>' .
                     '<td class="text-left"><a href="#"  onclick="'.$seeDetails.'">' . $report->remarks . '<br>'  . $report->name . ' | ' . $report->address . '</a></td>' .
-                    // '<td class="text-center">' . $reportDetails . '</td>' .
+                    '<td class="text-center">' . $reportDetails . '</td>' .
                     '<td class="text-center">' . $report->voucherNo . '</td>' .
                     '<td class="text-right">' . $report->amount . '</td>' .
                     '<td></td>' .
@@ -492,7 +490,7 @@ class ExpenseController extends Controller
                 $info .= '<tr>
                             <td class="text-center">' . $i++ . '</td>' .
                     '<td class="text-left"><a href="#"  onclick="'.$seeDetails.'">' . $report->remarks . '<br>' . $report->name . ' | ' . $report->address . '</a></td>' .
-                    // '<td class="text-center">' . $reportDetails . '</td>' .
+                    '<td class="text-center">' . $reportDetails . '</td>' .
                     '<td class="text-center">' . $report->voucherNo . '</td>' .
                     '<td class="text-right"></td>' .
                     '<td></td>' .
@@ -507,36 +505,36 @@ class ExpenseController extends Controller
 
 
 
-        $todayBankReports = DB::table('tbl_voucher_payment_vouchers')
-                        ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
-                        ->leftjoin('tbl_restaurant_order', 'tbl_voucher_payment_vouchers.resturant_order_id', '=', 'tbl_restaurant_order.id')
-                        ->leftjoin('tbl_crm_parties', 'tbl_voucher_payment_vouchers.party_id', '=', 'tbl_crm_parties.id')
-                        ->select('tbl_voucher_payment_vouchers.*', 'tbl_restaurant_order.grand_total', 'tbl_restaurant_order.paid_amount', 'tbl_purchases.total_amount', 'tbl_crm_parties.name', 'tbl_crm_parties.address')
-                        ->where('tbl_voucher_payment_vouchers.deleted', 'No')
-                        ->where('tbl_voucher_payment_vouchers.paymentDate', '=', $request->dateFrom)
-                        ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=', $logged_sister_concern_id)
-                        ->where('tbl_voucher_payment_vouchers.status', 'Active')
-                        ->where('tbl_voucher_payment_vouchers.payment_method', 'Bank')
+        $todayBankReports = DB::table('payment_vouchers')
+                        ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
+                        ->leftjoin('sales', 'payment_vouchers.sales_id', '=', 'sales.id')
+                        ->leftjoin('parties', 'payment_vouchers.party_id', '=', 'parties.id')
+                        ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
+                        ->where('payment_vouchers.deleted', 'No')
+                        ->where('payment_vouchers.paymentDate', '=', $request->dateFrom)
+                        ->where('payment_vouchers.warehouse_id', '=', $loggedWarehouseId)
+                        ->where('payment_vouchers.status', 'Active')
+                        ->where('payment_vouchers.payment_method', 'Bank')
                     ->where(function ($query) {
-                        $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
-                            ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
+                        $query->where('payment_vouchers.type', 'Payment')
+                            ->orWhere('payment_vouchers.type', 'Payment Received');
                     })
                     ->get();
 
 
-        $todayMobileBankingReports = DB::table('tbl_voucher_payment_vouchers')
-                        ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
-                        ->leftjoin('tbl_restaurant_order', 'tbl_voucher_payment_vouchers.resturant_order_id', '=', 'tbl_restaurant_order.id')
-                        ->leftjoin('tbl_crm_parties', 'tbl_voucher_payment_vouchers.party_id', '=', 'tbl_crm_parties.id')
-                        ->select('tbl_voucher_payment_vouchers.*', 'tbl_restaurant_order.grand_total', 'tbl_restaurant_order.paid_amount', 'tbl_purchases.total_amount', 'tbl_crm_parties.name', 'tbl_crm_parties.address')
-                        ->where('tbl_voucher_payment_vouchers.deleted', 'No')
-                        ->where('tbl_voucher_payment_vouchers.paymentDate', '=', $request->dateFrom)
-                        ->where('tbl_voucher_payment_vouchers.sister_concern_id', '=', $logged_sister_concern_id)
-                        ->where('tbl_voucher_payment_vouchers.status', 'Active')
-                        ->where('tbl_voucher_payment_vouchers.payment_method', 'Mobile Banking')
+        $todayMobileBankingReports = DB::table('payment_vouchers')
+                        ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
+                        ->leftjoin('sales', 'payment_vouchers.sales_id', '=', 'sales.id')
+                        ->leftjoin('parties', 'payment_vouchers.party_id', '=', 'parties.id')
+                        ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
+                        ->where('payment_vouchers.deleted', 'No')
+                        ->where('payment_vouchers.paymentDate', '=', $request->dateFrom)
+                        ->where('payment_vouchers.warehouse_id', '=', $loggedWarehouseId)
+                        ->where('payment_vouchers.status', 'Active')
+                        ->where('payment_vouchers.payment_method', 'Mobile Banking')
                     ->where(function ($query) {
-                        $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
-                            ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
+                        $query->where('payment_vouchers.type', 'Payment')
+                            ->orWhere('payment_vouchers.type', 'Payment Received');
                     })
                     ->get();
 
@@ -550,8 +548,8 @@ class ExpenseController extends Controller
         foreach ($todayBankReports as $todayBankReport){
             if($todayBankReport->voucherType == 'Expense'){
                 $bank_expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id',$todayBankReport->expense_id)
                             ->get();
@@ -564,8 +562,8 @@ class ExpenseController extends Controller
             }elseif($todayBankReport->voucherType == 'Bill Payment'){
                  $bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name','tbl_acc_bill_details.particulars')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name','tbl_acc_bill_details.particulars')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $todayBankReport->bill_id)
@@ -579,14 +577,14 @@ class ExpenseController extends Controller
                 if($bank_billId){
                     $bank_seeDetails='billDetails('.$bank_billId.')';
                 }
-            }elseif($todayBankReport->voucherType == 'WalkinSale'){
-                $bank_orderDetails=DB::table('tbl_restaurant_order_details')
-                                ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
-                                ->select('tbl_restaurant_order_details.*','tbl_inventory_products.name as product_name')
-                                ->where('tbl_restaurant_order_details.deleted','=','No')
-                                ->where('tbl_inventory_products.deleted','=','No')
-                                ->where('tbl_inventory_products.status','=','Active')
-                                ->where('tbl_restaurant_order_details.order_id','=',$todayBankReport->order_sale_id)
+            }elseif($todayBankReport->voucherType == 'Applicant Order' || $todayBankReport->voucherType == 'Vendor Order'){
+                $bank_orderDetails=DB::table('sale_order_products')
+                                ->leftJoin('products', 'sale_order_products.product_id', '=', 'products.id')
+                                ->select('sale_order_products.*','products.name as product_name')
+                                ->where('sale_order_products.deleted','=','No')
+                                ->where('products.deleted','=','No')
+                                ->where('products.status','=','Active')
+                                ->where('sale_order_products.tbl_sale_orders_id','=',$todayBankReport->order_sale_id)
                                 ->get();
                 $bank_c=1;
                 $bank_reportDetails='';
@@ -644,8 +642,8 @@ class ExpenseController extends Controller
 
             if($todayMobileBankingReport->voucherType == 'Expense'){
                 $mobile_bank_expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id',$todayMobileBankingReport->expense_id)
                             ->get();
@@ -658,8 +656,8 @@ class ExpenseController extends Controller
             }elseif($todayMobileBankingReport->voucherType == 'Bill Payment'){
                  $mobile_bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
-                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
+                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $todayMobileBankingReport->bill_id)
@@ -673,14 +671,14 @@ class ExpenseController extends Controller
                 if($mobile_bank_billId){
                     $mobile_bank_seeDetails='billDetails('.$mobile_bank_billId.')';
                 }
-            }elseif($todayMobileBankingReport->voucherType == 'WalkinSale' ){
-                $mobile_bank_orderDetails=DB::table('tbl_restaurant_order_details')
-                                ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.product_id', '=', 'tbl_inventory_products.id')
-                                ->select('tbl_restaurant_order_details.*','tbl_inventory_products.name as product_name')
-                                ->where('tbl_restaurant_order_details.deleted','=','No')
-                                ->where('tbl_inventory_products.deleted','=','No')
-                                ->where('tbl_inventory_products.status','=','Active')
-                                ->where('tbl_restaurant_order_details.order_id','=',$todayMobileBankingReport->order_sale_id)
+            }elseif($todayMobileBankingReport->voucherType == 'Applicant Order' || $todayMobileBankingReport->voucherType == 'Vendor Order'){
+                $mobile_bank_orderDetails=DB::table('sale_order_products')
+                                ->leftJoin('products', 'sale_order_products.product_id', '=', 'products.id')
+                                ->select('sale_order_products.*','products.name as product_name')
+                                ->where('sale_order_products.deleted','=','No')
+                                ->where('products.deleted','=','No')
+                                ->where('products.status','=','Active')
+                                ->where('sale_order_products.tbl_sale_orders_id','=',$todayMobileBankingReport->order_sale_id)
                                 ->get();
                 $mobile_bank_c=1;
                 $mobile_bank_reportDetails='';
@@ -750,27 +748,27 @@ class ExpenseController extends Controller
 
     public function generateExpensePdf($data)
     {
-        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
         $dataArray = explode(",", $data);
         $startAndEndDate = array($dataArray[0], $dataArray[1]);
         $from = $dataArray[0];
         $to = $dataArray[1];
         $date = $from;
 
-        $todayPaymentReport = DB::table('tbl_voucher_payment_vouchers')
-            ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
-            ->leftjoin('tbl_restaurant_order', 'tbl_voucher_payment_vouchers.resturant_order_id', '=', 'tbl_restaurant_order.id')
-            ->leftjoin('tbl_crm_parties', 'tbl_voucher_payment_vouchers.party_id', '=', 'tbl_crm_parties.id')
-            ->select('tbl_voucher_payment_vouchers.*', 'tbl_restaurant_order.grand_total', 'tbl_restaurant_order.paid_amount', 'tbl_purchases.total_amount', 'tbl_crm_parties.name', 'tbl_crm_parties.address')
-            ->where('tbl_voucher_payment_vouchers.deleted', 'No')
-            ->where('tbl_voucher_payment_vouchers.paymentDate', $date)
-            ->where('tbl_voucher_payment_vouchers.sister_concern_id', $logged_sister_concern_id)
-            ->where('tbl_voucher_payment_vouchers.status', 'Active')
-            ->where('tbl_voucher_payment_vouchers.payment_method', 'Cash')
+        $todayPaymentReport = DB::table('payment_vouchers')
+            ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
+            ->leftjoin('sales', 'payment_vouchers.sales_id', '=', 'sales.id')
+            ->leftjoin('parties', 'payment_vouchers.party_id', '=', 'parties.id')
+            ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
+            ->where('payment_vouchers.deleted', 'No')
+            ->where('payment_vouchers.paymentDate', $date)
+            ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+            ->where('payment_vouchers.status', 'Active')
+            ->where('payment_vouchers.payment_method', 'Cash')
             ->where(function ($query) {
-                $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
-                    //->orWhere('tbl_voucher_payment_vouchers.type', 'Party Payable')
-                    ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
+                $query->where('payment_vouchers.type', 'Payment')
+                    //->orWhere('payment_vouchers.type', 'Party Payable')
+                    ->orWhere('payment_vouchers.type', 'Payment Received');
             })
             ->get();
 
@@ -793,8 +791,8 @@ class ExpenseController extends Controller
             
             if($report->voucherType == 'Expense'){
                 $expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id', $report->expense_id)
                             ->get();
@@ -806,8 +804,8 @@ class ExpenseController extends Controller
             }elseif($report->voucherType == 'Bill Payment'){
                  $bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $report->bill_id)
@@ -817,14 +815,14 @@ class ExpenseController extends Controller
                 foreach($bill_payment_details as  $bill_payment_detail){
                     $reportDetails.=$b++.' . '.$bill_payment_detail->coa_name.  '('.$bill_payment_detail->particulars.')<br>';
                 }
-            }elseif($report->voucherType == 'WalkinSale'){
-                $orderDetails=DB::table('tbl_restaurant_order_details')
-                                ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
-                                ->select('tbl_restaurant_order_details.*','tbl_inventory_products.name as product_name')
-                                ->where('tbl_restaurant_order_details.deleted','=','No')
-                                ->where('tbl_inventory_products.deleted','=','No')
-                                ->where('tbl_inventory_products.status','=','Active')
-                                ->where('tbl_restaurant_order_details.order_id','=',$report->order_sale_id)
+            }elseif($report->voucherType == 'Applicant Order' || $report->voucherType == 'Vendor Order'){
+                $orderDetails=DB::table('sale_order_products')
+                                ->leftJoin('products', 'sale_order_products.product_id', '=', 'products.id')
+                                ->select('sale_order_products.*','products.name as product_name')
+                                ->where('sale_order_products.deleted','=','No')
+                                ->where('products.deleted','=','No')
+                                ->where('products.status','=','Active')
+                                ->where('sale_order_products.tbl_sale_orders_id','=',$report->order_sale_id)
                                 ->get();
                 $c=1;
                 $reportDetails='';
@@ -873,20 +871,20 @@ class ExpenseController extends Controller
 
 
         // bank
-        $todayPaymentReportBank = DB::table('tbl_voucher_payment_vouchers')
-                            ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
-                            ->leftjoin('tbl_restaurant_order', 'tbl_voucher_payment_vouchers.resturant_order_id', '=', 'tbl_restaurant_order.id')
-                            ->leftjoin('tbl_crm_parties', 'tbl_voucher_payment_vouchers.party_id', '=', 'tbl_crm_parties.id')
-                            ->select('tbl_voucher_payment_vouchers.*', 'tbl_restaurant_order.grand_total', 'tbl_restaurant_order.paid_amount', 'tbl_purchases.total_amount', 'tbl_crm_parties.name', 'tbl_crm_parties.address')
-                            ->where('tbl_voucher_payment_vouchers.deleted', 'No')
-                            ->where('tbl_voucher_payment_vouchers.paymentDate', $date)
-                            ->where('tbl_voucher_payment_vouchers.sister_concern_id', $logged_sister_concern_id)
-                            ->where('tbl_voucher_payment_vouchers.status', 'Active')
-                            ->where('tbl_voucher_payment_vouchers.payment_method', 'Bank')
+        $todayPaymentReportBank = DB::table('payment_vouchers')
+                            ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
+                            ->leftjoin('sales', 'payment_vouchers.sales_id', '=', 'sales.id')
+                            ->leftjoin('parties', 'payment_vouchers.party_id', '=', 'parties.id')
+                            ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
+                            ->where('payment_vouchers.deleted', 'No')
+                            ->where('payment_vouchers.paymentDate', $date)
+                            ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                            ->where('payment_vouchers.status', 'Active')
+                            ->where('payment_vouchers.payment_method', 'Bank')
                             ->where(function ($query) {
-                                $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
-                                    //->orWhere('tbl_voucher_payment_vouchers.type', 'Party Payable')
-                                    ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
+                                $query->where('payment_vouchers.type', 'Payment')
+                                    //->orWhere('payment_vouchers.type', 'Party Payable')
+                                    ->orWhere('payment_vouchers.type', 'Payment Received');
                             })
                             ->get();
     
@@ -910,8 +908,8 @@ class ExpenseController extends Controller
         
         if($reportBank->voucherType == 'Expense'){
             $bank_expense_details = DB::table('tbl_acc_expense_details')
-                        ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                        ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
+                        ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                        ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
                         ->where('tbl_acc_expense_details.deleted','No')
                         ->where('tbl_acc_expense_details.tbl_acc_expense_id',$reportBank->expense_id)
                         ->get();
@@ -923,8 +921,8 @@ class ExpenseController extends Controller
         }elseif($reportBank->voucherType == 'Bill Payment'){
              $bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                         ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                        ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                        ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
+                        ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                        ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
                         ->where('tbl_acc_bill_details.deleted','=','No')
                         ->where('tbl_acc_bill_details.status','=','Active')
                         ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $reportBank->bill_id)
@@ -934,14 +932,14 @@ class ExpenseController extends Controller
             foreach($bank_bill_payment_details as  $bank_bill_payment_detail){
                 $bank_reportDetails.=$bank_b++.' . '.$bank_bill_payment_detail->coa_name. '('. $bank_bill_payment_detail->particulars.')<br>';
             }
-        }elseif($reportBank->voucherType == 'WalkinSale'){
-            $bank_orderDetails=DB::table('tbl_restaurant_order_details')
-                            ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
-                            ->select('tbl_restaurant_order_details.*','tbl_inventory_products.name as product_name')
-                            ->where('tbl_restaurant_order_details.deleted','=','No')
-                            ->where('tbl_inventory_products.deleted','=','No')
-                            ->where('tbl_inventory_products.status','=','Active')
-                            ->where('tbl_restaurant_order_details.order_id','=',$reportBank->order_sale_id)
+        }elseif($reportBank->voucherType == 'Applicant Order' || $reportBank->voucherType == 'Vendor Order'){
+            $bank_orderDetails=DB::table('sale_order_products')
+                            ->leftJoin('products', 'sale_order_products.product_id', '=', 'products.id')
+                            ->select('sale_order_products.*','products.name as product_name')
+                            ->where('sale_order_products.deleted','=','No')
+                            ->where('products.deleted','=','No')
+                            ->where('products.status','=','Active')
+                            ->where('sale_order_products.tbl_sale_orders_id','=',$reportBank->order_sale_id)
                             ->get();
             $bank_c=1;
             $bank_reportDetails='';
@@ -992,20 +990,20 @@ class ExpenseController extends Controller
 
 
         // mobile banking
-        $todayPaymentReportMobileBanking = DB::table('tbl_voucher_payment_vouchers')
-                            ->leftjoin('tbl_purchases', 'tbl_voucher_payment_vouchers.purchase_id', '=', 'tbl_purchases.id')
-                            ->leftjoin('tbl_restaurant_order', 'tbl_voucher_payment_vouchers.resturant_order_id', '=', 'tbl_restaurant_order.id')
-                            ->leftjoin('tbl_crm_parties', 'tbl_voucher_payment_vouchers.party_id', '=', 'tbl_crm_parties.id')
-                            ->select('tbl_voucher_payment_vouchers.*', 'tbl_restaurant_order.grand_total', 'tbl_restaurant_order.paid_amount', 'tbl_purchases.total_amount', 'tbl_crm_parties.name', 'tbl_crm_parties.address')
-                            ->where('tbl_voucher_payment_vouchers.deleted', 'No')
-                            ->where('tbl_voucher_payment_vouchers.paymentDate', $date)
-                            ->where('tbl_voucher_payment_vouchers.sister_concern_id', $logged_sister_concern_id)
-                            ->where('tbl_voucher_payment_vouchers.status', 'Active')
-                            ->where('tbl_voucher_payment_vouchers.payment_method', 'Mobile Banking')
+        $todayPaymentReportMobileBanking = DB::table('payment_vouchers')
+                            ->leftjoin('purchases', 'payment_vouchers.purchase_id', '=', 'purchases.id')
+                            ->leftjoin('sales', 'payment_vouchers.sales_id', '=', 'sales.id')
+                            ->leftjoin('parties', 'payment_vouchers.party_id', '=', 'parties.id')
+                            ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
+                            ->where('payment_vouchers.deleted', 'No')
+                            ->where('payment_vouchers.paymentDate', $date)
+                            ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                            ->where('payment_vouchers.status', 'Active')
+                            ->where('payment_vouchers.payment_method', 'Mobile Banking')
                             ->where(function ($query) {
-                                $query->where('tbl_voucher_payment_vouchers.type', 'Payment')
-                                    //->orWhere('tbl_voucher_payment_vouchers.type', 'Party Payable')
-                                    ->orWhere('tbl_voucher_payment_vouchers.type', 'Payment Received');
+                                $query->where('payment_vouchers.type', 'Payment')
+                                    //->orWhere('payment_vouchers.type', 'Party Payable')
+                                    ->orWhere('payment_vouchers.type', 'Payment Received');
                             })
                             ->get();
 
@@ -1028,8 +1026,8 @@ class ExpenseController extends Controller
             
             if($reportMobileBanking->voucherType == 'Expense'){
                 $mobile_bank_expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id',$reportMobileBanking->expense_id)
                             ->get();
@@ -1041,8 +1039,8 @@ class ExpenseController extends Controller
             }elseif($reportMobileBanking->voucherType == 'Bill Payment'){
                  $mobile_bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
+                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $reportMobileBanking->bill_id)
@@ -1052,14 +1050,14 @@ class ExpenseController extends Controller
                 foreach($mobile_bank_bill_payment_details as  $mobile_bank_bill_payment_detail){
                     $mobile_bank_reportDetails.=$mobile_bank_b++.' . '.$mobile_bank_bill_payment_detail->coa_name. '('. $mobile_bank_bill_payment_detail->particulars.')<br>';
                 }
-            }elseif($reportMobileBanking->voucherType == 'WalkinSale' ){
-                $mobile_bank_orderDetails=DB::table('tbl_restaurant_order_details')
-                                ->leftJoin('tbl_inventory_products', 'tbl_restaurant_order_details.menu_id', '=', 'tbl_inventory_products.id')
-                                ->select('tbl_restaurant_order_details.*','tbl_inventory_products.name as product_name')
-                                ->where('tbl_restaurant_order_details.deleted','=','No')
-                                ->where('tbl_inventory_products.deleted','=','No')
-                                ->where('tbl_inventory_products.status','=','Active')
-                                ->where('tbl_restaurant_order_details.order_id','=',$reportMobileBanking->order_sale_id)
+            }elseif($reportMobileBanking->voucherType == 'Applicant Order' || $reportMobileBanking->voucherType == 'Vendor Order'){
+                $mobile_bank_orderDetails=DB::table('sale_order_products')
+                                ->leftJoin('products', 'sale_order_products.product_id', '=', 'products.id')
+                                ->select('sale_order_products.*','products.name as product_name')
+                                ->where('sale_order_products.deleted','=','No')
+                                ->where('products.deleted','=','No')
+                                ->where('products.status','=','Active')
+                                ->where('sale_order_products.tbl_sale_orders_id','=',$reportMobileBanking->order_sale_id)
                                 ->get();
                 $mobile_bank_c=1;
                 $mobile_bank_reportDetails='';
@@ -1126,31 +1124,31 @@ class ExpenseController extends Controller
             $bankAccounts=ChartOfAccounts::where('parent_id','=',$source->id)->where('deleted', 'No')->where('status', 'Active')->get();
             $singleBankAccountTotalOpeningBalance=0;
             foreach($bankAccounts as $account){
-                $bankPayments = DB::table('tbl_voucher_payment_vouchers')
-                                ->where('.deleted', 'No')
-                                ->where('paymentDate', '>=', date('Y-m-d', strtotime($account->opening_balance_entry_date)))
-                                ->where('paymentDate', '<', date('Y-m-d', strtotime($date)))
-                                ->where('sister_concern_id', $logged_sister_concern_id)
-                                ->where('status', 'Active')
-                                ->where('payment_method', 'Bank')
-                                ->where('account_coa_id', $account->id)
-                                ->where('type', 'Payment')
-                                ->get();
+                $bankPayments = DB::table('payment_vouchers')
+                                    ->where('payment_vouchers.deleted','=','No')
+                                    ->where('payment_vouchers.paymentDate','>=', $account->opening_balance_entry_date)
+                                    ->where('payment_vouchers.paymentDate','<', $date)
+                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.status','=', 'Active')
+                                    ->where('payment_vouchers.payment_method', 'Bank')
+                                    ->where('payment_vouchers.account_coa_id','=',$account->id)
+                                    ->where('payment_vouchers.type', 'Payment')
+                                    ->get();
                
                 $netBankPayment=0;
                 foreach($bankPayments as $bankPayment){
                      $netBankPayment+=$bankPayment->amount;
                 }
                 
-                $bankPaymentReceives = DB::table('tbl_voucher_payment_vouchers')
-                                    ->where('tbl_voucher_payment_vouchers.deleted','=','No')
-                                    ->where('paymentDate', '>=', date('Y-m-d', strtotime($account->opening_balance_entry_date)))
-                                    ->where('paymentDate', '<', date('Y-m-d', strtotime($date)))
-                                    ->where('tbl_voucher_payment_vouchers.sister_concern_id', $logged_sister_concern_id)
-                                    ->where('tbl_voucher_payment_vouchers.status','=', 'Active')
-                                    ->where('tbl_voucher_payment_vouchers.payment_method', 'Bank')
-                                    ->where('tbl_voucher_payment_vouchers.account_coa_id','=',$account->id)
-                                    ->where('tbl_voucher_payment_vouchers.type', 'Payment Received')
+                $bankPaymentReceives = DB::table('payment_vouchers')
+                                    ->where('payment_vouchers.deleted','=','No')
+                                    ->where('payment_vouchers.paymentDate','>=', $account->opening_balance_entry_date)
+                                    ->where('payment_vouchers.paymentDate','<', $date)
+                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.status','=', 'Active')
+                                    ->where('payment_vouchers.payment_method', 'Bank')
+                                    ->where('payment_vouchers.account_coa_id','=',$account->id)
+                                    ->where('payment_vouchers.type', 'Payment Received')
                                     ->get();
                
                 $netBankPaymentReceived=0;
@@ -1171,18 +1169,18 @@ class ExpenseController extends Controller
         //return $date;
         $allMobileBankOpeningBalance=0;
         foreach($mobileBankSources as $mobileBanksource){
-             $mobileBankAccounts=ChartOfAccounts::where('parent_id','=',$mobileBanksource->id)->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted', 'No')->where('status', 'Active')->get();
+             $mobileBankAccounts=ChartOfAccounts::where('parent_id','=',$mobileBanksource->id)->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted', 'No')->where('status', 'Active')->get();
              $singleMobileBankOpeningBalance=0;
             foreach($mobileBankAccounts as $mobileBankAccount){
-                 $mobileBankPayments = DB::table('tbl_voucher_payment_vouchers')
-                                    ->where('tbl_voucher_payment_vouchers.deleted','=','No')
-                                    ->where('tbl_voucher_payment_vouchers.paymentDate','>=',$mobileBankAccount->opening_balance_entry_date)
-                                    ->where('tbl_voucher_payment_vouchers.paymentDate','<', $date)
-                                    ->where('tbl_voucher_payment_vouchers.sister_concern_id', $logged_sister_concern_id)
-                                    ->where('tbl_voucher_payment_vouchers.status','=', 'Active')
-                                    ->where('tbl_voucher_payment_vouchers.payment_method', 'Mobile Banking')
-                                    ->where('tbl_voucher_payment_vouchers.account_coa_id','=',$mobileBankAccount->id)
-                                    ->where('tbl_voucher_payment_vouchers.type', 'Payment')
+                 $mobileBankPayments = DB::table('payment_vouchers')
+                                    ->where('payment_vouchers.deleted','=','No')
+                                    ->where('payment_vouchers.paymentDate','>=',$mobileBankAccount->opening_balance_entry_date)
+                                    ->where('payment_vouchers.paymentDate','<', $date)
+                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.status','=', 'Active')
+                                    ->where('payment_vouchers.payment_method', 'Mobile Banking')
+                                    ->where('payment_vouchers.account_coa_id','=',$mobileBankAccount->id)
+                                    ->where('payment_vouchers.type', 'Payment')
                                     ->get();
                
                 $netMobileBankPayment=0;
@@ -1190,15 +1188,15 @@ class ExpenseController extends Controller
                      $netMobileBankPayment+=$mobileBankPayment->amount;
                 }
                 //return $netMobileBankPayment; 
-                $mobileBankPaymentReceives = DB::table('tbl_voucher_payment_vouchers')
-                                    ->where('tbl_voucher_payment_vouchers.deleted','=','No')
-                                    ->where('tbl_voucher_payment_vouchers.paymentDate','>=', $mobileBankAccount->opening_balance_entry_date)
-                                    ->where('tbl_voucher_payment_vouchers.paymentDate','<', $date)
-                                    ->where('tbl_voucher_payment_vouchers.sister_concern_id', $logged_sister_concern_id)
-                                    ->where('tbl_voucher_payment_vouchers.status','=', 'Active')
-                                    ->where('tbl_voucher_payment_vouchers.payment_method', 'Mobile Banking')
-                                    ->where('tbl_voucher_payment_vouchers.account_coa_id','=',$mobileBankAccount->id)
-                                    ->where('tbl_voucher_payment_vouchers.type', 'Payment Received')
+                $mobileBankPaymentReceives = DB::table('payment_vouchers')
+                                    ->where('payment_vouchers.deleted','=','No')
+                                    ->where('payment_vouchers.paymentDate','>=', $mobileBankAccount->opening_balance_entry_date)
+                                    ->where('payment_vouchers.paymentDate','<', $date)
+                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.status','=', 'Active')
+                                    ->where('payment_vouchers.payment_method', 'Mobile Banking')
+                                    ->where('payment_vouchers.account_coa_id','=',$mobileBankAccount->id)
+                                    ->where('payment_vouchers.type', 'Payment Received')
                                     ->get();
                
                 $netMobileBankPaymentReceived=0;

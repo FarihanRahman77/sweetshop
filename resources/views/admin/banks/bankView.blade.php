@@ -44,9 +44,7 @@
     
         
     
-        function seeBills(id){
-            window.open("{{url('account/bill/details')}}"+"/"+id);
-        }
+        
 
         $(document).ready(function(){
             table = $('#manageBankTable').DataTable({
