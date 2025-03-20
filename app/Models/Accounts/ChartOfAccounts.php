@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class ChartOfAccounts extends Model
 {
     use HasFactory;
-    protected $table="tbl_acc_coas";
+    protected $table="tbl_accounts_coas";
 
      public static function incomeFunctionAmounts($dateFrom,$dateTo,$incomeId){
         $incomeAmounts=DB::table('tbl_acc_voucher_details')

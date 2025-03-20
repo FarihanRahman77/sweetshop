@@ -20,6 +20,7 @@ use PDF;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 
+
 class ExpenseController extends Controller
 {
 
@@ -30,11 +31,11 @@ class ExpenseController extends Controller
 
 
         public function getExpense(){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $expenses= DB::table('tbl_acc_expenses')
                     ->leftjoin('our_teams', 'tbl_acc_expenses.tbl_crm_vendor_id', '=', 'our_teams.id')
                     ->select('tbl_acc_expenses.*','our_teams.member_name')
-                    ->where('tbl_acc_expenses.from_warehouse','=',$loggedWarehouseId)
+                    ->where('tbl_acc_expenses.sister_concern_id','=',$logged_sister_concern_id)
                     ->where('tbl_acc_expenses.deleted','=','No')
                     ->orderby('tbl_acc_expenses.id','Desc')
                     ->get();
@@ -90,25 +91,25 @@ class ExpenseController extends Controller
 
 
         public function create(){
-            $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-            $expense=ChartOfAccounts::where('name','=','Expense')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
+            $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+            $expense=ChartOfAccounts::where('name','=','Expense')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first();
 
             $expense_id=$expense->id;
-            $bank=ChartOfAccounts::where('name','=','Bank')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
+            $bank=ChartOfAccounts::where('name','=','Bank')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first();
             $bank_id=$bank->id;
             $coas=ChartOfAccounts::where('parent_id','=',$expense_id)->where('deleted','=','No')
                                     ->where('status','=','Active')
                                     ->orderBy('our_code', 'asc')
-                                    ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                    ->where('sister_concern_id','like',"%$logged_sister_concern_id%")
                                     ->get();
 
             $suppliers=OurTeam::where('deleted','=','No')->where('status','=','Active')->get();
-            $banks=ChartOfAccounts::where('deleted','=','No')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('status','=','Active')->orderBy('id', 'asc')->where('parent_id','=',$bank_id )->where('name','!=','Cash')->get();
-            $cashId=ChartOfAccounts::where('name','=','Cash')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
-            $transaction_method =ChartOfAccounts::where('slug','=','cash-bank')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
-            $methods =ChartOfAccounts::where('parent_id','=',$transaction_method->id)->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->get();
-          
-            return view('admin.account.expense.expenseCreate',['coas'=>$coas,'suppliers'=>$suppliers,'methods'=>$methods,'cashId'=>$cashId,'loggedWarehouseId'=>$loggedWarehouseId]);
+            $banks=ChartOfAccounts::where('deleted','=','No')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('status','=','Active')->orderBy('id', 'asc')->where('parent_id','=',$bank_id )->where('name','!=','Cash')->get();
+            $cashId=ChartOfAccounts::where('name','=','Cash')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first();
+            $transaction_method =ChartOfAccounts::where('slug','=','cash-bank')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first();
+            $methods =ChartOfAccounts::where('parent_id','=',$transaction_method->id)->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->get();
+        
+            return view('admin.account.expense.expenseCreate',['coas'=>$coas,'suppliers'=>$suppliers,'methods'=>$methods,'cashId'=>$cashId,'loggedWarehouseId'=>$logged_sister_concern_id]);
         }
 
 
@@ -119,12 +120,12 @@ class ExpenseController extends Controller
 
 
         public function getAccountStatus(Request $request){
-                $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+                $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
                 $coas=ChartOfAccounts::where('deleted','=','No')
                         ->where('status','=','Active')
                         ->orderBy('code', 'asc')
                         ->where('parent_id','=',$request->payment_method)
-                        ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                        ->where('sister_concern_id','like',"%$logged_sister_concern_id%")
                         ->get();
 
                 $coa_data="<option value='' selected disabled> Select accounts</option  >";
@@ -148,10 +149,8 @@ class ExpenseController extends Controller
 
 
         public function getAmount(Request $request){
-
             $coas=ChartOfAccounts::find($request->account_status); 
             return $coas->amount;
-
         }
 
 
@@ -169,10 +168,9 @@ class ExpenseController extends Controller
                 'credit_amount'         => 'numeric',
                 'address'               => 'nullable'
             ]);
-            
-            $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+            $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
             $cash=ChartOfAccounts::where('slug','=','cash')
-                                ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                ->where('sister_concern_id','like',"%$logged_sister_concern_id%")
                                 ->where('deleted','=','No')
                                 ->where('status','=','Active')
                                 ->first();
@@ -200,7 +198,8 @@ class ExpenseController extends Controller
                 $expense = new Expense();
                 $expense->expense_no=$expenseCode;
                 $expense->transaction_date=$request->transaction_date;
-                $expense->from_warehouse=$loggedWarehouseId;
+                // $expense->from_warehouse=$loggedWarehouseId;
+                $expense->sister_concern_id=$logged_sister_concern_id;
                 $expense->tbl_crm_vendor_id=$request->vendor_id;
                 $expense->reference=$request->reference;
                 $expense->particulars=$request->particulars;
@@ -241,7 +240,8 @@ class ExpenseController extends Controller
                 $voucher->payment_method=$paymentMethodCOA;
                 $voucher->type_no=$last_id;
                 $voucher->type='Expense';
-                $voucher->warehouse_id=$loggedWarehouseId;
+                // $voucher->warehouse_id=$loggedWarehouseId;
+                $voucher->sister_concern_id=$logged_sister_concern_id;
                 $voucher->deleted="No";
                 $voucher->status="Active";
                 $voucher->created_by=Auth::user()->id;
@@ -282,7 +282,7 @@ class ExpenseController extends Controller
                   ];
                   DB::table('tbl_acc_voucher_details')->insert($item_array_single);
                   
-                $cashId=ChartOfAccounts::where('slug','=','Cash')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first()->id;
+                $cashId=ChartOfAccounts::where('slug','=','Cash')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first()->id;
                    if($request->payment_method == $cashId){
                     $expense=ChartOfAccounts::find($request->payment_method);
                     $expense->decrement('amount',$request->amountTotal);
@@ -355,13 +355,10 @@ class ExpenseController extends Controller
             ->where('tbl_acc_expense_details.deleted','No')
             ->where('tbl_acc_expense_details.tbl_acc_expense_id', $id)
             ->get();
-        
         $expenses=Expense::find($id);
         $party= OurTeam::find($expenses->tbl_crm_vendor_id);
         $pdf = PDF::loadView('admin.account.expense.expensePdf',  ['details'=>$details,'expenses'=>$expenses,'party'=>$party]);
-
-        return $pdf->stream('expense-report-pdf.pdf', array("Attachment" => false)); 
-
+        return $pdf->stream('expense-report-pdf.pdf', array("Attachment" => false));
     }
     
 
