@@ -126,6 +126,25 @@
         }
 
         $(document).ready(function(){
+
+            // $.ajax({
+            //             url:"",
+            //             method:"GET",
+                       
+            //             datatype:"json",
+            //             success:function(result){
+            //             alert(JSON.stringify(result));
+            //                 table.ajax.reload(null, false);
+            //             }, beforeSend: function () {
+            //                 $('#loading').show();
+            //             },complete: function () {
+            //                 $('#loading').hide();
+            //             }, error: function(response) {
+            //                 alert(JSON.stringify(response));
+            //             }
+            //         });
+
+
             table = $('#manageBillTable').DataTable({
                 'ajax': "{{route('getBill')}}",
                 processing:true,

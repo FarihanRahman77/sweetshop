@@ -31,10 +31,10 @@ class BillController extends Controller
 
 
     public function create(){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $expense=ChartOfAccounts::where('name','=','Expense')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
+        $expense=ChartOfAccounts::where('name','=','Expense')->where('sister_concern_id','like',"%$loggedWarehouseId%")->first();
         $expense_id=$expense->id;
-        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->orderBy('code', 'asc')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('parent_id','=',$expense_id )->get();
+        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->orderBy('code', 'asc')->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('parent_id','=',$expense_id )->get();
         $suppliers=Party::where('party_type','=','Supplier')->where('deleted','=','No')->where('status','=','Active')->orderBy('id','DESC')->get();
         
         return view('admin.account.bills.billCreate',['coas'=>$coas,'suppliers'=>$suppliers]);
@@ -44,7 +44,7 @@ class BillController extends Controller
 
 
     public function getBill(){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
         $bills= DB::table('tbl_acc_bills')
             ->leftjoin('parties','parties.id','=','tbl_acc_bills.tbl_crm_vendor_id')
             ->select('tbl_acc_bills.*','parties.name','parties.contact')
@@ -103,8 +103,8 @@ class BillController extends Controller
 
 
     public function store(Request $request){
-       // return $request;
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        // return $request;
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
         $request->validate([ 
             'bill_date'             => 'required',
             'vendor_id'             => 'required',
@@ -125,7 +125,7 @@ class BillController extends Controller
             $bill->reference=$request->reference;
             $bill->particulars=$request->particulars;
             $bill->amount=$request->amountTotal;
-            $bill->warehouse_id=$loggedWarehouseId;
+            $bill->sister_concern_id=$loggedWarehouseId;
             $bill->due_amount=$request->amountTotal;
             $bill->payment_status="Due";
             $bill->deleted="No";
@@ -157,7 +157,7 @@ class BillController extends Controller
             $voucher->amount=$request->amountTotal;
             $voucher->transaction_date=$request->bill_date;
             $voucher->type_no=$last_id;
-            $voucher->warehouse_id=$loggedWarehouseId;
+            $voucher->sister_concern_id=$loggedWarehouseId;
             $voucher->type='Bill created';
             $voucher->deleted="No";
             $voucher->status="Active";
@@ -197,7 +197,7 @@ class BillController extends Controller
             $PaymentVoucher->created_by = Auth::user()->id;
             $PaymentVoucher->paymentDate = $request->bill_date;
             $PaymentVoucher->bill_id = $last_id;
-            $PaymentVoucher->warehouse_id=$loggedWarehouseId;
+            $PaymentVoucher->sister_concern_id=$loggedWarehouseId;
             $PaymentVoucher->type = "Payable";
             $PaymentVoucher->voucherType = "Bill";
             $PaymentVoucher->customerType = "Party";
@@ -257,16 +257,16 @@ class BillController extends Controller
 
 
     public function payBills(){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
-        $expense=ChartOfAccounts::where('name','=','Expense')->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
+        $expense=ChartOfAccounts::where('name','=','Expense')->where('deleted','=','No')->where('status','=','Active')->where('sister_concern_id','like',"%$loggedWarehouseId%")->first();
         $expense_id=$expense->id;
-        $bank=ChartOfAccounts::where('name','=','Bank')->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
+        $bank=ChartOfAccounts::where('name','=','Bank')->where('deleted','=','No')->where('status','=','Active')->where('sister_concern_id','like',"%$loggedWarehouseId%")->first();
         $bank_id=$bank->id;
-        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->orderBy('code', 'asc')->where('parent_id','=',$expense_id )->get();
+        $coas=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->where('sister_concern_id','like',"%$loggedWarehouseId%")->orderBy('code', 'asc')->where('parent_id','=',$expense_id )->get();
         $suppliers=Party::where('party_type','=','Supplier')->where('deleted','=','No')->where('status','=','Active')->get();
         $banks=ChartOfAccounts::where('deleted','=','No')->where('status','=','Active')->orderBy('code', 'asc')->where('parent_id','=',$bank_id )->where('name','!=','Cash')->get();
-        $cashId=ChartOfAccounts::where('slug','=','cash-bank')->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->first();
-        $paymentMethods=ChartOfAccounts::where('parent_id','=',$cashId->id)->where('deleted','=','No')->where('status','=','Active')->where('warehouse_id','like',"%$loggedWarehouseId%")->get();
+        $cashId=ChartOfAccounts::where('slug','=','cash-bank')->where('deleted','=','No')->where('status','=','Active')->where('sister_concern_id','like',"%$loggedWarehouseId%")->first();
+        $paymentMethods=ChartOfAccounts::where('parent_id','=',$cashId->id)->where('deleted','=','No')->where('status','=','Active')->where('sister_concern_id','like',"%$loggedWarehouseId%")->get();
         return view('admin.account.bills.billPay',['coas'=>$coas,'suppliers'=>$suppliers,'banks'=>$banks,'paymentMethods'=>$paymentMethods]);
     }
 
@@ -274,7 +274,7 @@ class BillController extends Controller
 
 
     public function getBillData(Request $request){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
         $bills=Bill::where('tbl_crm_vendor_id','=',$request->vendor_id)
                     ->where('payment_status','=','Due')
                     ->where('deleted','=','No')
@@ -328,9 +328,9 @@ public function billPayStore(Request $request){
             'transaction_id'        => 'nullable',
         ]);
 
-            $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+            $loggedWarehouseId=Session::get('companySettings')[0]['id'];
             $cash=ChartOfAccounts::where('slug','=','cash')
-                                ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                ->where('sister_concern_id','like',"%$loggedWarehouseId%")
                                 ->where('deleted','=','No')
                                 ->where('status','=','Active')
                                 ->first();
@@ -365,7 +365,7 @@ public function billPayStore(Request $request){
             $billPayments->reference=$request->reference;
             $billPayments->payment_method=$paymentMethodCOA;
             $billPayments->account_status=$paymentMethod->id;
-            $billPayments->warehouse_id=$loggedWarehouseId;
+            $billPayments->sister_concern_id=$loggedWarehouseId;
             $billPayments->amount=$request->amountTotal;
             $billPayments->status="Active";
             $billPayments->deleted="No";
@@ -409,7 +409,7 @@ public function billPayStore(Request $request){
             $vouchers->transaction_date=date('Y-m-d h:s');
             $vouchers->payment_method=$paymentMethodCOA;
             $vouchers->type_no=$lastId;
-            $vouchers->warehouse_id=$loggedWarehouseId;
+            $vouchers->sister_concern_id=$loggedWarehouseId;
             $vouchers->type='Bill paid';
             $vouchers->deleted="No";
             $vouchers->status="Active";
@@ -459,7 +459,7 @@ public function billPayStore(Request $request){
             $PaymentVoucher->created_by = Auth::user()->id;
             $PaymentVoucher->paymentDate = $request->payment_date;
             $PaymentVoucher->bill_id = $lastId;
-            $PaymentVoucher->warehouse_id=$loggedWarehouseId;
+            $PaymentVoucher->sister_concern_id=$loggedWarehouseId;
             $PaymentVoucher->type = "Payment";
             $PaymentVoucher->voucherType = "Bill Payment";
             $PaymentVoucher->customerType = "Party";
@@ -490,12 +490,12 @@ public function billPayStore(Request $request){
 
 
     public function getBillsources(Request $request){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
             $method=ChartOfAccounts::find($request->payment_method);
             $sources=ChartOfAccounts::where('parent_id','=',$request->payment_method)
                                         ->where('deleted','=','No')
                                         ->where('status','=','Active')
-                                        ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                        ->where('sister_concern_id','like',"%$loggedWarehouseId%")
                                         ->get();
             $data='';
             $data .='<option value=""selected >Select Source</option>';

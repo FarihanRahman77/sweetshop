@@ -123,7 +123,7 @@
                                             $coaChildss=App\Models\Accounts\ChartOfAccounts::where('parent_id','=',$coa->id)->where('deleted','=','No')
                                                 ->where('status','=','Active')
                                                 ->orderBy('our_code', 'asc')
-                                                ->where('warehouse_id','like',"%$loggedWarehouseId%")
+                                                ->where('sister_concern_id','like',"%$loggedWarehouseId%")
                                                 ->get();
                                             @endphp
                                             @foreach($coaChildss as $coaChild)
@@ -247,7 +247,7 @@
             data:{"payment_method":payment_method},
             datatype:"json",
             success:function(result){
-                //alert(JSON.stringify(result));
+                // alert(JSON.stringify(result));
                 if(result.method_slug =='cash'){
                     $('#from_source').hide();
                     $('#div_account_status').hide();
@@ -265,7 +265,7 @@
             },complete: function () {
                   $('#loading').hide();
             }, error: function(response) {
-                //alert(JSON.stringify(response));
+                // alert(JSON.stringify(response));
             }
         });
     }

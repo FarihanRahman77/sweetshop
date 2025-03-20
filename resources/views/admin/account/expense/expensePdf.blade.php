@@ -164,23 +164,43 @@
         .spaces {
             color: white;
         }
+
+        .column2logo {
+                    text-align: center;
+                    padding: 1% 0% 0% 2%;
+                    height: 300px; /* Should be removed. Only for demonstration */
+                    }
+
         .column2 {
-            float: left;
-            padding: 1% 0% 0% 2%;
-            height: 300px; /* Should be removed. Only for demonstration */
-            }
+                    float: left;
+                    padding: 1% 0% 0% 2%;
+                    height: 300px;
+                    /* Should be removed. Only for demonstration */
+                    }
+         .textLeft {
+                        text-align: left;
+                        font-size: 12px;
+                    }
+            header {
+                        margin-bottom: 20px;
+                    }
+.supAddressFont {
+    font-size: 12px;
+}
         .column3 {
             float: right;
             width: 60%;
             padding: 0% 0% 0% 2%;
             height: 300px; /* Should be removed. Only for demonstration */
             }
+
             /* Clear floats after the columns */
             .row2:after {
             content: "";
             display: table;
             clear: both;
             }
+
         .pagenum:before {
                 content: counter(page);
                 margin-left:90%;
@@ -194,21 +214,18 @@
 </head>
 <body>
 <!-- Content Wrapper. Contains page content -->
-    <header>
-        <div class="row2">
-            <div class="column2">
-                <img src="{{'upload/images/'.Session::get('companySettings')[0]['logo']}}" width='240' height='100'>
-                <div class="supAddressFont">
-                    {!!Session::get("companySettings")[0]["report_header"]!!}
-                </div>
+<header>
+    <div class="row">
+        <div class="col-md-6 column2logo ">
+            <img src="{{'upload/images/'.Session::get('companySettings')[0]['logo']}}" width='240' height='100' class="mb-3">
+            <div class="supAddressFont">
+                {!! Session::get("companySettings")[0]["report_header"] !!}
             </div>
-            <div class="column2">
-             <div class="textLeft"><strong>Customer Name:</strong> {{ $party->member_name . ' - ' . $party->code }}</div>
-                <div class="textLeft"><strong>Phone: </strong> {{ $party->mobile_number }}</div>
-                <div class="textLeft"><strong>Address: </strong> {{ $party->address }}</div>
-            </div> 
+           
         </div>
-    </header>
+    </div>
+</header>
+
 
 
     <footer>
@@ -246,6 +263,17 @@
 <div>
     <div style="text-align: center;">
         <div class="citiestd13">Expense Invoice 1</div>
+        <div style="margin-left: 17px;"> 
+            <div class="textLeft ">
+                <strong>Customer Name:</strong> {{ $party->member_name . ' - ' . $party->code }}
+            </div>
+            <div class="textLeft">
+                <strong>Phone: </strong> {{ $party->mobile_number }}
+            </div>
+            <div class="textLeft">
+                <strong>Address: </strong> {{ $party->address }}
+            </div>
+            </div>
         <table  cellspacing="0" cellpadding="3">
             <tr>
                 <td width="60%" class="supAddress">

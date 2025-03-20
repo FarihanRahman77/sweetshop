@@ -31,11 +31,19 @@ class ExpenseController extends Controller
 
 
         public function getExpense(){
+<<<<<<< Updated upstream
         $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $expenses= DB::table('tbl_acc_expenses')
                     ->leftjoin('our_teams', 'tbl_acc_expenses.tbl_crm_vendor_id', '=', 'our_teams.id')
                     ->select('tbl_acc_expenses.*','our_teams.member_name')
                     ->where('tbl_acc_expenses.sister_concern_id','=',$logged_sister_concern_id)
+=======
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
+        $expenses= DB::table('tbl_acc_expenses')
+                    ->leftjoin('our_teams', 'tbl_acc_expenses.tbl_crm_vendor_id', '=', 'our_teams.id')
+                    ->select('tbl_acc_expenses.*','our_teams.member_name')
+                    ->where('tbl_acc_expenses.sister_concern_id','=',$loggedWarehouseId)
+>>>>>>> Stashed changes
                     ->where('tbl_acc_expenses.deleted','=','No')
                     ->orderby('tbl_acc_expenses.id','Desc')
                     ->get();
@@ -91,15 +99,24 @@ class ExpenseController extends Controller
 
 
         public function create(){
+<<<<<<< Updated upstream
             $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
             $expense=ChartOfAccounts::where('name','=','Expense')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first();
 
             $expense_id=$expense->id;
             $bank=ChartOfAccounts::where('name','=','Bank')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first();
+=======
+            $loggedWarehouseId=Session::get('companySettings')[0]['id'];
+            $expense=ChartOfAccounts::where('name','=','Expense')->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
+
+            $expense_id=$expense->id;
+            $bank=ChartOfAccounts::where('name','=','Bank')->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
+>>>>>>> Stashed changes
             $bank_id=$bank->id;
             $coas=ChartOfAccounts::where('parent_id','=',$expense_id)->where('deleted','=','No')
                                     ->where('status','=','Active')
                                     ->orderBy('our_code', 'asc')
+<<<<<<< Updated upstream
                                     ->where('sister_concern_id','like',"%$logged_sister_concern_id%")
                                     ->get();
 
@@ -110,6 +127,18 @@ class ExpenseController extends Controller
             $methods =ChartOfAccounts::where('parent_id','=',$transaction_method->id)->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->get();
         
             return view('admin.account.expense.expenseCreate',['coas'=>$coas,'suppliers'=>$suppliers,'methods'=>$methods,'cashId'=>$cashId,'loggedWarehouseId'=>$logged_sister_concern_id]);
+=======
+                                    ->where('sister_concern_id','like',"%$loggedWarehouseId%")
+                                    ->get();
+
+            $suppliers=OurTeam::where('deleted','=','No')->where('status','=','Active')->get();
+            $banks=ChartOfAccounts::where('deleted','=','No')->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('status','=','Active')->orderBy('id', 'asc')->where('parent_id','=',$bank_id )->where('name','!=','Cash')->get();
+            $cashId=ChartOfAccounts::where('name','=','Cash')->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
+            $transaction_method =ChartOfAccounts::where('slug','=','cash-bank')->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
+            $methods =ChartOfAccounts::where('parent_id','=',$transaction_method->id)->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->get();
+          
+            return view('admin.account.expense.expenseCreate',['coas'=>$coas,'suppliers'=>$suppliers,'methods'=>$methods,'cashId'=>$cashId,'loggedWarehouseId'=>$loggedWarehouseId]);
+>>>>>>> Stashed changes
         }
 
 
@@ -120,12 +149,20 @@ class ExpenseController extends Controller
 
 
         public function getAccountStatus(Request $request){
+<<<<<<< Updated upstream
                 $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
+=======
+                $loggedWarehouseId=Session::get('companySettings')[0]['id'];
+>>>>>>> Stashed changes
                 $coas=ChartOfAccounts::where('deleted','=','No')
                         ->where('status','=','Active')
                         ->orderBy('code', 'asc')
                         ->where('parent_id','=',$request->payment_method)
+<<<<<<< Updated upstream
                         ->where('sister_concern_id','like',"%$logged_sister_concern_id%")
+=======
+                        ->where('sister_concern_id','like',"%$loggedWarehouseId%")
+>>>>>>> Stashed changes
                         ->get();
 
                 $coa_data="<option value='' selected disabled> Select accounts</option  >";
@@ -157,7 +194,7 @@ class ExpenseController extends Controller
 
 
         public function store(Request $request){
-           
+        //    return $request;
             $request->validate([   
                 'transaction_date'      => 'required',
                 'vendor_id'             => 'required',
@@ -168,9 +205,16 @@ class ExpenseController extends Controller
                 'credit_amount'         => 'numeric',
                 'address'               => 'nullable'
             ]);
+<<<<<<< Updated upstream
             $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
             $cash=ChartOfAccounts::where('slug','=','cash')
                                 ->where('sister_concern_id','like',"%$logged_sister_concern_id%")
+=======
+            
+            $loggedWarehouseId=Session::get('companySettings')[0]['id'];
+            $cash=ChartOfAccounts::where('slug','=','cash')
+                                ->where('sister_concern_id','like',"%$loggedWarehouseId%")
+>>>>>>> Stashed changes
                                 ->where('deleted','=','No')
                                 ->where('status','=','Active')
                                 ->first();
@@ -198,8 +242,12 @@ class ExpenseController extends Controller
                 $expense = new Expense();
                 $expense->expense_no=$expenseCode;
                 $expense->transaction_date=$request->transaction_date;
+<<<<<<< Updated upstream
                 // $expense->from_warehouse=$loggedWarehouseId;
                 $expense->sister_concern_id=$logged_sister_concern_id;
+=======
+                $expense->sister_concern_id=$loggedWarehouseId;
+>>>>>>> Stashed changes
                 $expense->tbl_crm_vendor_id=$request->vendor_id;
                 $expense->reference=$request->reference;
                 $expense->particulars=$request->particulars;
@@ -223,7 +271,7 @@ class ExpenseController extends Controller
                         'particulars'           => $request->particular[$i],
                         'amount'                => $request->amount[$i],
                         'taxable_amount'        => $request->taxable_amount[$i],
-                        'warehouse_id'          => $loggedWarehouseId,
+                        'sister_concern_id'          => $loggedWarehouseId,
                         'deleted'               => 'No',
                         'status'                => 'Active',
                         'created_by'            => Auth::user()->id,
@@ -240,8 +288,12 @@ class ExpenseController extends Controller
                 $voucher->payment_method=$paymentMethodCOA;
                 $voucher->type_no=$last_id;
                 $voucher->type='Expense';
+<<<<<<< Updated upstream
                 // $voucher->warehouse_id=$loggedWarehouseId;
                 $voucher->sister_concern_id=$logged_sister_concern_id;
+=======
+                $voucher->sister_concern_id=$loggedWarehouseId;
+>>>>>>> Stashed changes
                 $voucher->deleted="No";
                 $voucher->status="Active";
                 $voucher->created_by=Auth::user()->id;
@@ -256,7 +308,7 @@ class ExpenseController extends Controller
                         'tbl_acc_coa_id'        => $request->account[$j],
                         'debit'                 => $request->amount[$j],
                         'particulars'           => $request->particular[$j],
-                        'warehouse_id'           => $loggedWarehouseId,
+                        'sister_concern_id'           => $loggedWarehouseId,
                         'voucher_title'         => 'Expense created with voucher '.$expenseCode,
                         'deleted'               => 'No',
                         'status'                => 'Active',
@@ -273,7 +325,7 @@ class ExpenseController extends Controller
                     'tbl_acc_voucher_id'    => $voucherId,
                     'tbl_acc_coa_id'        => $paymentMethodCOA,
                     'credit'                 => $request->amountTotal,
-                    'warehouse_id'          => $loggedWarehouseId,
+                    'sister_concern_id'          => $loggedWarehouseId,
                     'voucher_title'         => 'Expense paid with voucher '.$expenseCode,
                     'deleted'               => 'No',
                     'status'                => 'Active',
@@ -282,7 +334,11 @@ class ExpenseController extends Controller
                   ];
                   DB::table('tbl_acc_voucher_details')->insert($item_array_single);
                   
+<<<<<<< Updated upstream
                 $cashId=ChartOfAccounts::where('slug','=','Cash')->where('sister_concern_id','like',"%$logged_sister_concern_id%")->where('deleted','=','No')->where('status','=','Active')->first()->id;
+=======
+                $cashId=ChartOfAccounts::where('slug','=','Cash')->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first()->id;
+>>>>>>> Stashed changes
                    if($request->payment_method == $cashId){
                     $expense=ChartOfAccounts::find($request->payment_method);
                     $expense->decrement('amount',$request->amountTotal);
@@ -313,7 +369,7 @@ class ExpenseController extends Controller
                     
                     $PaymentVoucher->paymentDate = $request->transaction_date;
                     $PaymentVoucher->expense_id = $last_id;
-                    $PaymentVoucher->warehouse_id = $loggedWarehouseId;
+                    $PaymentVoucher->sister_concern_id = $loggedWarehouseId;
                     $PaymentVoucher->type = "Payment";
                     $PaymentVoucher->voucherType = "Expense";
                     $PaymentVoucher->customerType = "Party";
@@ -348,10 +404,10 @@ class ExpenseController extends Controller
 
 
     public function seeDetails($id){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
         $details = DB::table('tbl_acc_expense_details')
-            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
+            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
             ->where('tbl_acc_expense_details.deleted','No')
             ->where('tbl_acc_expense_details.tbl_acc_expense_id', $id)
             ->get();
@@ -374,7 +430,7 @@ class ExpenseController extends Controller
     
     public function expenseReportGenerate(Request $request)
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
         $request->validate([
             'dateFrom' => 'required',
         ]);
@@ -386,7 +442,7 @@ class ExpenseController extends Controller
             ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
             ->where('payment_vouchers.deleted', 'No')
             ->where('payment_vouchers.paymentDate', '=', $request->dateFrom)
-            ->where('payment_vouchers.warehouse_id', '=', $loggedWarehouseId)
+            ->where('payment_vouchers.sister_concern_id', '=', $loggedWarehouseId)
             ->where('payment_vouchers.status', 'Active')
             ->where('payment_vouchers.payment_method', 'Cash')
             ->where(function ($query) {
@@ -410,8 +466,8 @@ class ExpenseController extends Controller
 
             if($report->voucherType == 'Expense'){
                 $expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id', $report->expense_id)
                             ->get();
@@ -424,8 +480,8 @@ class ExpenseController extends Controller
             }elseif($report->voucherType == 'Bill Payment'){
                  $bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
-                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
+                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $report->bill_id)
@@ -509,7 +565,7 @@ class ExpenseController extends Controller
                         ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
                         ->where('payment_vouchers.deleted', 'No')
                         ->where('payment_vouchers.paymentDate', '=', $request->dateFrom)
-                        ->where('payment_vouchers.warehouse_id', '=', $loggedWarehouseId)
+                        ->where('payment_vouchers.sister_concern_id', '=', $loggedWarehouseId)
                         ->where('payment_vouchers.status', 'Active')
                         ->where('payment_vouchers.payment_method', 'Bank')
                     ->where(function ($query) {
@@ -526,7 +582,7 @@ class ExpenseController extends Controller
                         ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
                         ->where('payment_vouchers.deleted', 'No')
                         ->where('payment_vouchers.paymentDate', '=', $request->dateFrom)
-                        ->where('payment_vouchers.warehouse_id', '=', $loggedWarehouseId)
+                        ->where('payment_vouchers.sister_concern_id', '=', $loggedWarehouseId)
                         ->where('payment_vouchers.status', 'Active')
                         ->where('payment_vouchers.payment_method', 'Mobile Banking')
                     ->where(function ($query) {
@@ -545,8 +601,8 @@ class ExpenseController extends Controller
         foreach ($todayBankReports as $todayBankReport){
             if($todayBankReport->voucherType == 'Expense'){
                 $bank_expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id',$todayBankReport->expense_id)
                             ->get();
@@ -559,8 +615,8 @@ class ExpenseController extends Controller
             }elseif($todayBankReport->voucherType == 'Bill Payment'){
                  $bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name','tbl_acc_bill_details.particulars')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name','tbl_acc_bill_details.particulars')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $todayBankReport->bill_id)
@@ -639,8 +695,8 @@ class ExpenseController extends Controller
 
             if($todayMobileBankingReport->voucherType == 'Expense'){
                 $mobile_bank_expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id',$todayMobileBankingReport->expense_id)
                             ->get();
@@ -653,8 +709,8 @@ class ExpenseController extends Controller
             }elseif($todayMobileBankingReport->voucherType == 'Bill Payment'){
                  $mobile_bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
-                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id','tbl_acc_bill_details.particulars')
+                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $todayMobileBankingReport->bill_id)
@@ -745,7 +801,7 @@ class ExpenseController extends Controller
 
     public function generateExpensePdf($data)
     {
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $loggedWarehouseId=Session::get('companySettings')[0]['id'];
         $dataArray = explode(",", $data);
         $startAndEndDate = array($dataArray[0], $dataArray[1]);
         $from = $dataArray[0];
@@ -759,7 +815,7 @@ class ExpenseController extends Controller
             ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
             ->where('payment_vouchers.deleted', 'No')
             ->where('payment_vouchers.paymentDate', $date)
-            ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+            ->where('payment_vouchers.sister_concern_id', $loggedWarehouseId)
             ->where('payment_vouchers.status', 'Active')
             ->where('payment_vouchers.payment_method', 'Cash')
             ->where(function ($query) {
@@ -788,8 +844,8 @@ class ExpenseController extends Controller
             
             if($report->voucherType == 'Expense'){
                 $expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id', $report->expense_id)
                             ->get();
@@ -801,8 +857,8 @@ class ExpenseController extends Controller
             }elseif($report->voucherType == 'Bill Payment'){
                  $bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $report->bill_id)
@@ -875,7 +931,7 @@ class ExpenseController extends Controller
                             ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
                             ->where('payment_vouchers.deleted', 'No')
                             ->where('payment_vouchers.paymentDate', $date)
-                            ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                            ->where('payment_vouchers.sister_concern_id', $loggedWarehouseId)
                             ->where('payment_vouchers.status', 'Active')
                             ->where('payment_vouchers.payment_method', 'Bank')
                             ->where(function ($query) {
@@ -905,8 +961,8 @@ class ExpenseController extends Controller
         
         if($reportBank->voucherType == 'Expense'){
             $bank_expense_details = DB::table('tbl_acc_expense_details')
-                        ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                        ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
+                        ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                        ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
                         ->where('tbl_acc_expense_details.deleted','No')
                         ->where('tbl_acc_expense_details.tbl_acc_expense_id',$reportBank->expense_id)
                         ->get();
@@ -918,8 +974,8 @@ class ExpenseController extends Controller
         }elseif($reportBank->voucherType == 'Bill Payment'){
              $bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                         ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                        ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                        ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
+                        ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                        ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
                         ->where('tbl_acc_bill_details.deleted','=','No')
                         ->where('tbl_acc_bill_details.status','=','Active')
                         ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $reportBank->bill_id)
@@ -994,7 +1050,7 @@ class ExpenseController extends Controller
                             ->select('payment_vouchers.*', 'sales.grand_total', 'sales.current_payment', 'purchases.total_amount', 'parties.name', 'parties.address')
                             ->where('payment_vouchers.deleted', 'No')
                             ->where('payment_vouchers.paymentDate', $date)
-                            ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                            ->where('payment_vouchers.sister_concern_id', $loggedWarehouseId)
                             ->where('payment_vouchers.status', 'Active')
                             ->where('payment_vouchers.payment_method', 'Mobile Banking')
                             ->where(function ($query) {
@@ -1023,8 +1079,8 @@ class ExpenseController extends Controller
             
             if($reportMobileBanking->voucherType == 'Expense'){
                 $mobile_bank_expense_details = DB::table('tbl_acc_expense_details')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_expense_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_expense_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_expense_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_expense_details.deleted','No')
                             ->where('tbl_acc_expense_details.tbl_acc_expense_id',$reportMobileBanking->expense_id)
                             ->get();
@@ -1036,8 +1092,8 @@ class ExpenseController extends Controller
             }elseif($reportMobileBanking->voucherType == 'Bill Payment'){
                  $mobile_bank_bill_payment_details = DB::table('tbl_acc_bill_details')
                             ->join('tbl_acc_bill_payment_details','tbl_acc_bill_details.tbl_acc_bill_id','=','tbl_acc_bill_payment_details.tbl_acc_bill_id')
-                            ->leftjoin('tbl_acc_coas','tbl_acc_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
-                            ->select('tbl_acc_bill_details.*','tbl_acc_coas.name as coa_name')
+                            ->leftjoin('tbl_accounts_coas','tbl_accounts_coas.id','=','tbl_acc_bill_details.tbl_acc_coa_id')
+                            ->select('tbl_acc_bill_details.*','tbl_accounts_coas.name as coa_name')
                             ->where('tbl_acc_bill_details.deleted','=','No')
                             ->where('tbl_acc_bill_details.status','=','Active')
                             ->where('tbl_acc_bill_payment_details.tbl_acc_billPayment_id','=', $reportMobileBanking->bill_id)
@@ -1125,7 +1181,7 @@ class ExpenseController extends Controller
                                     ->where('payment_vouchers.deleted','=','No')
                                     ->where('payment_vouchers.paymentDate','>=', $account->opening_balance_entry_date)
                                     ->where('payment_vouchers.paymentDate','<', $date)
-                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.sister_concern_id', $loggedWarehouseId)
                                     ->where('payment_vouchers.status','=', 'Active')
                                     ->where('payment_vouchers.payment_method', 'Bank')
                                     ->where('payment_vouchers.account_coa_id','=',$account->id)
@@ -1141,7 +1197,7 @@ class ExpenseController extends Controller
                                     ->where('payment_vouchers.deleted','=','No')
                                     ->where('payment_vouchers.paymentDate','>=', $account->opening_balance_entry_date)
                                     ->where('payment_vouchers.paymentDate','<', $date)
-                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.sister_concern_id', $loggedWarehouseId)
                                     ->where('payment_vouchers.status','=', 'Active')
                                     ->where('payment_vouchers.payment_method', 'Bank')
                                     ->where('payment_vouchers.account_coa_id','=',$account->id)
@@ -1166,14 +1222,14 @@ class ExpenseController extends Controller
         //return $date;
         $allMobileBankOpeningBalance=0;
         foreach($mobileBankSources as $mobileBanksource){
-             $mobileBankAccounts=ChartOfAccounts::where('parent_id','=',$mobileBanksource->id)->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted', 'No')->where('status', 'Active')->get();
+             $mobileBankAccounts=ChartOfAccounts::where('parent_id','=',$mobileBanksource->id)->where('sister_concern_id','like',"%$loggedWarehouseId%")->where('deleted', 'No')->where('status', 'Active')->get();
              $singleMobileBankOpeningBalance=0;
             foreach($mobileBankAccounts as $mobileBankAccount){
                  $mobileBankPayments = DB::table('payment_vouchers')
                                     ->where('payment_vouchers.deleted','=','No')
                                     ->where('payment_vouchers.paymentDate','>=',$mobileBankAccount->opening_balance_entry_date)
                                     ->where('payment_vouchers.paymentDate','<', $date)
-                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.sister_concern_id', $loggedWarehouseId)
                                     ->where('payment_vouchers.status','=', 'Active')
                                     ->where('payment_vouchers.payment_method', 'Mobile Banking')
                                     ->where('payment_vouchers.account_coa_id','=',$mobileBankAccount->id)
@@ -1189,7 +1245,7 @@ class ExpenseController extends Controller
                                     ->where('payment_vouchers.deleted','=','No')
                                     ->where('payment_vouchers.paymentDate','>=', $mobileBankAccount->opening_balance_entry_date)
                                     ->where('payment_vouchers.paymentDate','<', $date)
-                                    ->where('payment_vouchers.warehouse_id', $loggedWarehouseId)
+                                    ->where('payment_vouchers.sister_concern_id', $loggedWarehouseId)
                                     ->where('payment_vouchers.status','=', 'Active')
                                     ->where('payment_vouchers.payment_method', 'Mobile Banking')
                                     ->where('payment_vouchers.account_coa_id','=',$mobileBankAccount->id)
@@ -1234,7 +1290,7 @@ class ExpenseController extends Controller
         //-----End today payment, expense , payment received-------//
 
     }
-    ///
+    
 
 
 
