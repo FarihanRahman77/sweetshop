@@ -30,7 +30,7 @@ class ExpenseController extends Controller
 
 
         public function getExpense(){
-        $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+        $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
         $expenses= DB::table('tbl_acc_expenses')
                     ->leftjoin('our_teams', 'tbl_acc_expenses.tbl_crm_vendor_id', '=', 'our_teams.id')
                     ->select('tbl_acc_expenses.*','our_teams.member_name')
@@ -90,7 +90,7 @@ class ExpenseController extends Controller
 
 
         public function create(){
-            $loggedWarehouseId=Session::get('warehouse')[0]['id'];
+            $logged_sister_concern_id = Session::get('companySettings')[0]['id'];
             $expense=ChartOfAccounts::where('name','=','Expense')->where('warehouse_id','like',"%$loggedWarehouseId%")->where('deleted','=','No')->where('status','=','Active')->first();
 
             $expense_id=$expense->id;
