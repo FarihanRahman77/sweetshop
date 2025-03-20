@@ -832,7 +832,7 @@ function menudetailsmodal(id) {
         },
         datatype: "json",
         success: function(result) {
-            //  alert(JSON.stringify(result));
+        //    alert(JSON.stringify(result));
             $('#imageDiv').html(result.imageHtml);
             $('#getmenuid').val(result.menu.id);
             $('#menu_name').text(result.menu.name);

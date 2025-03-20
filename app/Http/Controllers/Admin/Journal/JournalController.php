@@ -167,8 +167,8 @@ class JournalController extends Controller
     {
         $details = DB::table('tbl_acc_jornal_details')
             ->join('tbl_acc_jornals', 'tbl_acc_jornal_details.tbl_acc_journal_id', '=', 'tbl_acc_jornals.id')
-            ->leftjoin('tbl_acc_coas', 'tbl_acc_coas.id', '=', 'tbl_acc_jornal_details.tbl_acc_coa_id')
-            ->select('tbl_acc_jornal_details.*', 'tbl_acc_jornals.transaction_date', 'tbl_acc_jornals.reference', 'tbl_acc_jornals.internal_information', 'tbl_acc_jornals.voucher_amount', 'tbl_acc_coas.name')
+            ->leftjoin('tbl_accounts_coas', 'tbl_accounts_coas.id', '=', 'tbl_acc_jornal_details.tbl_acc_coa_id')
+            ->select('tbl_acc_jornal_details.*', 'tbl_acc_jornals.transaction_date', 'tbl_acc_jornals.reference', 'tbl_acc_jornals.internal_information', 'tbl_acc_jornals.voucher_amount', 'tbl_accounts_coas.name')
             ->where('tbl_acc_jornal_details.deleted', 'No')
             ->where('tbl_acc_jornal_details.tbl_acc_journal_id', $id)
             ->get();
