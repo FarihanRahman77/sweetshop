@@ -102,7 +102,6 @@ class SaleReturnController extends Controller
 			'dateOfSaleReturn' => 'required'
 		]);
 
-		//return $request;
 
 		DB::beginTransaction();
 		try {
@@ -119,10 +118,12 @@ class SaleReturnController extends Controller
 			$saleProductIdsArray = explode(",", $saleProductIds);
 			$itemCodesArray = explode(",", $request->itemCodes);
 			$QuantitiesArray = explode(",", $request->Quantities);
+			$SUBQuantitiesArray = explode(",", $request->SUBQuantities);
 			$returnedQuantitiesArray = explode(",", $request->returnedQuantities);
 			$returnQuantitiesArray = explode(",", $request->returnQuantities);
 			$remainQuantitiesArray = explode(",", $request->remainQuantities);
 			$unitPricesArray = explode(",", $request->unitPrices);
+			$SUBunitPricesArray = explode(",", $request->SUBunitPrices);
 			$productIdsOfSaleArray = explode(",", $request->productIdsOfSale);
 			$totalsArray = explode(",", $request->totals);
 			$warehouse_id = Session::get('companySettings')[0]['id'];
@@ -169,18 +170,26 @@ class SaleReturnController extends Controller
 					$saleReturnProduct->save();
 
 					// update (current_stock)  in products table //
+
 					$productId = intval($itemCodesArray[$i]);
 					$quantity = intval($returnQuantitiesArray[$i]);
 					$product = Product::find($productId);
 					$product->increment('current_stock', $quantity);
-
 					$Currentstock = Currentstock::where("tbl_productsId", $productId)
 						->where("sister_concern_id", $warehouse_id)
 						->where("deleted", 'No');
 					if ($Currentstock->first()) {
-						$Currentstock->increment('currentStock', $quantity);
-						$Currentstock->increment('salesReturnStock', $quantity);
-					} else {
+						if($request->Quantities > 0){
+							$Currentstock->increment('currentStock', $quantity);
+							$Currentstock->increment('salesReturnStock', $quantity);
+						}
+						elseif($request->SUBQuantities > 0){
+							$Currentstock->increment('broken_remaining', $quantity);
+							$Currentstock->decrement('broken_sold', $quantity);
+						}
+						
+					} 
+					else {
 						$Currentstock_insert = new Currentstock();
 						$Currentstock_insert->tbl_productsId = $productId;
 						$Currentstock_insert->sister_concern_id = $warehouse_id;
@@ -417,6 +426,7 @@ class SaleReturnController extends Controller
 					->where("sister_concern_id", $warehouse_id)
 					->where("deleted", 'No');
 				if ($Currentstock->first()) {
+					
 					$Currentstock->decrement('currentStock', $quantity);
 					$Currentstock->increment('salesReturnDelete', $quantity);
 				} else {

@@ -590,6 +590,7 @@ public function generateproductbarcode($productId,$date,$qty){
             $currentStock = new Currentstock();
             $currentStock->tbl_productsId  = $productId;
             $currentStock->tbl_wareHouseId = $request->stock_warehouse;
+            $currentStock->sister_concern_id = $request->sisterconcern_id;
             $currentStock->currentStock = $request->opening_stock;
             $currentStock->initialStock = $request->opening_stock;
             $currentStock->purchaseStock = 0;
