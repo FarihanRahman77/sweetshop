@@ -122,6 +122,7 @@
                 'ajax': "{{route('getExpense')}}",
                 processing:true,
             });
+            
         });
 
         function deleteExpense(id){
