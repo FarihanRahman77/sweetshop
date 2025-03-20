@@ -729,7 +729,7 @@
                             showSerializTable(productId, warehouseId);
                         }
                     } else {
-                        alert(JSON.stringify(result));
+                       // alert(JSON.stringify(result));
                     }
                 },
                 beforeSend: function() {
@@ -739,7 +739,7 @@
                     $('#loading').hide();
                 },
                 error: function(response) {
-                    alert(JSON.stringify(response))
+                    //alert(JSON.stringify(response))
                     $("#barcodeError").text("No such product available in your system");
                 }
             });
@@ -831,7 +831,7 @@
                                 fetchCart();
                                 clearSalesForm();
                             } else {
-                                alert(JSON.stringify(response));
+                             //   alert(JSON.stringify(response));
                             }
                         },
                         beforeSend: function() {
@@ -841,7 +841,7 @@
                             $('#loading').hide();
                         },
                         error: function(response) {
-                            alert(JSON.stringify(response));
+                          //  alert(JSON.stringify(response));
                         }
                     });
                 } else {
@@ -909,10 +909,10 @@
                 },
                 datatype: "json",
                 success: function(result) {
-                    alert(JSON.stringify(result));
+                  //  alert(JSON.stringify(result));
                 },
                 error: function(response) {
-                    alert(JSON.stringify(response));
+                   // alert(JSON.stringify(response));
                 },
                 beforeSend: function() {
                     $('#loading').show();
@@ -977,7 +977,7 @@
                 processData: false,
                 datatype: "json",
                 success: function(result) {
-                 alert(JSON.stringify(result));
+              //   alert(JSON.stringify(result));
                     let purchaseId = result.purchaseId;
                     clearSalesForm();
                     fetchCart();
@@ -1007,7 +1007,7 @@
                     $('#loading').hide();
                 },
                 error: function(response) {
-                     alert(JSON.stringify(response));
+                    // alert(JSON.stringify(response));
                     Swal.fire("Error: ", "Please Check Required Field ! ", "error");
                     $('#productIdError').text(response.responseJSON.errors.product);
                     $('#supplierIdError').text(response.responseJSON.errors.supplier);

@@ -68,7 +68,7 @@ class ExpenseController extends Controller
                         </a>
                     </li>
                 </ul>
-            </div>';            
+            </div>';       
 			$output['data'][] = array(
 				$i++. '<input type="hidden" name="id" id="id" value="'.$expense->id.'" />',
 				$expense->expense_no,
