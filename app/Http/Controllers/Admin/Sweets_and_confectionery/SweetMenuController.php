@@ -319,7 +319,7 @@ class SweetMenuController extends Controller
                 $Currentstock->increment('salesStock', $cartItem['menu_quantity']); 
                 $Currentstock->broken_quantity = $cartItem['broken_qty']; 
                 $Currentstock->broken_sold     = $cartItem['sell_qty'];
-                $Currentstock->broken_remaining = $cartItem['broken_qty'] - $cartItem['sell_qty'];
+                $Currentstock->broken_remaining = max($cartItem['broken_qty'] - $cartItem['sell_qty'], 0);
                 $Currentstock->broken_perslice_price = $cartItem['menu_price_after_break'];
                 $Currentstock->entryBy         = auth()->user()->id;
                 $Currentstock->entryDate       = date('Y-m-d H:i:s');
@@ -331,17 +331,14 @@ class SweetMenuController extends Controller
                 $Currentstock_insert->salesStock      = $cartItem['menu_quantity'];
                 $Currentstock_insert->broken_quantity = $cartItem['broken_qty']; 
                 $Currentstock_insert->broken_sold     = $cartItem['sell_qty'];
-                $Currentstock_insert->broken_remaining = $cartItem['broken_qty'] - $cartItem['sell_qty'];
+                $Currentstock_insert->broken_remaining = max($cartItem['broken_qty'] - $cartItem['sell_qty'], 0);
                 $Currentstock_insert->broken_perslice_price = $cartItem['menu_price_after_break'];
                 $Currentstock_insert->entryBy         = auth()->user()->id;
                 $Currentstock_insert->entryDate       = date('Y-m-d H:i:s');
                 $Currentstock_insert->save();
             }
-
             }
         
-
-
                 $party->increment('current_due', $request->totalAmount);
 
                 $payemntMethod=ChartOfAccounts::find($request->payment_method);
